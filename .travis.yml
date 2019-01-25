@@ -1,0 +1,10 @@
+matrix:
+  include:
+    - language: python
+      python: 3.6
+      before_script:
+        - cd inv_trans_tool
+      install:
+        - pip install pipenv
+        - pipenv install
+      script: pytest
