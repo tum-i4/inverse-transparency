@@ -5,7 +5,7 @@
 
 import sys
 # pylint: disable-msg=no-name-in-module
-from PyQt5.QtWidgets import QMainWindow, QApplication, QStatusBar
+from PyQt5.QtWidgets import QMainWindow, QApplication, QStatusBar, QMessageBox
 from PyQt5 import uic
 
 qtCreatorFile = "gui/main.ui" # Enter file here.
@@ -20,8 +20,11 @@ class MonitorTool(QMainWindow, Ui_MainWindow): # type: ignore
 		self.statusbar.showMessage("Ready")
 
 	def sign_in(self):
+		# TODO actual sign in!
 		user_id = self.id_edit.text()
 		user_pwd = self.pwd_edit.text()
+		if False:
+			QMessageBox.warning(None, "Sign in failed", "Could not sign in!\nPlease check your details.")
 
 
 if __name__ == "__main__":
