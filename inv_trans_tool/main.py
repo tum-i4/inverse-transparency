@@ -16,15 +16,27 @@ class MonitorTool(QMainWindow, Ui_MainWindow): # type: ignore
 	def __init__(self):
 		super(MonitorTool, self).__init__()
 		self.setupUi(self)
+
+		# TODO auto sign-in?
+		self.screens.setCurrentIndex(0)
 		self.sign_in_button.clicked.connect(self.sign_in)
 		self.statusbar.showMessage("Ready")
+
 
 	def sign_in(self):
 		# TODO actual sign in!
 		user_id = self.id_edit.text()
 		user_pwd = self.pwd_edit.text()
-		if False:
+		if user_id != "admin" or user_pwd != "admin":
 			QMessageBox.warning(None, "Sign in failed", "Could not sign in!\nPlease check your details.")
+			return
+
+		self.screens.setCurrentIndex(1)
+		self.i_just("Successfully signed in as " + user_id)
+
+
+	def i_just(self, did:str) -> None:
+		self.statusbar.showMessage(did, msecs=3000)
 
 
 if __name__ == "__main__":
