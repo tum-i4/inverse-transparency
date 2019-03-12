@@ -25,8 +25,11 @@ class MonitorTool(QMainWindow, Ui_MainWindow): # type: ignore
 
 
 if __name__ == "__main__":
-	app = QApplication(sys.argv)
-	window = MonitorTool()
-	window.show()
-
-sys.exit(app.exec_())
+	try:
+		app = QApplication(sys.argv)
+		window = MonitorTool()
+		window.show()
+		exit_code = app.exec_()
+		sys.exit(exit_code)
+	except KeyboardInterrupt:
+		sys.exit(130)
