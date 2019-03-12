@@ -27,11 +27,12 @@ class MonitorTool(QMainWindow, Ui_MainWindow): # type: ignore
 		# TODO actual sign in!
 		user_id = self.id_edit.text()
 		user_pwd = self.pwd_edit.text()
-		if user_id != "admin" or user_pwd != "admin":
+		if user_pwd != "admin":
 			QMessageBox.warning(None, "Sign in failed", "Could not sign in!\nPlease check your details.")
 			return
 
 		self.screens.setCurrentIndex(1)
+		self.signed_in_as_label.setText(user_id)
 		self.i_just("Successfully signed in as " + user_id)
 
 
