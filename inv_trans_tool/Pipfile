@@ -5,6 +5,9 @@ name = "pypi"
 
 [packages]
 pytest = "*"
+pyqt5 = "*"
+mypy = "*"
+pylint = "*"
 
 [dev-packages]
 
