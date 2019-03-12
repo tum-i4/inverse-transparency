@@ -5,8 +5,10 @@
 
 import sys
 # pylint: disable-msg=no-name-in-module
-from PyQt5.QtWidgets import QMainWindow, QApplication, QStatusBar, QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QApplication, QStatusBar, QMessageBox, QMenuBar, QMenu, QAction
 from PyQt5 import uic
+
+VERSION = 0.1
 
 qtCreatorFile = "gui/main.ui" # Enter file here.
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
@@ -19,6 +21,12 @@ class MonitorTool(QMainWindow, Ui_MainWindow): # type: ignore
 
 		# TODO auto sign-in?
 		self.screens.setCurrentIndex(0)
+
+		# Add an "About" menu bar
+		menu:QMenu = self.menubar.addMenu("About")
+		action:QAction = menu.addAction("Monitor tool v {}".format(VERSION))
+		action.setDisabled(True)
+
 		self.sign_in_button.clicked.connect(self.sign_in)
 		self.statusbar.showMessage("Ready")
 
