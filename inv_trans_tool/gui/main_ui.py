@@ -3,7 +3,7 @@
 # Form implementation generated from reading ui file 'main.ui',
 # licensing of 'main.ui' applies.
 #
-# Created: Wed Mar 13 11:49:17 2019
+# Created: Wed Mar 13 14:45:53 2019
 #      by: pyside2-uic  running on PySide2 5.12.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -117,6 +117,7 @@ class Ui_MainWindow(object):
         self.activity_table.setObjectName("activity_table")
         self.activity_table.setColumnCount(0)
         self.activity_table.setRowCount(0)
+        self.activity_table.verticalHeader().setVisible(False)
         self.verticalLayout.addWidget(self.activity_table)
         self.screens.addWidget(self.main_page)
         self.gridLayout.addWidget(self.screens, 0, 0, 1, 1)

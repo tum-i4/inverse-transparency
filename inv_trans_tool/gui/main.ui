@@ -194,7 +194,11 @@
          </layout>
         </item>
         <item>
-         <widget class="QTableWidget" name="activity_table"/>
+         <widget class="QTableWidget" name="activity_table">
+          <attribute name="verticalHeaderVisible">
+           <bool>false</bool>
+          </attribute>
+         </widget>
         </item>
        </layout>
       </widget>
