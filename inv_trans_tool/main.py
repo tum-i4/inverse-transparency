@@ -39,9 +39,16 @@ class MonitorTool(QMainWindow, Ui_MainWindow): # type: ignore
 			QMessageBox.warning(None, "Sign in failed", "Could not sign in!\nPlease check your details.")
 			return
 
+		self.i_just("Successfully signed in as " + user_id)
+		self.load_monitor_screen(user_id=user_id)
+
+
+	def load_monitor_screen(self, user_id:str):
+		""" Switch to the monitor screen and populate its fields. """
+
 		self.screens.setCurrentIndex(1)
 		self.signed_in_as_label.setText(user_id)
-		self.i_just("Successfully signed in as " + user_id)
+		self.activity_table.setColumnCount(5)
 
 
 	def i_just(self, did:str) -> None:
