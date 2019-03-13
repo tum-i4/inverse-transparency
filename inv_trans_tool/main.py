@@ -4,9 +4,12 @@
 """ Main module of the inverse transparency tool """
 
 import sys
+from typing import List, Tuple
+
 # pylint: disable-msg=no-name-in-module
-from PySide2.QtWidgets import QMainWindow, QApplication, QStatusBar, QMessageBox, QMenuBar, QMenu, QAction, QTableWidget, QWidget
-from PySide2.QtCore import QFile, QAbstractTableModel
+from PySide2.QtWidgets import (QMainWindow, QApplication, QStatusBar, QMessageBox, QMenuBar, QMenu, QAction,
+	QTableWidget, QTableWidgetItem, QWidget)
+from PySide2.QtCore import Qt, QFile, QAbstractTableModel, QAbstractItemModel, QModelIndex
 from PySide2.QtUiTools import QUiLoader
 
 from gui.main_ui import Ui_MainWindow
@@ -51,10 +54,21 @@ class MonitorTool(QMainWindow): # type: ignore
 
 		self.ui.screens.setCurrentIndex(1)
 		self.ui.signed_in_as_label.setText(user_id)
-		self.ui.activity_table.setColumnCount(5)
 
-		x:QTableWidget
-		x.item
+		self.ui.activity_table.itemClicked.connect(self.at_item_clicked)
+
+		self.ui.activity_table.setColumnCount(4)
+		self.ui.activity_table.setRowCount(2)
+		self.ui.activity_table.setHorizontalHeaderLabels(["Responsible", "Tool", "Usage", "Date"])
+
+		first_row:Tuple[QTableWidgetItem, QTableWidgetItem, QTableWidgetItem, QTableWidgetItem] = (
+			QTableWidgetItem("Strauch, Frank"), QTableWidgetItem("JIRA"), QTableWidgetItem("Read"), QTableWidgetItem("2019-03-12 15:30"))
+		for i in range(len(first_row)):
+			self.ui.activity_table.setItem(0, i, first_row[i])
+
+
+	def at_item_clicked(self, item:QTableWidgetItem):
+		print("Clicked item in row {}".format(item.row()))
 
 
 	def i_just(self, did:str) -> None:
