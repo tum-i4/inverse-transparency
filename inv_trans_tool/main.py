@@ -5,36 +5,39 @@
 
 import sys
 # pylint: disable-msg=no-name-in-module
-from PyQt5.QtWidgets import QMainWindow, QApplication, QStatusBar, QMessageBox, QMenuBar, QMenu, QAction
-from PyQt5 import uic
+from PySide2.QtWidgets import QMainWindow, QApplication, QStatusBar, QMessageBox, QMenuBar, QMenu, QAction, QTableWidget, QWidget
+from PySide2.QtCore import QFile, QAbstractTableModel
+from PySide2.QtUiTools import QUiLoader
+
+from gui.main_ui import Ui_MainWindow
+
 
 VERSION = 0.1
 
-qtCreatorFile = "gui/main.ui" # Enter file here.
-Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
 
-
-class MonitorTool(QMainWindow, Ui_MainWindow): # type: ignore
-	def __init__(self):
+class MonitorTool(QMainWindow): # type: ignore
+	def __init__(self, ui):
 		super(MonitorTool, self).__init__()
-		self.setupUi(self)
+
+		self.ui:Ui_MainWindow = ui
+		self.ui.setupUi(self)
 
 		# TODO auto sign-in?
-		self.screens.setCurrentIndex(0)
+		self.ui.screens.setCurrentIndex(0)
 
 		# Add an "About" menu bar
-		menu:QMenu = self.menubar.addMenu("About")
+		menu:QMenu = self.ui.menubar.addMenu("About")
 		action:QAction = menu.addAction("Monitor tool v {}".format(VERSION))
 		action.setDisabled(True)
 
-		self.sign_in_button.clicked.connect(self.sign_in)
-		self.statusbar.showMessage("Ready")
+		self.ui.sign_in_button.clicked.connect(self.sign_in)
+		self.ui.statusbar.showMessage("Ready")
 
 
 	def sign_in(self):
 		# TODO actual sign in!
-		user_id = self.id_edit.text()
-		user_pwd = self.pwd_edit.text()
+		user_id = self.ui.id_edit.text()
+		user_pwd = self.ui.pwd_edit.text()
 		if user_pwd != "admin":
 			QMessageBox.warning(None, "Sign in failed", "Could not sign in!\nPlease check your details.")
 			return
@@ -46,20 +49,24 @@ class MonitorTool(QMainWindow, Ui_MainWindow): # type: ignore
 	def load_monitor_screen(self, user_id:str):
 		""" Switch to the monitor screen and populate its fields. """
 
-		self.screens.setCurrentIndex(1)
-		self.signed_in_as_label.setText(user_id)
-		self.activity_table.setColumnCount(5)
+		self.ui.screens.setCurrentIndex(1)
+		self.ui.signed_in_as_label.setText(user_id)
+		self.ui.activity_table.setColumnCount(5)
+
+		x:QTableWidget
+		x.item
 
 
 	def i_just(self, did:str) -> None:
-		self.statusbar.showMessage(did, msecs=3000)
+		self.ui.statusbar.showMessage(did, msecs=3000)
 
 
 if __name__ == "__main__":
 	try:
 		app = QApplication(sys.argv)
-		window = MonitorTool()
-		window.show()
+		main_window = MonitorTool(ui=Ui_MainWindow())
+		main_window.show()
+
 		exit_code = app.exec_()
 		sys.exit(exit_code)
 	except KeyboardInterrupt:
