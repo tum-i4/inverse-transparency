@@ -11,7 +11,7 @@ from flask_restful import Resource
 
 
 BASE_URL = "http://vmpretschner28.informatik.tu-muenchen.de/"
-API_BASE_PATH = "api/"
+API_BASE_PATH = "rest/api/"
 
 # Paths – ? = not explored, o = explored, t = to implement, x = done
 # (?) audit/
@@ -22,6 +22,8 @@ API_BASE_PATH = "api/"
 # (o) search
 # (?) space/
 # (?) user/
+#
+# Relative paths should be identical to the original API.
 
 
 class ConfluenceApi(object):
