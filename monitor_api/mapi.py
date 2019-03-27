@@ -3,16 +3,21 @@
 
 """ moduleinfo """
 
-import sys
+from flask import Flask
+from flask_restful import Resource, Api
 
+from api import confluence
 
-def main():
-	pass
-
+app = Flask(__name__)
+api = Api(app)
 
 if __name__ == "__main__":
-	try:
-		main()
-	except KeyboardInterrupt:
-		# Exit code for Ctrl-C
-		sys.exit(130)
+	# Connect Confluence API
+	confluence_base_path = "confluence/"
+	for resource, relative_path in confluence.RESOURCES:
+		api.add_resource(resource, confluence_base_path + relative_path)
+
+	# TODO connect further APIs
+
+	# Flask handles Ctrl-C
+	app.run(debug=True)
