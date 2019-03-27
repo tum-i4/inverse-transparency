@@ -16,6 +16,14 @@ app = Flask(__name__)
 api = Api(app)
 
 if __name__ == "__main__":
+	# TODO configure logger
+	logging.basicConfig(
+		format="%(asctime)s (%(name)s | %(levelname)s) \"%(message)s\"",
+		datefmt="%Y-%m-%dT%H:%M:%S%z"
+	)
+	logger = logging.getLogger(LOGGER_BASE)
+	logger.info("Initializing API")
+
 	# Connect Confluence API
 	confluence_base_path = "confluence/"
 	for resource, relative_path in ConfluenceApi(logger_base=LOGGER_BASE).get_resources():
