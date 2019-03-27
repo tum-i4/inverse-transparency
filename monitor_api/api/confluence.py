@@ -27,9 +27,13 @@ API_BASE_PATH = "rest/api/"
 
 
 class ConfluenceApi(object):
+
 	def __init__(self, logger_base:str):
-		self.logger = logging.getLogger(name=logger_base + ".confluence")
+		my_path:str = logger_base + ".confluence"
+		self.logger = logging.getLogger(name=my_path)
 		# TODO create all resources with the given logger attached
+		self.resources:List[Tuple[Resource, str]] = []
+
 
 	def get_resources(self) -> List[Tuple[Resource, str]]:
-		return []
+		return self.resources
