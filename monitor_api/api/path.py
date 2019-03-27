@@ -10,13 +10,12 @@ def join(first:str, *others:str) -> str:
 	Join one or more path components intelligently.
 	Contrary to `os.path`, there are no "absolute paths".
 	Rules:
-	- Starting / ending slashes (from the first and last component) will be kept
+	- The returned path will always start with "/", except if the first component starts with "http"
+	- The returned path will never end with "/", except when enforced (see below)
 	- Empty components will be discarded
-	- A slash can be enforced with a starting / ending component "/"
+	- A trailing slash can be enforced with a final component "/"
+	- Caution: "http://" will be stripped of its slashes!
 	"""
-
-	if not others:
-		return first
 
 	s = "/"
 	strip = lambda p: p.strip(s)
@@ -26,10 +25,11 @@ def join(first:str, *others:str) -> str:
 	if not all_components:
 		return ""
 
-	start_s:bool = all_components[0].startswith(s)
-	end_s:bool = all_components[-1].endswith(s)
+	start_s:bool = not all_components[0].startswith("http")
+	end_s:bool = all_components[-1] == s
 
-	stripped_components:List[str] = [strip(p) for p in all_components if p != s]
+	# Filter empty strings again; this ensures that "/" and "//" do not result in double slashes
+	stripped_components:List[str] = [p for p in [strip(p) for p in all_components] if p != ""]
 	result = s.join(stripped_components)
 
 	if start_s:
