@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 # encoding=utf-8
 
-""" moduleinfo """
+""" Confluence API endpoints """
 
 
 from typing import List, Tuple
+import logging
+
 from flask_restful import Resource
 
 
@@ -21,4 +23,11 @@ API_BASE_PATH = "api/"
 # (?) space/
 # (?) user/
 
-RESOURCES:List[Tuple[Resource, str]] = []
+
+class ConfluenceApi(object):
+	def __init__(self, logger_base:str):
+		self.logger = logging.getLogger(name=logger_base + ".confluence")
+		# TODO create all resources with the given logger attached
+
+	def get_resources(self) -> List[Tuple[Resource, str]]:
+		return []
