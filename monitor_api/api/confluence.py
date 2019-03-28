@@ -4,8 +4,9 @@
 """ Confluence API endpoints """
 
 
-from typing import Dict, List, Tuple
+import json
 import logging
+from typing import Dict, List, Tuple
 
 from flask import request
 from flask_restful import Resource, reqparse
@@ -15,8 +16,13 @@ import api.path
 from api.base import WrappedResourceBase
 
 
-BASE_URL = "http://vmpretschner28.informatik.tu-muenchen.de/"
 API_BASE_PATH = "rest/api/"
+with open("config.json", "r") as config:
+	config_content = json.load(config)["confluence"]
+	BASE_URL = config_content["base_url"]
+	USER = config_content["user"]
+	PASSWORD = config_content["password"]
+
 
 # Paths – ? = not explored, o = explored, t = to implement, x = done
 # (?) audit/
