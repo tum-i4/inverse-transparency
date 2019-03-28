@@ -20,7 +20,10 @@ def join(first:str, *others:str) -> str:
 	s = "/"
 	strip = lambda p: p.strip(s)
 
-	all_components:List[str] = [p for p in [first, *others] if p != ""]
+	all_components:List[str] = [
+		p for p in [first, *others]
+		if p != ""
+	]
 
 	if not all_components:
 		return ""
@@ -29,7 +32,11 @@ def join(first:str, *others:str) -> str:
 	end_s:bool = all_components[-1] == s
 
 	# Filter empty strings again; this ensures that "/" and "//" do not result in double slashes
-	stripped_components:List[str] = [p for p in [strip(p) for p in all_components] if p != ""]
+	stripped_components:List[str] = [
+		p for p in [
+			strip(p) for p in all_components
+		] if p != ""
+	]
 	result = s.join(stripped_components)
 
 	if start_s:
