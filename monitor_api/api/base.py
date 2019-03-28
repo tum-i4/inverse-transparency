@@ -17,6 +17,8 @@ class WrappedResourceBase(Resource):
 	def __init__(self, own_name:str, target_url:str, logger_base:str):
 		self.target_url = target_url
 		self.logger = logging.getLogger(name=logger_base + "." + own_name)
+		# TODO debug
+		self.logger.setLevel(logging.DEBUG)
 
 	def _get(self):
 		""" Wrapped GET (has to be explicitly linked to get()) """
