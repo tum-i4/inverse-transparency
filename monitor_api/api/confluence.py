@@ -7,7 +7,9 @@
 from typing import List, Tuple
 import logging
 
-from flask_restful import Resource
+from flask import request
+from flask_restful import Resource, reqparse
+import requests
 
 import api.path
 
@@ -33,10 +35,14 @@ class ConfluenceApi(object):
 	def __init__(self, logger_base:str):
 		my_path:str = logger_base + ".confluence"
 		self.logger = logging.getLogger(name=my_path)
+
 		# TODO create all resources with the given logger attached
-		self.resources:List[Tuple[Resource, str]] = [
-			(ConfluenceApi.SearchResource(logger_base=my_path), api.path.join(API_BASE_PATH, "search")),
+		resources = [
+			ConfluenceApi.SearchResource(logger_base=my_path, url_base=API_BASE_PATH, name="search"),
 		]
+		self.resources:List[Tuple[Resource, str]] = []
+		for resource in resources:
+			self.resources.append((resource, resource.url))
 
 
 	def get_resources(self) -> List[Tuple[Resource, str]]:
@@ -44,9 +50,14 @@ class ConfluenceApi(object):
 
 
 	class SearchResource(Resource):
-		def __init__(self, logger_base:str):
+		""" /search """
+
+		def __init__(self, logger_base:str, url_base:str, name:str):
+			self.__name__ = name
+			self.url = api.path.join(url_base, self.__name__)
 			self.logger = logging.getLogger(name=logger_base + ".search")
 
 		def get(self):
 			""" Search for entities in Confluence using the Confluence Query Language (CQL) """
-			raise NotImplementedError()
+			r = requests.get(self.url, params=request.form)
+			return r.json(), r.status_code
