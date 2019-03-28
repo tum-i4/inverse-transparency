@@ -18,7 +18,7 @@ from gui.main_ui import Ui_MainWindow
 VERSION = 0.1
 
 
-class MonitorTool(QMainWindow): # type: ignore
+class MonitorTool(QMainWindow):
 	def __init__(self, ui):
 		super(MonitorTool, self).__init__()
 
