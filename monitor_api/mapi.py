@@ -24,9 +24,9 @@ if __name__ == "__main__":
 		datefmt="%Y-%m-%dT%H:%M:%S%z"
 	)
 	logger = logging.getLogger(MY_LOGGER_PATH)
-	logger.info("Initializing API")
 
 	# Connect Confluence API
+	logger.info("Initializing Confluence API")
 	confluence_base_path = api.path.join(API_BASE_PATH, "confluence")
 	for resource, relative_path, kwargs_dict in ConfluenceApi(logger_base=MY_LOGGER_PATH).get_resources():
 		app_api.add_resource(resource, api.path.join(confluence_base_path, relative_path), resource_class_kwargs=kwargs_dict)
