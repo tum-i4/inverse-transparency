@@ -9,12 +9,13 @@ from flask import Flask
 from flask_restful import Resource, Api
 
 from api.confluence import ConfluenceApi
+import api.path
 
 MY_LOGGER_PATH = "mapi"
 API_BASE_PATH = ""
 
 app = Flask(__name__)
-api = Api(app)
+app_api = Api(app)
 
 if __name__ == "__main__":
 	# TODO configure logger
@@ -26,9 +27,9 @@ if __name__ == "__main__":
 	logger.info("Initializing API")
 
 	# Connect Confluence API
-	confluence_base_path = API_BASE_PATH + "confluence/"
+	confluence_base_path = api.path.join(API_BASE_PATH, "confluence")
 	for resource, relative_path in ConfluenceApi(logger_base=MY_LOGGER_PATH).get_resources():
-		api.add_resource(resource, confluence_base_path + relative_path)
+		app_api.add_resource(resource, api.path.join(confluence_base_path, relative_path))
 
 	# TODO connect further APIs
 
