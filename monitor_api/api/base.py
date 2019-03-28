@@ -22,6 +22,6 @@ class WrappedResourceBase(Resource):
 
 	def _get(self):
 		""" Wrapped GET (has to be explicitly linked to get()) """
-		r = requests.get(self.target_url, params=request.form)
-		self.logger.info("GET %s | Data: %s | Return: %s", self.target_url, request.form, r.json())
+		r = requests.get(self.target_url, params=request.args)
+		self.logger.info("GET %s | Data: %s | Return: %s", self.target_url, request.args, r.json())
 		return r.json(), r.status_code
