@@ -4,7 +4,7 @@
 """ Confluence API endpoints """
 
 
-from typing import List, Tuple
+from typing import Dict, List, Tuple
 import logging
 
 from flask import request
@@ -12,6 +12,7 @@ from flask_restful import Resource, reqparse
 import requests
 
 import api.path
+from api.base import WrappedResourceBase
 
 
 BASE_URL = "http://vmpretschner28.informatik.tu-muenchen.de/"
@@ -37,27 +38,28 @@ class ConfluenceApi(object):
 		self.logger = logging.getLogger(name=my_path)
 
 		# TODO create all resources with the given logger attached
-		resources = [
-			ConfluenceApi.SearchResource(logger_base=my_path, url_base=API_BASE_PATH, name="search"),
+
+		# Resource, URL, kwargs
+		search_name:str = "search"
+		search_relative_url:str = api.path.join(API_BASE_PATH, search_name)
+
+		self.resources:List[Tuple[Resource, str, Dict[str, object]]] = [
+			(ConfluenceApi.SearchResource,
+				search_relative_url,
+				{"own_name" : search_name, "target_url" : api.path.join(BASE_URL, search_relative_url), "logger_base" : my_path}),
 		]
-		self.resources:List[Tuple[Resource, str]] = []
-		for resource in resources:
-			self.resources.append((resource, resource.url))
 
 
-	def get_resources(self) -> List[Tuple[Resource, str]]:
+	def get_resources(self) -> List[Tuple[Resource, str, Dict[str, object]]]:
 		return self.resources
 
 
-	class SearchResource(Resource):
+	class SearchResource(WrappedResourceBase):
 		""" /search """
 
-		def __init__(self, logger_base:str, url_base:str, name:str):
-			self.__name__ = name
-			self.url = api.path.join(url_base, self.__name__)
-			self.logger = logging.getLogger(name=logger_base + ".search")
+		def __init__(self, own_name:str, target_url:str, logger_base:str):
+			super().__init__(own_name=own_name, target_url=target_url, logger_base=logger_base)
 
 		def get(self):
 			""" Search for entities in Confluence using the Confluence Query Language (CQL) """
-			r = requests.get(self.url, params=request.form)
-			return r.json(), r.status_code
+			return self._get()

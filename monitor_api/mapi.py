@@ -28,8 +28,8 @@ if __name__ == "__main__":
 
 	# Connect Confluence API
 	confluence_base_path = api.path.join(API_BASE_PATH, "confluence")
-	for resource, relative_path in ConfluenceApi(logger_base=MY_LOGGER_PATH).get_resources():
-		app_api.add_resource(resource, api.path.join(confluence_base_path, relative_path))
+	for resource, relative_path, kwargs_dict in ConfluenceApi(logger_base=MY_LOGGER_PATH).get_resources():
+		app_api.add_resource(resource, api.path.join(confluence_base_path, relative_path), resource_class_kwargs=kwargs_dict)
 
 	# TODO connect further APIs
 
