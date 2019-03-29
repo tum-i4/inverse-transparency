@@ -21,8 +21,14 @@ class WrappedResourceBase(Resource):
 		# TODO debug
 		self.logger.setLevel(logging.DEBUG)
 
+
 	def _get(self):
 		""" Wrapped GET (has to be explicitly linked to get()) """
-		r = requests.get(self.target_url, params=request.args)
-		self.logger.info("GET %s | Data: %s | Return: %s", self.target_url, request.args, r.json())
-		return r.json(), r.status_code
+
+		req = requests.Request("GET", self.target_url, params=request.args)
+		self.authenticator.authenticate(request=req)
+		res = requests.Session().send(req.prepare())
+
+		self.logger.info("GET %s | Data: %s | Return: %s", self.target_url, request.args, res.json())
+
+		return res.json(), res.status_code
