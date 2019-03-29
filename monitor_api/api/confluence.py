@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # encoding=utf-8
-
 """ Confluence API endpoints """
-
 
 import json
 import logging
@@ -12,8 +10,9 @@ from flask import request
 from flask_restful import Resource, reqparse
 import requests
 
-import api.path
+from api.auth import BasicAuth
 from api.base import WrappedResourceBase
+import api.path
 
 
 API_BASE_PATH = "rest/api/"
@@ -64,7 +63,8 @@ class ConfluenceApi(object):
 		""" /search """
 
 		def __init__(self, own_name:str, target_url:str, logger_base:str):
-			super().__init__(own_name=own_name, target_url=target_url, logger_base=logger_base)
+			basic_auth = BasicAuth(user=USER, password=PASSWORD)
+			super().__init__(own_name=own_name, target_url=target_url, logger_base=logger_base, authenticator=basic_auth)
 
 		def get(self):
 			""" Search for entities in Confluence using the Confluence Query Language (CQL) """
