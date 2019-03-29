@@ -30,6 +30,6 @@ class WrappedResourceBase(Resource):
 		self.authenticator.authenticate(request=req)
 		res = requests.Session().send(req.prepare())
 
-		self.logger.info(Entry(method="GET", url=self.target_url, request_params=request.args, response_content=res.json()))
+		self.logger.info(Entry(method="GET", url=self.target_url, request_params=request.args.to_dict(flat=False), response_content=res.json()))
 
 		return res.json(), res.status_code
