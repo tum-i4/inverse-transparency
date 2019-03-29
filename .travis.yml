@@ -1,17 +1,17 @@
 matrix:
   include:
-    # - language: python
-    #   python: 3.6
-    #   before_script:
-    #     - cd inv_trans_tool
-    #   install:
-    #     - pip install pipenv
-    #     - pipenv install
-    #   script: make test
+    - language: python
+      python: 3.6
+      before_install:
+        - cd inv_trans_tool
+      install:
+        - pip install pipenv
+        - pipenv install
+      script: make test
 
     - language: python
       python: 3.6
-      before_script:
+      before_install:
         - cd monitor_api
       install:
         - pip install pipenv
