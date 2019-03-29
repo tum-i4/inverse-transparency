@@ -9,6 +9,7 @@ from flask_restful import Resource
 import requests
 
 from api.auth import Authenticator
+from log.entry import Entry
 
 
 class WrappedResourceBase(Resource):
@@ -29,6 +30,6 @@ class WrappedResourceBase(Resource):
 		self.authenticator.authenticate(request=req)
 		res = requests.Session().send(req.prepare())
 
-		self.logger.info("GET %s | Data: %s | Return: %s", self.target_url, request.args, res.json())
+		self.logger.info(Entry(method="GET", url=self.target_url, request_params=request.args, response_content=res.json()))
 
 		return res.json(), res.status_code
