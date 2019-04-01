@@ -45,13 +45,10 @@ class ConfluenceApi(AnyApi):
 		# TODO create all resources with the given logger attached
 
 		# Resource, URL, kwargs
-		search_name:str = "search"
-		search_relative_url:str = api.path.join(API_BASE_PATH, search_name)
-
 		self.resources:List[Tuple[Resource, str, Dict[str, object]]] = [
 			(ConfluenceApi.SearchResource,
-				search_relative_url,
-				{"own_name" : search_name, "target_url" : api.path.join(BASE_URL, search_relative_url), "logger_base" : my_path}),
+				ConfluenceApi.SearchResource.RELATIVE_URL,
+				{"own_name" : ConfluenceApi.SearchResource.NAME, "target_url" : api.path.join(BASE_URL, ConfluenceApi.SearchResource.RELATIVE_URL), "logger_base" : my_path}),
 		]
 
 
@@ -61,6 +58,9 @@ class ConfluenceApi(AnyApi):
 
 	class SearchResource(WrappedResourceBase):
 		""" /search """
+
+		NAME = "search"
+		RELATIVE_URL = api.path.join(API_BASE_PATH, NAME)
 
 		def __init__(self, own_name:str, target_url:str, logger_base:str):
 			basic_auth = BasicAuth(user=USER, password=PASSWORD)
