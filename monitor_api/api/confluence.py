@@ -11,7 +11,7 @@ from flask_restful import Resource, reqparse
 import requests
 
 from api.auth import BasicAuth
-from api.base import WrappedResourceBase
+from api.base import AnyApi, WrappedResourceBase
 import api.path
 
 
@@ -36,7 +36,7 @@ with open("config.json", "r") as config:
 # Relative paths should be identical to the original API.
 
 
-class ConfluenceApi(object):
+class ConfluenceApi(AnyApi):
 
 	def __init__(self, logger_base:str):
 		my_path:str = logger_base + ".confluence"
