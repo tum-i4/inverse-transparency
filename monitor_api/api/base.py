@@ -2,7 +2,9 @@
 # encoding=utf-8
 """ API wrapper base """
 
+from abc import ABC, abstractmethod
 import logging
+from typing import Dict, List, Tuple
 
 from flask import request
 from flask_restful import Resource
@@ -10,6 +12,16 @@ import requests
 
 from api.auth import Authenticator
 from log.entry import Entry
+
+
+class AnyApi(ABC):
+	@abstractmethod
+	def __init__(self, logger_base:str):
+		raise NotImplementedError()
+
+	@abstractmethod
+	def get_resources(self) -> List[Tuple[Resource, str, Dict[str, object]]]:
+		raise NotImplementedError()
 
 
 class WrappedResourceBase(Resource):
