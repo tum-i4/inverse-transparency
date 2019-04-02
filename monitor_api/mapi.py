@@ -8,6 +8,7 @@ from flask import Flask
 from flask_restful import Resource, Api
 
 from api.confluence import ConfluenceApi
+from api.jira import JiraApi
 import api.path
 
 MY_LOGGER_PATH = "mapi"
@@ -29,6 +30,12 @@ if __name__ == "__main__":
 	confluence_base_path = api.path.join(API_BASE_PATH, "confluence")
 	for resource, relative_path, kwargs_dict in ConfluenceApi(logger_base=MY_LOGGER_PATH).get_resources():
 		app_api.add_resource(resource, api.path.join(confluence_base_path, relative_path), resource_class_kwargs=kwargs_dict)
+
+	# Connect JIRA API
+	logger.info("Initializing JIRA API")
+	jira_base_path = api.path.join(API_BASE_PATH, "jira")
+	for resource, relative_path, kwargs_dict in JiraApi(logger_base=MY_LOGGER_PATH).get_resources():
+		app_api.add_resource(resource, api.path.join(jira_base_path, relative_path), resource_class_kwargs=kwargs_dict)
 
 	# TODO connect further APIs
 
