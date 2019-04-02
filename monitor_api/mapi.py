@@ -10,6 +10,7 @@ from flask_restful import Resource, Api
 from api.confluence import ConfluenceApi
 from api.jira import JiraApi
 import api.path
+import log.format
 
 MY_LOGGER_PATH = "mapi"
 API_BASE_PATH = ""
@@ -21,7 +22,7 @@ if __name__ == "__main__":
 	# TODO configure logger
 	logging.basicConfig(
 		format="%(asctime)s (%(name)s | %(levelname)s) \"%(message)s\"",
-		datefmt="%Y-%m-%dT%H:%M:%S%z"
+		datefmt=log.format.ISO_DATE_FORMAT
 	)
 	logger = logging.getLogger(MY_LOGGER_PATH)
 
