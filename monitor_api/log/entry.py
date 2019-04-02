@@ -16,9 +16,9 @@ class Entry(object):
 
 
 	def __str__(self):
-		return "{} {} | Data: {} | Return: {}".format(
+		""" Called when the entry is stored. """
+		return "{} {} | Params: {}".format(
 			self.method,
 			self.url,
-			self.request_params,
-			self.response_content
+			self.request_params
 		)
