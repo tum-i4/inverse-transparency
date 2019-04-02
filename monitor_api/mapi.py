@@ -21,7 +21,7 @@ app_api = Api(app)
 if __name__ == "__main__":
 	# TODO configure logger
 	logging.basicConfig(
-		format="%(asctime)s (%(name)s | %(levelname)s) \"%(message)s\"",
+		format=log.format.READABLE_LOG_FORMAT,
 		datefmt=log.format.ISO_DATE_FORMAT
 	)
 	logger = logging.getLogger(MY_LOGGER_PATH)
