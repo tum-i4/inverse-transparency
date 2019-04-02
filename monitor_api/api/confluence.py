@@ -72,5 +72,5 @@ class ConfluenceApi(IApi):
 			)
 
 		def get(self):
-			""" Search for entities in Confluence using the Confluence Query Language (CQL) """
+			""" Search for entities in Confluence using the Confluence Query Language (CQL). """
 			return self._get()

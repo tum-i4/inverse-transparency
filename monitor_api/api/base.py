@@ -40,7 +40,8 @@ class WrappedResourceBase(Resource):
 
 		req = requests.Request("GET", self.target_url, params=request.args)
 		self.authenticator.authenticate(request=req)
-		res = requests.Session().send(req.prepare())
+		with requests.Session() as s:
+			res = s.send(req.prepare())
 
 		self.logger.info(Entry(method="GET", url=self.target_url, request_params=request.args.to_dict(flat=False), response_content=res.json()))
 
