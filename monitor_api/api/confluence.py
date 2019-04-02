@@ -48,7 +48,7 @@ class ConfluenceApi(IApi):
 		self.resources:List[Tuple[Resource, str, Dict[str, object]]] = [
 			(ConfluenceApi.SearchResource,
 				ConfluenceApi.SearchResource.RELATIVE_URL,
-				{"own_name" : ConfluenceApi.SearchResource.NAME, "target_url" : api.path.join(BASE_URL, ConfluenceApi.SearchResource.RELATIVE_URL), "logger_base" : my_path}),
+				{"base_url" : BASE_URL, "logger_base" : my_path}),
 		]
 
 
@@ -62,9 +62,14 @@ class ConfluenceApi(IApi):
 		NAME = "search"
 		RELATIVE_URL = api.path.join(API_BASE_PATH, NAME)
 
-		def __init__(self, own_name:str, target_url:str, logger_base:str):
+		def __init__(self, base_url:str, logger_base:str):
 			basic_auth = BasicAuth(user=USER, password=PASSWORD)
-			super().__init__(own_name=own_name, target_url=target_url, logger_base=logger_base, authenticator=basic_auth)
+			super().__init__(
+				own_name=self.NAME,
+				target_url=api.path.join(base_url, self.RELATIVE_URL),
+				logger_base=logger_base,
+				authenticator=basic_auth
+			)
 
 		def get(self):
 			""" Search for entities in Confluence using the Confluence Query Language (CQL) """
