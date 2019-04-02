@@ -2,6 +2,7 @@
 # encoding=utf-8
 """ Entry class """
 
+import json
 from typing import Dict
 
 
@@ -22,3 +23,14 @@ class Entry(object):
 			self.url,
 			self.request_params
 		)
+
+
+	def to_json(self):
+		""" A storable JSON one-liner. """
+
+		return json.dumps({
+			"method" : self.method,
+			"url" : self.url,
+			"request_params" : self.request_params,
+			"response_content" : self.response_content
+		})
