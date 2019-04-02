@@ -14,7 +14,7 @@ from api.auth import Authenticator
 from log.entry import Entry
 
 
-class AnyApi(ABC):
+class IApi(ABC):
 	@abstractmethod
 	def __init__(self, logger_base:str):
 		raise NotImplementedError()

@@ -9,7 +9,7 @@ from typing import Dict, List, Tuple
 from flask_restful import Resource
 
 from api.auth import BasicAuth
-from api.base import AnyApi, WrappedResourceBase
+from api.base import IApi, WrappedResourceBase
 import api.path
 
 
@@ -30,7 +30,7 @@ with open("config.json", "r") as config:
 # Relative paths should be identical to the original API.
 
 
-class JiraApi(AnyApi):
+class JiraApi(IApi):
 
 	def __init__(self, logger_base:str):
 		my_path:str = logger_base + ".jira"
