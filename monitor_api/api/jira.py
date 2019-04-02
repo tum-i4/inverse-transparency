@@ -13,8 +13,9 @@ from api.base import IApi, WrappedResourceBase
 import api.path
 
 
-# This base is not used for all API endpoints!
-API_BASE_PATH = "rest/api/2/"
+API_BASE_PATH = "rest/"
+# This part is not used for all API endpoints!
+API_2_PATH = "api/2/"
 with open("config.json", "r") as config:
 	config_content = json.load(config)["jira"]
 	BASE_URL = config_content["base_url"]
@@ -40,7 +41,30 @@ class JiraApi(IApi):
 
 		# Resource, URL, kwargs
 		self.resources:List[Tuple[Resource, str, Dict[str, object]]] = [
+			(JiraApi.ConfigurationResource,
+				JiraApi.ConfigurationResource.RELATIVE_URL,
+				{"base_url" : BASE_URL, "logger_base" : my_path}),
 		]
 
 	def get_resources(self) -> List[Tuple[Resource, str, Dict[str, object]]]:
 		return self.resources
+
+
+	class ConfigurationResource(WrappedResourceBase):
+		""" api/2/configuration """
+
+		NAME = "configuration"
+		RELATIVE_URL = api.path.join(API_BASE_PATH, API_2_PATH, NAME)
+
+		def __init__(self, base_url:str, logger_base:str):
+			basic_auth = BasicAuth(user=USER, password=PASSWORD)
+			super().__init__(
+				own_name=self.NAME,
+				target_url=api.path.join(base_url, self.RELATIVE_URL),
+				logger_base=logger_base,
+				authenticator=basic_auth
+			)
+
+		def get(self):
+			""" Returns the information if the optional features in JIRA are enabled or disabled. """
+			return self._get()
