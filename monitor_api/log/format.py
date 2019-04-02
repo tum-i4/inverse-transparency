@@ -3,3 +3,6 @@
 """ Log formatting """
 
 from logging import Formatter
+
+
+ISO_DATE_FORMAT:str = "%Y-%m-%dT%H:%M:%S%z"
