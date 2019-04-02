@@ -12,6 +12,7 @@ import requests
 
 from api.auth import Authenticator
 from log.entry import Entry
+from log.store import Storage
 
 
 class IApi(ABC):
@@ -31,6 +32,7 @@ class WrappedResourceBase(Resource):
 		self.target_url = target_url
 		self.logger = logging.getLogger(name=logger_base + "." + own_name)
 		self.authenticator = authenticator
+		self.storage = Storage(filename="/var/log/mapi.log", source=own_name)
 		# TODO debug
 		self.logger.setLevel(logging.DEBUG)
 
@@ -39,10 +41,14 @@ class WrappedResourceBase(Resource):
 		""" Wrapped GET (has to be explicitly linked to get()) """
 
 		req = requests.Request("GET", self.target_url, params=request.args)
+		# TODO Temp
+		# req = requests.Request("GET", "http://httpbin.org/json")
 		self.authenticator.authenticate(request=req)
 		with requests.Session() as s:
 			res = s.send(req.prepare())
 
-		self.logger.info(Entry(method="GET", url=self.target_url, request_params=request.args.to_dict(flat=False), response_content=res.json()))
+		entry = Entry(method="GET", url=self.target_url, request_params=request.args.to_dict(flat=False), response_content=res.json())
+		self.logger.info(entry)
+		self.storage.add(entry)
 
 		return res.json(), res.status_code
