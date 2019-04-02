@@ -17,4 +17,5 @@ class MEFileHandler(FileHandler):
 		if not isinstance(record, log.entry.Entry):
 			return
 
+		record.msg = record.msg.to_json()
 		super().emit(record)
