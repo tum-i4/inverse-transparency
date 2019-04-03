@@ -38,6 +38,8 @@ with open("config.json", "r") as config:
 
 class ConfluenceApi(IApi):
 
+	AUTH = BasicAuth(user=USER, password=PASSWORD)
+
 	def __init__(self, logger_base:str):
 		my_path:str = logger_base + ".confluence"
 		self.logger = logging.getLogger(name=my_path)
@@ -63,12 +65,11 @@ class ConfluenceApi(IApi):
 		RELATIVE_URL = api.path.join(API_BASE_PATH, NAME)
 
 		def __init__(self, base_url:str, logger_base:str):
-			basic_auth = BasicAuth(user=USER, password=PASSWORD)
 			super().__init__(
 				own_name=self.NAME,
 				target_url=api.path.join(base_url, self.RELATIVE_URL),
 				logger_base=logger_base,
-				authenticator=basic_auth
+				authenticator=ConfluenceApi.AUTH,
 			)
 
 		def get(self):
