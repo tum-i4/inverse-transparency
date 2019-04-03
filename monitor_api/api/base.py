@@ -47,7 +47,10 @@ class WrappedResourceBase(Resource):
 
 
 	def _build_url(self, *args) -> str:
-		""" Build or retrieve the URL to target. """
+		"""
+		Build or retrieve the URL to target.
+		:param args: The URL args to merge with the template URL
+		"""
 		if self.target_url:
 			return self.target_url
 		elif self.template_url:
