@@ -46,6 +46,17 @@ class WrappedResourceBase(Resource):
 		self.logger.setLevel(logging.DEBUG)
 
 
+	def _build_url(self, *args) -> str:
+		""" Build or retrieve the URL to target. """
+		if self.target_url:
+			return self.target_url
+		elif self.template_url:
+			# String formatting automatically raises in case of an invalid number of arguments
+			return self.template_url % args
+		else:
+			raise RuntimeError("Both URL attributes not set")
+
+
 	def _get(self):
 		""" Wrapped GET (has to be explicitly linked to get()) """
 
