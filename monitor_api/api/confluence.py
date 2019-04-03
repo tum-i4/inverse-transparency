@@ -51,6 +51,9 @@ class ConfluenceApi(IApi):
 			(ConfluenceApi.SearchResource,
 				ConfluenceApi.SearchResource.RELATIVE_URL,
 				{"base_url" : BASE_URL, "logger_base" : my_path}),
+			(ConfluenceApi.ContentIdHistoryResource,
+				ConfluenceApi.ContentIdHistoryResource.RELATIVE_URL,
+				{"base_url" : BASE_URL, "logger_base" : my_path}),
 		]
 
 
@@ -74,4 +77,25 @@ class ConfluenceApi(IApi):
 
 		def get(self):
 			""" Search for entities in Confluence using the Confluence Query Language (CQL). """
+			return self._get()
+
+
+	class ContentIdHistoryResource(WrappedResourceBase):
+		""" /content/{id}/history """
+
+		NAME = "content_history"
+		_TEMPLATE_URL = api.path.join(API_BASE_PATH, "content", "%s", "history")
+		RELATIVE_URL = _TEMPLATE_URL % "<int:id>"
+
+		def __init__(self, base_url:str, logger_base:str):
+			super().__init__(
+				own_name=self.NAME,
+				logger_base=logger_base,
+				authenticator=ConfluenceApi.AUTH,
+				template_url=api.path.join(base_url, self._TEMPLATE_URL),
+			)
+
+		def get(self, id):
+			""" Return the history of a particular piece of content. """
+			self.target_url = self._build_url(id)
 			return self._get()
