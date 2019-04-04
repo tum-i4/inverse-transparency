@@ -42,7 +42,7 @@ class WrappedResourceBase(Resource):
 		self.template_url = template_url
 		self.logger = logging.getLogger(name=logger_base + "." + resource_name)
 		self.authenticator = authenticator
-		self.storage = Storage(filename="/var/log/mapi.log", source=api_name)
+		self.storage = Storage(filename="/var/log/mapi.log", api=api_name)
 
 		# TODO debug
 		self.logger.setLevel(logging.DEBUG)

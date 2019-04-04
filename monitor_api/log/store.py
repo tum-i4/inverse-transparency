@@ -10,14 +10,14 @@ import log.format
 
 
 class Storage(object):
-	def __init__(self, filename:str, source:str):
+	def __init__(self, filename:str, api:str):
 		self.filename = filename
-		self.source = source
+		self.api = api
 
 	def add(self, entry:Entry) -> None:
 		content = {
 			"time" : time.strftime(log.format.ISO_DATE_FORMAT),
-			"source" : self.source
+			"api" : self.api
 		}
 		content.update(entry.to_dict())
 		with open(self.filename, "a") as f:
