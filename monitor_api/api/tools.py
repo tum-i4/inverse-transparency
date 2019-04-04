@@ -2,7 +2,13 @@
 # encoding=utf-8
 """ Low-level tools """
 
+import flask
 import requests
+import werkzeug.datastructures as wz_ds
+
+def requests_Response_to_flask_Response(req_response:requests.Response) -> flask.Response:
+	""" Convert a `requests.Response` object to a `flask.Response` object. """
+	raise NotImplementedError()
 
 
 def requests_Response_is_json(req_response:requests.Response) -> bool:
