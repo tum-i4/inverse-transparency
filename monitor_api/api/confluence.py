@@ -70,7 +70,8 @@ class ConfluenceApi(IApi):
 
 		def __init__(self, base_url:str, logger_base:str):
 			super().__init__(
-				own_name=self.NAME,
+				resource_name=self.NAME,
+				api_name=ConfluenceApi.NAME,
 				target_url=api.path.join(base_url, self.RELATIVE_URL),
 				logger_base=logger_base,
 				authenticator=ConfluenceApi.AUTH,
@@ -90,7 +91,8 @@ class ConfluenceApi(IApi):
 
 		def __init__(self, base_url:str, logger_base:str):
 			super().__init__(
-				own_name=self.NAME,
+				resource_name=self.NAME,
+				api_name=ConfluenceApi.NAME,
 				logger_base=logger_base,
 				authenticator=ConfluenceApi.AUTH,
 				template_url=api.path.join(base_url, self._TEMPLATE_URL),

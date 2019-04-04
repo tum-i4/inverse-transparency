@@ -61,7 +61,8 @@ class JiraApi(IApi):
 
 		def __init__(self, base_url:str, logger_base:str):
 			super().__init__(
-				own_name=self.NAME,
+				resource_name=self.NAME,
+				api_name=JiraApi.NAME,
 				target_url=api.path.join(base_url, self.RELATIVE_URL),
 				logger_base=logger_base,
 				authenticator=JiraApi.AUTH
