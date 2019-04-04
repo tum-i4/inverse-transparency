@@ -33,8 +33,11 @@ with open("config.json", "r") as config:
 
 class JiraApi(IApi):
 
+	NAME = "jira"
+	AUTH = BasicAuth(user=USER, password=PASSWORD)
+
 	def __init__(self, logger_base:str):
-		my_path:str = logger_base + ".jira"
+		my_path:str = logger_base + "." + JiraApi.NAME
 		self.logger = logging.getLogger(name=my_path)
 
 		# TODO create all resources with the given logger attached
@@ -57,12 +60,11 @@ class JiraApi(IApi):
 		RELATIVE_URL = api.path.join(API_BASE_PATH, API_2_PATH, NAME)
 
 		def __init__(self, base_url:str, logger_base:str):
-			basic_auth = BasicAuth(user=USER, password=PASSWORD)
 			super().__init__(
 				own_name=self.NAME,
 				target_url=api.path.join(base_url, self.RELATIVE_URL),
 				logger_base=logger_base,
-				authenticator=basic_auth
+				authenticator=JiraApi.AUTH
 			)
 
 		def get(self):
