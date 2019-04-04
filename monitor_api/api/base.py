@@ -11,6 +11,7 @@ from flask_restful import Resource
 import requests
 import requests.auth
 
+import api.tools
 from log.entry import Entry
 from log.store import Storage
 
@@ -81,13 +82,10 @@ class WrappedResourceBase(Resource):
 			res = s.send(req.prepare())
 
 		# We currently only process JSON data
-		if not res.headers["content-type"] == "application/json":
+		if not api.tools.requests_Response_is_json(res):
 			return WrappedResourceBase.CONTENT_NOT_JSON_ERR
 
-		try:
-			res_json = res.json()
-		except ValueError:
-			return WrappedResourceBase.CONTENT_NOT_JSON_ERR
+		res_json = res.json()
 
 		entry = Entry(method="GET", url=self.target_url, request_params=request.args.to_dict(flat=False), response_content=res_json)
 		self.logger.info(entry)
