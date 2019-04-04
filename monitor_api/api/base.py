@@ -28,20 +28,22 @@ class IApi(ABC):
 class WrappedResourceBase(Resource):
 	""" A wrapped resource that pipes and logs requests. """
 
-	def __init__(self, own_name:str, logger_base:str, authenticator:Authenticator,
+	def __init__(self, resource_name:str, api_name:str, logger_base:str, authenticator:Authenticator,
 		target_url:Optional[str] = None, template_url:Optional[str] = None):
 		"""
 		:param target_url: A constant URL to target
 		:param template_url: A template URL (with replaceable arg) to target
 		"""
+
 		if not (bool(target_url) ^ bool(template_url)):
 			raise ValueError("Specify either target_url xor templater_url")
 
 		self.target_url = target_url
 		self.template_url = template_url
-		self.logger = logging.getLogger(name=logger_base + "." + own_name)
+		self.logger = logging.getLogger(name=logger_base + "." + resource_name)
 		self.authenticator = authenticator
-		self.storage = Storage(filename="/var/log/mapi.log", source=own_name)
+		self.storage = Storage(filename="/var/log/mapi.log", source=api_name)
+
 		# TODO debug
 		self.logger.setLevel(logging.DEBUG)
 
