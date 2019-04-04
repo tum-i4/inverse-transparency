@@ -84,8 +84,13 @@ class WrappedResourceBase(Resource):
 		if not res.headers["content-type"] == "application/json":
 			return WrappedResourceBase.CONTENT_NOT_JSON_ERR
 
-		entry = Entry(method="GET", url=self.target_url, request_params=request.args.to_dict(flat=False), response_content=res.json())
+		try:
+			res_json = res.json()
+		except ValueError:
+			return WrappedResourceBase.CONTENT_NOT_JSON_ERR
+
+		entry = Entry(method="GET", url=self.target_url, request_params=request.args.to_dict(flat=False), response_content=res_json)
 		self.logger.info(entry)
 		self.storage.add(entry)
 
-		return res.json(), res.status_code
+		return res_json, res.status_code
