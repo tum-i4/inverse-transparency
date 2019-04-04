@@ -38,10 +38,11 @@ with open("config.json", "r") as config:
 
 class ConfluenceApi(IApi):
 
+	NAME = "confluence"
 	AUTH = BasicAuth(user=USER, password=PASSWORD)
 
 	def __init__(self, logger_base:str):
-		my_path:str = logger_base + ".confluence"
+		my_path:str = logger_base + "." + ConfluenceApi.NAME
 		self.logger = logging.getLogger(name=my_path)
 
 		# TODO create all resources with the given logger attached
