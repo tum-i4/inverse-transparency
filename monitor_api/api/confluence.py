@@ -9,6 +9,7 @@ from typing import Dict, List, Tuple
 from flask import request
 from flask_restful import Resource, reqparse
 import requests
+import requests.auth
 
 from api.auth import BasicAuth
 from api.base import IApi, WrappedResourceBase
@@ -39,7 +40,7 @@ with open("config.json", "r") as config:
 class ConfluenceApi(IApi):
 
 	NAME = "confluence"
-	AUTH = BasicAuth(user=USER, password=PASSWORD)
+	AUTH = requests.auth.HTTPBasicAuth(username=USER, password=PASSWORD)
 
 	def __init__(self, logger_base:str):
 		my_path:str = logger_base + "." + ConfluenceApi.NAME
@@ -74,7 +75,7 @@ class ConfluenceApi(IApi):
 				api_name=ConfluenceApi.NAME,
 				target_url=api.path.join(base_url, self.RELATIVE_URL),
 				logger_base=logger_base,
-				authenticator=ConfluenceApi.AUTH,
+				auth=ConfluenceApi.AUTH,
 			)
 
 		def get(self):
@@ -94,7 +95,7 @@ class ConfluenceApi(IApi):
 				resource_name=self.NAME,
 				api_name=ConfluenceApi.NAME,
 				logger_base=logger_base,
-				authenticator=ConfluenceApi.AUTH,
+				auth=ConfluenceApi.AUTH,
 				template_url=api.path.join(base_url, self._TEMPLATE_URL),
 			)
 

@@ -7,6 +7,7 @@ import logging
 from typing import Dict, List, Tuple
 
 from flask_restful import Resource
+import requests.auth
 
 from api.auth import BasicAuth
 from api.base import IApi, WrappedResourceBase
@@ -34,7 +35,7 @@ with open("config.json", "r") as config:
 class JiraApi(IApi):
 
 	NAME = "jira"
-	AUTH = BasicAuth(user=USER, password=PASSWORD)
+	AUTH = requests.auth.HTTPBasicAuth(username=USER, password=PASSWORD)
 
 	def __init__(self, logger_base:str):
 		my_path:str = logger_base + "." + JiraApi.NAME
@@ -65,7 +66,7 @@ class JiraApi(IApi):
 				api_name=JiraApi.NAME,
 				target_url=api.path.join(base_url, self.RELATIVE_URL),
 				logger_base=logger_base,
-				authenticator=JiraApi.AUTH
+				auth=JiraApi.AUTH
 			)
 
 		def get(self):

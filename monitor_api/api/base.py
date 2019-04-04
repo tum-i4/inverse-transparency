@@ -9,6 +9,7 @@ from typing import Dict, List, Optional, Tuple
 from flask import request
 from flask_restful import Resource
 import requests
+import requests.auth
 
 from api.auth import Authenticator
 from log.entry import Entry
@@ -28,8 +29,14 @@ class IApi(ABC):
 class WrappedResourceBase(Resource):
 	""" A wrapped resource that pipes and logs requests. """
 
-	def __init__(self, resource_name:str, api_name:str, logger_base:str, authenticator:Authenticator,
-		target_url:Optional[str] = None, template_url:Optional[str] = None):
+	def __init__(self,
+		resource_name:str,
+		api_name:str,
+		logger_base:str,
+		auth:requests.auth.AuthBase,
+		target_url:Optional[str] = None,
+		template_url:Optional[str] = None
+	):
 		"""
 		:param target_url: A constant URL to target
 		:param template_url: A template URL (with replaceable arg) to target
@@ -41,7 +48,7 @@ class WrappedResourceBase(Resource):
 		self.target_url = target_url
 		self.template_url = template_url
 		self.logger = logging.getLogger(name=logger_base + "." + resource_name)
-		self.authenticator = authenticator
+		self.auth = auth
 		self.storage = Storage(filename="/var/log/mapi.log", api=api_name)
 
 		# TODO debug
@@ -65,10 +72,10 @@ class WrappedResourceBase(Resource):
 	def _get(self):
 		""" Wrapped GET (has to be explicitly linked to get()) """
 
-		req = requests.Request("GET", self.target_url, params=request.args)
+		req = requests.Request("GET", self.target_url, params=request.args, auth=self.auth)
 		# TODO Temp
 		# req = requests.Request("GET", "http://httpbin.org/json")
-		self.authenticator.authenticate(request=req)
+
 		with requests.Session() as s:
 			res = s.send(req.prepare())
 
