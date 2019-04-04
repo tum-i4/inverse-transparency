@@ -28,6 +28,8 @@ class IApi(ABC):
 class WrappedResourceBase(Resource):
 	""" A wrapped resource that pipes and logs requests. """
 
+	CONTENT_NOT_JSON_ERR:Tuple[Dict, int] = ({ "error_message" : "The API did not return JSON data" }, 500)
+
 	def __init__(self,
 		resource_name:str,
 		api_name:str,
@@ -77,6 +79,10 @@ class WrappedResourceBase(Resource):
 
 		with requests.Session() as s:
 			res = s.send(req.prepare())
+
+		# We currently only process JSON data
+		if not res.headers["content-type"] == "application/json":
+			return WrappedResourceBase.CONTENT_NOT_JSON_ERR
 
 		entry = Entry(method="GET", url=self.target_url, request_params=request.args.to_dict(flat=False), response_content=res.json())
 		self.logger.info(entry)
