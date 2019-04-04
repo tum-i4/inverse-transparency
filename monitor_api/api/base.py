@@ -11,7 +11,6 @@ from flask_restful import Resource
 import requests
 import requests.auth
 
-from api.auth import Authenticator
 from log.entry import Entry
 from log.store import Storage
 

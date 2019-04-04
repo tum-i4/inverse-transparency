@@ -11,7 +11,6 @@ from flask_restful import Resource, reqparse
 import requests
 import requests.auth
 
-from api.auth import BasicAuth
 from api.base import IApi, WrappedResourceBase
 import api.path
 

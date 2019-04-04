@@ -9,7 +9,6 @@ from typing import Dict, List, Tuple
 from flask_restful import Resource
 import requests.auth
 
-from api.auth import BasicAuth
 from api.base import IApi, WrappedResourceBase
 import api.path
 
