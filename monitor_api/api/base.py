@@ -75,11 +75,12 @@ class WrappedResourceBase(Resource):
 		""" Wrapped GET (has to be explicitly linked to get()) """
 
 		req = requests.Request("GET", self.target_url, params=request.args, auth=self.auth)
-		# TODO Temp
-		# req = requests.Request("GET", "http://httpbin.org/json")
 
 		with requests.Session() as s:
-			res = s.send(req.prepare())
+			# TODO The timeouts are very low for debug purposes – might need to be increased for production!
+			res = s.send(s.prepare_request(req), timeout=(0.1, 1))
+
+		# TODO Check if the timeout was activated and warn?
 
 		# We currently only process JSON data
 		if not api.tools.requests_Response_is_json(res):
