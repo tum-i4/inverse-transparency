@@ -24,14 +24,14 @@ _USERS:Dict[str, Tuple[str, str, str, bytes]] = {
 class Auth(ABC):
 	""" Authenticate requests """
 
-	@abstractmethod
 	@staticmethod
+	@abstractmethod
 	def get_user_readable(request:flask.Request) -> str:
 		""" Return a readable representation of the user that authorized the given request. """
 		raise NotImplementedError()
 
-	@abstractmethod
 	@staticmethod
+	@abstractmethod
 	def is_authorized_request(request:flask.Request) -> bool:
 		""" Verify securely whether the given request contains authorization corresponding to an authorized user. """
 		raise NotImplementedError()
