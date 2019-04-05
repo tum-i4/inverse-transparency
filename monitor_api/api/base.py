@@ -100,7 +100,15 @@ class WrappedResourceBase(Resource):
 		response_flask = api.tools.requests_Response_to_flask_Response(response_requests)
 		response_requests.close()
 
-		entry = Entry(method="GET", url=self.target_url, request_params=request.args.to_dict(flat=False), response_content=response_flask.get_json())
+		user, _ = api.auth.user_password_from(request.headers["Authorization"])
+
+		entry = Entry(
+			user=user,
+			method="GET",
+			url=self.target_url,
+			request_params=request.args.to_dict(flat=False),
+			response_content=response_flask.get_json()
+		)
 		self.logger.info(entry)
 		self.storage.add(entry)
 
