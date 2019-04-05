@@ -9,32 +9,23 @@ import werkzeug.datastructures as wz_ds
 def requests_Response_to_flask_Response(req_response:requests.Response) -> flask.Response:
 	""" Convert a `requests.Response` object to a `flask.Response` object. """
 
-	# flask.Response
-	# (response=None, status=None, headers=None, mimetype=None, content_type=None, direct_passthrough=False)
-	# ? response
-
-	# status:int
 	status_code:int = req_response.status_code
 
 	# headers:werkzeug.datastructures.Headers
 	headers = wz_ds.Headers()
-	for k, v in req_response.headers:
+	for k, v in req_response.headers.items():
 		headers.add(k, v)
 
-	# ? mimetype
-	# ? content_type
-	# ? direct_passthrough
+	content_type:str = req_response.headers["content-type"]
 
 	return flask.Response(
 		response=req_response.content,
 		status=status_code,
 		headers=headers,
-		mimetype=None,
-		content_type=None,
-		direct_passthrough=False
+		mimetype=None, # Not sure how to resolve – is automatically set anyways
+		content_type=content_type,
+		direct_passthrough=False # Probably better left as False
 	)
-
-	raise NotImplementedError()
 
 
 def requests_Response_is_json(req_response:requests.Response) -> bool:
