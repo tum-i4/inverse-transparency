@@ -5,7 +5,7 @@ from abc import ABC, abstractmethod
 import base64
 import re
 import secrets
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import flask
 
@@ -54,6 +54,15 @@ class BasicAuth(Auth):
 
 
 	@staticmethod
+	def auth_header_from(request:flask.Request) -> Optional[str]:
+		""" Return the BasicAuth header; None if not present. """
+		auth_key = "Authorization"
+		if auth_key not in request.headers:
+			return None
+		return request.headers[auth_key]
+
+
+	@staticmethod
 	def is_authorized_header(basic_auth_header:str) -> bool:
 		user, password = BasicAuth.user_password_from(basic_auth_header)
 
@@ -68,8 +77,7 @@ class BasicAuth(Auth):
 
 	@staticmethod
 	def is_authorized_flask_req(request:flask.Request) -> bool:
-		auth_key = "Authorization"
-		if auth_key not in request.headers:
+		basic_auth_header = BasicAuth.auth_header_from(request)
+		if not basic_auth_header:
 			return False
-		basic_auth_header = request.headers[auth_key]
 		return BasicAuth.is_authorized_header(basic_auth_header)
