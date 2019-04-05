@@ -6,6 +6,8 @@ import re
 import secrets
 from typing import Dict, List, Tuple
 
+import flask
+
 import api.sec
 
 
@@ -35,3 +37,14 @@ def is_authorized_header(basic_auth_header:str) -> bool:
 	received_pw_hash:str = api.sec.password_hash(password=password, salt=pw_salt)
 
 	return secrets.compare_digest(pw_hash, received_pw_hash)
+
+
+def is_authorized_flask_req(request:flask.Request) -> bool:
+	""" Verify securely whether the given request contains authorization corresponding to an authorized user. """
+
+	auth_key = "Authorization"
+	if auth_key not in request.headers:
+		return False
+
+	basic_auth_header = request.headers[auth_key]
+	return is_authorized_header(basic_auth_header)
