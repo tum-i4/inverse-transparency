@@ -78,18 +78,19 @@ class WrappedResourceBase(Resource):
 
 		with requests.Session() as s:
 			# TODO The timeouts are very low for debug purposes – might need to be increased for production!
-			res = s.send(s.prepare_request(req), timeout=(0.1, 1))
+			response_requests = s.send(s.prepare_request(req), timeout=(0.1, 1))
 
 		# TODO Check if the timeout was activated and warn?
 
 		# We currently only process JSON data
-		if not api.tools.requests_Response_is_json(res):
+		if not api.tools.requests_Response_is_json(response_requests):
 			return WrappedResourceBase.CONTENT_NOT_JSON_ERR
 
-		res_json = res.json()
+		response_flask = api.tools.requests_Response_to_flask_Response(response_requests)
+		response_requests.close()
 
-		entry = Entry(method="GET", url=self.target_url, request_params=request.args.to_dict(flat=False), response_content=res_json)
+		entry = Entry(method="GET", url=self.target_url, request_params=request.args.to_dict(flat=False), response_content=response_flask.get_json())
 		self.logger.info(entry)
 		self.storage.add(entry)
 
-		return res_json, res.status_code
+		return response_flask
