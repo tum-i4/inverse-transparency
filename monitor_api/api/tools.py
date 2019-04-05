@@ -13,6 +13,8 @@ def requests_Response_to_flask_Response(req_response:requests.Response) -> flask
 	# headers:werkzeug.datastructures.Headers
 	headers = wz_ds.Headers()
 	for k, v in req_response.headers.items():
+		if k not in ["Expires", "Server", "Cache-Control"]:
+			continue
 		headers.add(k, v)
 
 	content_type:str = req_response.headers["content-type"]
