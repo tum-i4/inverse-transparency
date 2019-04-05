@@ -8,20 +8,19 @@ import hashlib
 import secrets
 import sys
 
+import api.sec
+
 
 if __name__ == "__main__":
 	try:
 		parser = argparse.ArgumentParser(prog="pw_hash")
 		parser.add_argument("password", help="The password to hash")
-		parser.add_argument("--size", type=int, default=16, help="Size in bytes; in [0, 64]")
 		args = parser.parse_args()
 		password:str = args.password
-		size:int = args.size
 
-		salt:bytes = secrets.token_bytes(8)
-		pw_hash:str = hashlib.blake2b(bytes(password, encoding="utf-8"), salt=salt, digest_size=size).hexdigest()
+		pw_hash, salt = api.sec.password_hash_gen(password=password)
 
-		print("Password hash ({} Byte): {}\nSalt: {}".format(size, pw_hash, salt))
+		print("Password hash: {}\nSalt: {}".format(pw_hash, salt))
 
 	except KeyboardInterrupt:
 		# Exit code for Ctrl-C
