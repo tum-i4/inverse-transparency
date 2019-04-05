@@ -1,6 +1,7 @@
 # encoding=utf-8
 """ API authentication """
 
+from abc import ABC, abstractmethod
 import base64
 import re
 import secrets
@@ -20,38 +21,55 @@ _USERS:Dict[str, Tuple[str, str, str, bytes]] = {
 }
 
 
-def user_password_from(basic_auth_header:str) -> Tuple[str, str]:
-	""" Extract user and password from the given BasicAuth header. """
+class Auth(ABC):
+	""" Authenticate requests """
 
-	if not re.fullmatch(r"Basic\s\S+", basic_auth_header):
-		raise ValueError("Given input does not correspond to expected format")
+	@abstractmethod
+	@staticmethod
+	def get_user_readable(request:flask.Request) -> str:
+		""" Return a readable representation of the user that authorized the given request. """
+		raise NotImplementedError()
 
-	b64str:str = basic_auth_header[6:]
-	decoded_auth:str = base64.b64decode(b64str).decode(encoding="utf-8")
-	user, password = decoded_auth.split(":")
-	return user, password
-
-
-def is_authorized_header(basic_auth_header:str) -> bool:
-	""" Verify securely whether the given authorization corresponds to an authorized user. """
-
-	user, password = user_password_from(basic_auth_header)
-
-	if not user in _USERS:
-		return False
-
-	_, _, pw_hash, pw_salt = _USERS[user]
-	received_pw_hash:str = api.sec.password_hash(password=password, salt=pw_salt)
-
-	return secrets.compare_digest(pw_hash, received_pw_hash)
+	@abstractmethod
+	@staticmethod
+	def is_authorized_flask_req(request:flask.Request) -> bool:
+		""" Verify securely whether the given request contains authorization corresponding to an authorized user. """
+		raise NotImplementedError()
 
 
-def is_authorized_flask_req(request:flask.Request) -> bool:
-	""" Verify securely whether the given request contains authorization corresponding to an authorized user. """
+class BasicAuth(Auth):
+	""" Authenticate requests using HTTP Basic Authentication """
 
-	auth_key = "Authorization"
-	if auth_key not in request.headers:
-		return False
+	@staticmethod
+	def user_password_from(basic_auth_header:str) -> Tuple[str, str]:
+		""" Extract user and password from the given BasicAuth header. """
 
-	basic_auth_header = request.headers[auth_key]
-	return is_authorized_header(basic_auth_header)
+		if not re.fullmatch(r"Basic\s\S+", basic_auth_header):
+			raise ValueError("Given input does not correspond to expected format")
+
+		b64str:str = basic_auth_header[6:]
+		decoded_auth:str = base64.b64decode(b64str).decode(encoding="utf-8")
+		user, password = decoded_auth.split(":")
+		return user, password
+
+
+	@staticmethod
+	def is_authorized_header(basic_auth_header:str) -> bool:
+		user, password = BasicAuth.user_password_from(basic_auth_header)
+
+		if not user in _USERS:
+			return False
+
+		_, _, pw_hash, pw_salt = _USERS[user]
+		received_pw_hash:str = api.sec.password_hash(password=password, salt=pw_salt)
+
+		return secrets.compare_digest(pw_hash, received_pw_hash)
+
+
+	@staticmethod
+	def is_authorized_flask_req(request:flask.Request) -> bool:
+		auth_key = "Authorization"
+		if auth_key not in request.headers:
+			return False
+		basic_auth_header = request.headers[auth_key]
+		return BasicAuth.is_authorized_header(basic_auth_header)
