@@ -32,7 +32,7 @@ class Auth(ABC):
 
 	@abstractmethod
 	@staticmethod
-	def is_authorized_flask_req(request:flask.Request) -> bool:
+	def is_authorized_request(request:flask.Request) -> bool:
 		""" Verify securely whether the given request contains authorization corresponding to an authorized user. """
 		raise NotImplementedError()
 
@@ -76,7 +76,7 @@ class BasicAuth(Auth):
 
 
 	@staticmethod
-	def is_authorized_flask_req(request:flask.Request) -> bool:
+	def is_authorized_request(request:flask.Request) -> bool:
 		basic_auth_header = BasicAuth.auth_header_from(request)
 		if not basic_auth_header:
 			return False
