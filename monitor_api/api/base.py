@@ -10,6 +10,7 @@ from flask_restful import Resource
 import requests
 import requests.auth
 
+import api.auth
 import api.tools
 from log.entry import Entry
 from log.store import Storage
@@ -29,6 +30,7 @@ class WrappedResourceBase(Resource):
 	""" A wrapped resource that pipes and logs requests. """
 
 	CONTENT_NOT_JSON_ERR:Tuple[Dict, int] = ({ "error_message" : "The API did not return JSON data" }, 500)
+	NOT_AUTHORIZED_ERR:Tuple[str, int] =    ("not authorized", 401)
 
 	def __init__(self,
 		resource_name:str,
@@ -70,6 +72,16 @@ class WrappedResourceBase(Resource):
 			raise RuntimeError("Both URL attributes not set")
 
 
+	def _authorize(func): # pylint: disable-msg=no-self-argument
+		""" Authorization before any request is handled. """
+		def req(self):
+			if not api.auth.is_authorized_flask_req(request):
+				return WrappedResourceBase.NOT_AUTHORIZED_ERR
+			return func(self) # pylint: disable-msg=not-callable
+		return req
+
+
+	@_authorize
 	def _get(self):
 		""" Wrapped GET (has to be explicitly linked to get()) """
 
