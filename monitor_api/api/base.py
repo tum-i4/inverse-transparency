@@ -29,6 +29,8 @@ class IApi(ABC):
 class WrappedResourceBase(Resource):
 	""" A wrapped resource that pipes and logs requests. """
 
+	AUTH:api.auth.Auth = api.auth.BasicAuth()
+
 	CONTENT_NOT_JSON_ERR:Tuple[Dict, int] = ({ "error_message" : "The API did not return JSON data" }, 500)
 	NOT_AUTHORIZED_ERR:Tuple[str, int] =    ("not authorized", 401)
 
@@ -75,7 +77,7 @@ class WrappedResourceBase(Resource):
 	def _authorize(func): # pylint: disable-msg=no-self-argument
 		""" Authorization before any request is handled. """
 		def req(self):
-			if not api.auth.is_authorized_flask_req(request):
+			if not WrappedResourceBase.AUTH.is_authorized_request(request):
 				return WrappedResourceBase.NOT_AUTHORIZED_ERR
 			return func(self) # pylint: disable-msg=not-callable
 		return req
@@ -100,10 +102,10 @@ class WrappedResourceBase(Resource):
 		response_flask = api.tools.requests_Response_to_flask_Response(response_requests)
 		response_requests.close()
 
-		user, _ = api.auth.user_password_from(request.headers["Authorization"])
+		user_readable:str = WrappedResourceBase.AUTH.get_user_readable(request)
 
 		entry = Entry(
-			user=user,
+			user=user_readable,
 			method="GET",
 			url=self.target_url,
 			request_params=request.args.to_dict(flat=False),
