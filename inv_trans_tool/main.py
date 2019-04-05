@@ -27,11 +27,11 @@ class MonitorTool(QMainWindow):
 		# TODO auto sign-in?
 		# self.ui.screens.setCurrentIndex(0)
 		# TODO DEBUG MODE: INSTANT SIGN IN
-		self.load_monitor_screen(user_id="valentin")
+		self.load_monitor_screen(user_id="frauke")
 
 		# Add an "About" menu bar
 		menu:QMenu = self.ui.menubar.addMenu("About")
-		action:QAction = menu.addAction("Monitor tool v {}".format(VERSION))
+		action:QAction = menu.addAction("Monitor tool v{}".format(VERSION))
 		action.setDisabled(True)
 
 		self.ui.sign_in_button.clicked.connect(self.sign_in)
