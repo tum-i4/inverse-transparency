@@ -63,6 +63,17 @@ class BasicAuth(Auth):
 
 
 	@staticmethod
+	def get_user_readable(request:flask.Request) -> str:
+		basic_auth_header = BasicAuth.auth_header_from(request)
+		if not basic_auth_header:
+			raise ValueError("Given request does not contain a HTTP Basic Auth header!")
+
+		user, _ = BasicAuth.user_password_from(basic_auth_header)
+		first, last, _, _ = _USERS[user]
+		return last + ", " + first
+
+
+	@staticmethod
 	def is_authorized_header(basic_auth_header:str) -> bool:
 		user, password = BasicAuth.user_password_from(basic_auth_header)
 
