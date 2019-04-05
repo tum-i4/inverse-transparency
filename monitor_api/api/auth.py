@@ -20,8 +20,8 @@ _USERS:Dict[str, Tuple[str, str, str, bytes]] = {
 }
 
 
-def is_authorized_header(basic_auth_header:str) -> bool:
-	""" Verify securely whether the given authorization corresponds to an authorized user. """
+def user_password_from(basic_auth_header:str) -> Tuple[str, str]:
+	""" Extract user and password from the given BasicAuth header. """
 
 	if not re.fullmatch(r"Basic\s\S+", basic_auth_header):
 		raise ValueError("Given input does not correspond to expected format")
@@ -29,6 +29,13 @@ def is_authorized_header(basic_auth_header:str) -> bool:
 	b64str:str = basic_auth_header[6:]
 	decoded_auth:str = base64.b64decode(b64str).decode(encoding="utf-8")
 	user, password = decoded_auth.split(":")
+	return user, password
+
+
+def is_authorized_header(basic_auth_header:str) -> bool:
+	""" Verify securely whether the given authorization corresponds to an authorized user. """
+
+	user, password = user_password_from(basic_auth_header)
 
 	if not user in _USERS:
 		return False
