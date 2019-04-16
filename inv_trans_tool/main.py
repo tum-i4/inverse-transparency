@@ -12,6 +12,7 @@ from PySide2.QtCore import Qt, QFile, QAbstractTableModel, QAbstractItemModel, Q
 from PySide2.QtUiTools import QUiLoader
 
 from gui.main_ui import Ui_MainWindow
+import log_dao
 
 
 VERSION = 0.1
@@ -59,13 +60,21 @@ class MonitorTool(QMainWindow):
 		self.ui.activity_table.itemClicked.connect(self.at_item_clicked)
 
 		self.ui.activity_table.setColumnCount(4)
-		self.ui.activity_table.setRowCount(2)
 		self.ui.activity_table.setHorizontalHeaderLabels(["Responsible", "Tool", "Usage", "Date"])
 
-		first_row:Tuple[QTableWidgetItem, QTableWidgetItem, QTableWidgetItem, QTableWidgetItem] = (
-			QTableWidgetItem("Strauch, Frank"), QTableWidgetItem("JIRA"), QTableWidgetItem("Read"), QTableWidgetItem("2019-03-12 15:30"))
-		for i in range(len(first_row)):
-			self.ui.activity_table.setItem(0, i, first_row[i])
+		rows = log_dao.load_all(user_id=user_id)
+		rows_widgets:List[List[QTableWidgetItem]] = [
+			list(map(lambda s: QTableWidgetItem(s), row)) for row in [
+				[r, t, u, d.strftime("%Y-%m-%d %H:%M")] for (r, t, u, d) in rows
+			]
+		]
+
+		self.ui.activity_table.setRowCount(len(rows_widgets))
+
+		for i in range(len(rows_widgets)):
+			row = rows_widgets[i]
+			for j in range(len(row)):
+				self.ui.activity_table.setItem(i, j, row[j])
 
 
 	def at_item_clicked(self, item:QTableWidgetItem):
