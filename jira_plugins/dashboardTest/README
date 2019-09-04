@@ -1,3 +1,7 @@
+IMPORTANT: java -version needs to be "1.8"!
+
+===
+
 You have successfully created an Atlassian Plugin!
 
 Here are the SDK commands you'll use immediately:
