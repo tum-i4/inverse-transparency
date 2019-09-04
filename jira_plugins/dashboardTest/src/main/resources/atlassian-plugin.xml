@@ -28,7 +28,10 @@
   </web-section>  
   <web-item name="Dashboard" i18n-name-key="dashboard.name" key="dashboard" section="transparenz-item-link/transparenz-section" weight="1000"> 
     <description key="dashboard.description">The Dashboard Plugin</description>  
-    <label key="dashboard.label"></label>  
+    <label key="dashboard.label"/>  
     <link linkId="dashboard-link">http://www.inversetransparenz.de/</link> 
-  </web-item>
+  </web-item>  
+  <gadget name="Performance Warnings" i18n-name-key="performance-warnings.name" key="performance-warnings" location="gadgets/performance-warnings/gadget.xml"> 
+    <description key="performance-warnings.description">The Performance Warnings Plugin</description> 
+  </gadget>
 </atlassian-plugin>
