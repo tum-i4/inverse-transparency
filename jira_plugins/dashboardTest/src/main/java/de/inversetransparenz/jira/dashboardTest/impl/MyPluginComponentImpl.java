@@ -1,9 +1,9 @@
-package de.inversetransparenz.jira.dashboard_test.impl;
+package de.inversetransparenz.jira.dashboardTest.impl;
 
 import com.atlassian.plugin.spring.scanner.annotation.export.ExportAsService;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.atlassian.sal.api.ApplicationProperties;
-import de.inversetransparenz.jira.dashboard_test.api.MyPluginComponent;
+import de.inversetransparenz.jira.dashboardTest.api.MyPluginComponent;
 
 import javax.inject.Inject;
 import javax.inject.Named;

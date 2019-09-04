@@ -1,8 +1,8 @@
-package ut.de.inversetransparenz.jira.dashboard_test;
+package ut.de.inversetransparenz.jira.dashboardTest;
 
 import org.junit.Test;
-import de.inversetransparenz.jira.dashboard_test.api.MyPluginComponent;
-import de.inversetransparenz.jira.dashboard_test.impl.MyPluginComponentImpl;
+import de.inversetransparenz.jira.dashboardTest.api.MyPluginComponent;
+import de.inversetransparenz.jira.dashboardTest.impl.MyPluginComponentImpl;
 
 import static org.junit.Assert.assertEquals;
 

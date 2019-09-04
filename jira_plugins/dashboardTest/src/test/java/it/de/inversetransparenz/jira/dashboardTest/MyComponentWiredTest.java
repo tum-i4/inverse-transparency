@@ -1,9 +1,9 @@
-package it.de.inversetransparenz.jira.dashboard_test;
+package it.de.inversetransparenz.jira.dashboardTest;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import com.atlassian.plugins.osgi.test.AtlassianPluginsTestRunner;
-import de.inversetransparenz.jira.dashboard_test.api.MyPluginComponent;
+import de.inversetransparenz.jira.dashboardTest.api.MyPluginComponent;
 import com.atlassian.sal.api.ApplicationProperties;
 
 import static org.junit.Assert.assertEquals;

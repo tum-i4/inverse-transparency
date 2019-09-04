@@ -1,4 +1,4 @@
-package de.inversetransparenz.jira.dashboard_test.api;
+package de.inversetransparenz.jira.dashboardTest.api;
 
 public interface MyPluginComponent
 {
