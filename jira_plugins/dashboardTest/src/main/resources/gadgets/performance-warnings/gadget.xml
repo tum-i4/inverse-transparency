@@ -11,20 +11,39 @@
                 JIRA
             </Param>
         </Optional>
+        <Require feature="dynamic-height"/>
         <Require feature="setprefs"/>
         #supportedLocales("${MODULE_KEY}")
     </ModulePrefs>
     <UserPref name="isConfigured" datatype="hidden" default_value="false"/>
     <Content type="html" view="profile">
         <![CDATA[
-            <!-- Bootstrap CSS -->
-            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-            <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-            Hello World!
+        <div id="spacerbox" class="container-fluid" style="margin-top: 15px">
+            <div class="row justify-content-md-center">
+                <h4>Scope: Today, All</h4>
+            </div>
+            <div id="alertlist">
+                <div class="alert alert-warning" role="alert">
+                    <a target="_parent" href="/jira/secure/ViewProfile.jspa?name=frauke" class="alert-link">@frauke</a> worked overtime three days in a row.
+                </div>
+                <div class="alert alert-danger" role="alert">
+                    <a target="_parent" href="/jira/secure/ViewProfile.jspa?name=admin" class="alert-link">@valentin</a> has violated the policy "no-work-during-holidays"!
+                </div>
+                <div class="alert alert-warning" role="alert">
+                    <a target="_parent" href="/jira/secure/ViewProfile.jspa?name=frauke" class="alert-link">@frauke</a> worked overtime five days in a row.
+                </div>
+                <div class="alert alert-danger" role="alert">
+                    There are 10 open and overdue tasks!
+                </div>
+            </div>
+        </div>
         ]]>
     </Content>
 </Module>
