@@ -51,6 +51,8 @@
             </div>
         </div>
 
+        <script src="__ATLASSIAN_BASE_URL__/download/resources/de.inversetransparenz.jira.dashboardTest/dashboardTest.js"></script>
+
         <script type="text/javascript">
             var gadget = AJS.Gadget({
                 baseUrl: "__ATLASSIAN_BASE_URL__",
