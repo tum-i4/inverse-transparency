@@ -11,13 +11,19 @@
   <!-- add our i18n resource -->  
   <resource type="i18n" name="i18n" location="dashboardTest"/>  
   <!-- add our web resources -->  
-  <web-resource key="dashboardTest-resources" name="dashboardTest Web Resources"> 
+
+  <web-resource key="dashboardTest-resources" name="dashboardTest Web Resources">
     <dependency>com.atlassian.auiplugin:ajs</dependency>  
     <resource type="download" name="dashboardTest.css" location="/css/dashboardTest.css"/>  
-    <resource type="download" name="dashboardTest.js" location="/js/dashboardTest.js"/>  
+    <!-- <resource type="download" name="dashboardTest.js" location="js/dashboardTest.js"/> -->
     <resource type="download" name="images/" location="/images"/>  
     <context>dashboardTest</context> 
-  </web-resource>  
+  </web-resource>
+
+  <resource type="download" name="dashboardTest.js" location="js/dashboardTest.js"> 
+    <param name="content-type" value="application/javascript"/> 
+  </resource> 
+  
   <web-item name="myItem" i18n-name-key="transparenz-item.name" key="transparenz-item" section="system.top.navigation.bar" weight="1000"> 
     <description key="transparenz-item.description">The myItem Plugin</description>  
     <label key="transparenz-item.label"/>  
