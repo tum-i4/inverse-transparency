@@ -11,13 +11,19 @@
                 JIRA
             </Param>
         </Optional>
-        <Require feature="dynamic-height"/>
         <Require feature="setprefs"/>
+        <Require feature="views" />
+        <Require feature="dynamic-height"/>
         #supportedLocales("${MODULE_KEY}")
     </ModulePrefs>
     <UserPref name="isConfigured" datatype="hidden" default_value="false"/>
     <Content type="html" view="profile">
         <![CDATA[
+        #requireResource("com.atlassian.gadgets.publisher:ajs-gadgets")
+        #requireResource("com.atlassian.jira.gadgets:common")
+
+        #includeResources()
+
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
@@ -44,6 +50,15 @@
                 </div>
             </div>
         </div>
+
+        <script type="text/javascript">
+            var gadget = AJS.Gadget({
+                baseUrl: "__ATLASSIAN_BASE_URL__",
+                view: {
+                    onResizeAdjustHeight: true
+                }
+            });
+        </script>
         ]]>
     </Content>
 </Module>
