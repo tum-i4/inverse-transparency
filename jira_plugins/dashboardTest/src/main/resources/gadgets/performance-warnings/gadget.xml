@@ -36,18 +36,10 @@
                 <h4>Scope: Today, All</h4>
             </div>
             <div id="alertlist">
-                <div class="alert alert-warning" role="alert">
-                    <a target="_parent" href="/jira/secure/ViewProfile.jspa?name=frauke" class="alert-link">@frauke</a> worked overtime three days in a row.
-                </div>
-                <div class="alert alert-danger" role="alert">
-                    <a target="_parent" href="/jira/secure/ViewProfile.jspa?name=admin" class="alert-link">@valentin</a> has violated the policy "no-work-during-holidays"!
-                </div>
-                <div class="alert alert-warning" role="alert">
-                    <a target="_parent" href="/jira/secure/ViewProfile.jspa?name=frauke" class="alert-link">@frauke</a> worked overtime five days in a row.
-                </div>
-                <div class="alert alert-danger" role="alert">
-                    There are 10 open and overdue tasks!
-                </div>
+                <div class="alert alert-dark" role="alert">Loading...</div>
+            </div>
+            <div class="row">
+                <button type="button" class="btn btn-light">Light</button>
             </div>
         </div>
 
