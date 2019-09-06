@@ -29,5 +29,25 @@ function _create_alert(warning_level, warning_text) {
     return alert;
 };
 
+/**
+ * Creates an HTML <a> element linking to the given user.
+ * 
+ * @param {String} username
+ *   The username (may not contain "@")
+ */
+function _create_user_link(username) {
+    if (username.includes("@")) {
+        throw "user_name may not contain \"@\"";
+    }
+
+    var a = document.createElement("A");
+    a.setAttribute("target", "_parent");
+    a.setAttribute("href", "/jira/secure/ViewProfile.jspa?name=" + username)
+    a.className = "alert-link";
+    a.innerHTML = "@" + username;
+
+    return a;
+}
+
 // This script is run after the document has loaded
 populate();
