@@ -46,6 +46,17 @@ function _create_user_link(username) {
 }
 
 function populate() {
+    // 1. Load warnings
+    console.error("WARNINGS ARE CURRENTLY FAKE!")
+    var warnings = [
+        { level: "danger", text: "(!) Debug code – warnings are fake (!)" },
+        { level: "warning", text: _create_user_link("frauke") + "worked overtime three days in a row." },
+        { level: "danger", text: _create_user_link("admin") + "has violated the policy \"no-work-during-holidays\"!" },
+        { level: "danger", text: _create_user_link("frauke") + "worked overtime five days in a row." },
+        { level: "warning", text: "There are 10 open and overdue tasks!" },
+    ]
+
+    // 2. Populate interface
     throw "NOT IMPLEMENTED";
 };
 
