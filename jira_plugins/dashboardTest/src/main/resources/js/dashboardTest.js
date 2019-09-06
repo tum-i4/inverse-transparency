@@ -54,10 +54,14 @@ function populate() {
         { level: "danger", text: _create_user_link("admin") + "has violated the policy \"no-work-during-holidays\"!" },
         { level: "danger", text: _create_user_link("frauke") + "worked overtime five days in a row." },
         { level: "warning", text: "There are 10 open and overdue tasks!" },
-    ]
+    ];
 
     // 2. Populate interface
-    throw "NOT IMPLEMENTED";
+    var alertlist = document.querySelector("#alertlist");
+    warnings.forEach(function(warning) {
+        var warning_alert = _create_alert(warning.level, warning.text);
+        alertlist.appendChild(warning_alert);
+    });
 };
 
 // This script is run after the document has loaded
