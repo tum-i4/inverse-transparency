@@ -1,11 +1,11 @@
-console.log('Hello world!');
-var a = [1, 2, 3];
-console.log(a);
+/**
+ * @file
+ * Functionality of the performance warnings dashboard.
+ */
 
-function init() {
-    var box = document.getElementById("spacerbox");
-    box.style.backgroundColor = "red";
-    // document.querySelector("#spacerbox")
+function populate() {
+    throw "NOT IMPLEMENTED";
 };
 
-init();
+// This script is run after the document has loaded
+populate();
