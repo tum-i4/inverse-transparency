@@ -56,8 +56,15 @@ function populate() {
         { level: "warning", text: "There are 10 open and overdue tasks!" },
     ];
 
-    // 2. Populate interface
     var alertlist = document.querySelector("#alertlist");
+
+    // 2. Remove "Loading..." placeholder
+    if (alertlist.childElementCount != 1) {
+        throw "Invalid DOM state!";
+    }
+    alertlist.removeChild(alertlist.children[0]);
+
+    // 3. Populate interface
     warnings.forEach(function(warning) {
         var warning_alert = _create_alert(warning.level, warning.text);
         alertlist.appendChild(warning_alert);
