@@ -71,5 +71,10 @@ function populate() {
     });
 };
 
+function recalculate_height() {
+    console.error("NOT IMPLEMENTED: recalculate_height()");
+}
+
 // This script is run after the document has loaded
 populate();
+recalculate_height();
