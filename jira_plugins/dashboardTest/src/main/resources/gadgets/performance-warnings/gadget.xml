@@ -5,6 +5,7 @@
                  description="[INV] See warnings about the performance"
                  author="Inv_T"
                  author_email=""
+                 height="350"
                  >
         <Optional feature="gadget-directory">
             <Param name="categories">
