@@ -3,10 +3,6 @@
  * Functionality of the performance warnings dashboard.
  */
 
-function populate() {
-    throw "NOT IMPLEMENTED";
-};
-
 /**
  * Creates an HTML <div> element styled as an alert with the given level and text.
  * 
@@ -48,6 +44,10 @@ function _create_user_link(username) {
 
     return a;
 }
+
+function populate() {
+    throw "NOT IMPLEMENTED";
+};
 
 // This script is run after the document has loaded
 populate();
