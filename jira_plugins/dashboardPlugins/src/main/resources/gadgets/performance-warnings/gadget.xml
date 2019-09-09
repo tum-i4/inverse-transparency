@@ -15,6 +15,7 @@
         <Require feature="setprefs"/>
         <Require feature="views" />
         <Require feature="dynamic-height"/>
+        <Require feature="oauthpopup" />
         #supportedLocales("${MODULE_KEY}")
     </ModulePrefs>
     <UserPref name="isConfigured" datatype="hidden" default_value="false"/>
