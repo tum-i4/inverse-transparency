@@ -39,9 +39,6 @@
             <div id="alertlist">
                 <div class="alert alert-dark" role="alert">Loading...</div>
             </div>
-            <div class="row">
-                <button type="button" class="btn btn-light">Light</button>
-            </div>
         </div>
 
         <script src="__ATLASSIAN_BASE_URL__/download/resources/de.inversetransparenz.jira.dashboardPlugins/dashboardPlugins.js"></script>
