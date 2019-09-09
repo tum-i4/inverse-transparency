@@ -40,7 +40,7 @@ function _create_user_link(username) {
 
     var a = document.createElement("A");
     a.setAttribute("target", "_parent");
-    a.setAttribute("href", "/jira/secure/ViewProfile.jspa?name=" + username)
+    a.setAttribute("href", "/jira/secure/ViewProfile.jspa?name=" + username);
     a.className = "alert-link";
     a.innerHTML = "@" + username;
 
@@ -56,7 +56,7 @@ function _span(text) {
 
 function populate() {
     // 1. Load warnings
-    console.error("WARNINGS ARE CURRENTLY FAKE!")
+    console.error("WARNINGS ARE CURRENTLY FAKE!");
     var warnings = [
         { level: "danger", children: [_span("(!) Debug code – warnings are fake (!)")] },
         { level: "warning", children: [_create_user_link("frauke"), _span(" worked overtime three days in a row.")] },
