@@ -8,10 +8,10 @@
  * 
  * @param {String} warning_level
  *   Either "warning" or "danger"
- * @param {String} warning_text
- *   The text to appear on the warning
+ * @param {Array} warning_text_children
+ *   The HTML elements describing the warning text.
  */
-function _create_alert(warning_level, warning_text) {
+function _create_alert(warning_level, warning_text_children) {
     // Invalid warning_level
     if (["warning", "danger"].indexOf(warning_level) < 0) {
         throw "Invalid warning level";
@@ -20,7 +20,9 @@ function _create_alert(warning_level, warning_text) {
     var alert = document.createElement("DIV");
     alert.className = "alert alert-" + warning_level;
     alert.setAttribute("role", "alert");
-    alert.innerHTML = warning_text;
+    warning_text_children.forEach(function(warning_text_child) {
+        alert.appendChild(warning_text_child);
+    });
 
     return alert;
 };
@@ -56,11 +58,11 @@ function populate() {
     // 1. Load warnings
     console.error("WARNINGS ARE CURRENTLY FAKE!")
     var warnings = [
-        { level: "danger", text: "(!) Debug code – warnings are fake (!)" },
-        { level: "warning", text: _create_user_link("frauke") + "worked overtime three days in a row." },
-        { level: "danger", text: _create_user_link("admin") + "has violated the policy \"no-work-during-holidays\"!" },
-        { level: "danger", text: _create_user_link("frauke") + "worked overtime five days in a row." },
-        { level: "warning", text: "There are 10 open and overdue tasks!" },
+        { level: "danger", children: [_span("(!) Debug code – warnings are fake (!)")] },
+        { level: "warning", children: [_create_user_link("frauke"), _span(" worked overtime three days in a row.")] },
+        { level: "danger", children: [_create_user_link("admin"), _span(" has violated the policy \"no-work-during-holidays\"!")] },
+        { level: "danger", children: [_create_user_link("frauke"), _span(" worked overtime five days in a row.")] },
+        { level: "warning", children: [_span("There are 10 open and overdue tasks!")] },
     ];
 
     var alertlist = document.querySelector("#alertlist");
@@ -73,7 +75,7 @@ function populate() {
 
     // 3. Populate interface
     warnings.forEach(function(warning) {
-        var warning_alert = _create_alert(warning.level, warning.text);
+        var warning_alert = _create_alert(warning.level, warning.children);
         alertlist.appendChild(warning_alert);
     });
 };
