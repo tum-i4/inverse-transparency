@@ -45,6 +45,13 @@ function _create_user_link(username) {
     return a;
 }
 
+/** Creates an HTML <span> element containing the given text. */
+function _span(text) {
+    var s = document.createElement("SPAN");
+    s.innerHTML = text;
+    return s;
+}
+
 function populate() {
     // 1. Load warnings
     console.error("WARNINGS ARE CURRENTLY FAKE!")
