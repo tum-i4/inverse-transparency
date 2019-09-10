@@ -1,6 +1,8 @@
 # encoding=utf-8
 """ <see> API class """
 
+from typing import Dict
+
 from flask import request
 from flask_restful import Api, Resource, reqparse
 
@@ -30,6 +32,6 @@ class SeeApi(IApi):
 			parser.add_argument("do", help="Data owner")
 			parser.add_argument("app", help="Affected app")
 			parser.add_argument("du", help="Data user")
-			args = parser.parse_args(strict=True)
+			args:Dict = parser.parse_args(strict=True)
 
 			dao.store(do=args["do"], app=args["app"], du=args["du"])
