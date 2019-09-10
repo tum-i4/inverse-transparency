@@ -5,7 +5,7 @@
 import logging
 
 from flask import Flask
-from flask_restful import Resource, Api
+from flask_restful import Api
 
 from api.confluence import ConfluenceApi
 from api.jira import JiraApi
