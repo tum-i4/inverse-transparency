@@ -34,4 +34,4 @@ class SeeApi(IApi):
 			parser.add_argument("du", help="Data user")
 			args:Dict = parser.parse_args(strict=True)
 
-			dao.store(do=args["do"], app=args["app"], du=args["du"])
+			dao.store(**args)
