@@ -30,8 +30,9 @@ class SeeApi(IApi):
 		def put(self):
 			parser = reqparse.RequestParser()
 			parser.add_argument("do", help="Data owner")
-			parser.add_argument("app", help="Affected app")
 			parser.add_argument("du", help="Data user")
+			parser.add_argument("app", help="Affected app")
+			parser.add_argument("data", help="Affected data")
 			args:Dict = parser.parse_args(strict=True)
 
 			dao.store(**args)
