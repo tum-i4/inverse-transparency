@@ -12,7 +12,7 @@ def join(first:str, *others:str) -> str:
 	- The returned path will never end with "/", except when enforced (see below)
 	- Empty components will be discarded
 	- A trailing slash can be enforced with a final component "/"
-	- Caution: "http://" will be stripped of its slashes!
+	- Caution: "http://" will be stripped of its slashes! Instead pass "http://www.de" or similar.
 	"""
 
 	s = "/"
