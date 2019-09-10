@@ -36,3 +36,5 @@ class SeeApi(IApi):
 			args:Dict = parser.parse_args(strict=True)
 
 			dao.store(**args)
+
+			return ("Got it", 200)
