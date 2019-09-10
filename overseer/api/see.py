@@ -25,4 +25,11 @@ class SeeApi(IApi):
 		BASE_PATH = "/see"
 
 		def put(self):
+			parser = reqparse.RequestParser()
+			parser.add_argument("do", help="Data owner")
+			parser.add_argument("app", help="Affected app")
+			parser.add_argument("du", help="Data user")
+			args = parser.parse_args(strict=True)
+
+			# TODO functionality
 			raise NotImplementedError()
