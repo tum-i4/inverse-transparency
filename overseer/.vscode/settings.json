@@ -1,0 +1,6 @@
+{
+	"python.pythonPath": ".venv/bin/python3",
+	"python.linting.pylintPath": ".venv/bin/pylint",
+	"python.linting.mypyPath": ".venv/bin/mypy",
+	"python.testing.pytestPath": ".venv/bin/pytest",
+}
