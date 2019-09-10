@@ -1,7 +1,8 @@
 # encoding=utf-8
 """ <see> API class """
 
-from flask_restful import Api
+from flask import request
+from flask_restful import Api, Resource, reqparse
 
 from api.base import IApi
 
@@ -15,4 +16,13 @@ class SeeApi(IApi):
 
 	def add_resources(self, app_api:Api):
 		""" See `IApi.add_resources` """
-		raise NotImplementedError()
+		app_api.add_resource(self.See, self.See.BASE_PATH)
+
+
+	class See(Resource):
+		""" The API resource /see """
+
+		BASE_PATH = "/see"
+
+		def put(self):
+			raise NotImplementedError()
