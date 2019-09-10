@@ -5,6 +5,7 @@ from flask import request
 from flask_restful import Api, Resource, reqparse
 
 from api.base import IApi
+import dao
 
 
 class SeeApi(IApi):
@@ -31,5 +32,4 @@ class SeeApi(IApi):
 			parser.add_argument("du", help="Data user")
 			args = parser.parse_args(strict=True)
 
-			# TODO functionality
-			raise NotImplementedError()
+			dao.store(do=args["do"], app=args["app"], du=args["du"])
