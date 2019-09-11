@@ -63,6 +63,8 @@ function _create_user_link(username) {
     a.className = "alert-link";
     a.innerHTML = "@" + username;
 
+    warn_overseer(username, "?? TODO ??");
+
     return a;
 }
 
