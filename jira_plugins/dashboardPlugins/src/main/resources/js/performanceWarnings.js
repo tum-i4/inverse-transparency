@@ -10,12 +10,16 @@ function warn_overseer(data_owner_id, affected_data) {
     formData.append("app", "jira");
     formData.append("data", affected_data);
 
-    // TODO: Adapt URL
-    fetch("http://localhost:5000/see", {
+    var fetchBody = {
         method: "POST",
         mode: "no-cors",
         body: formData
-    });
+    };
+
+    // TODO: Adapt URL
+    const fetchUrl = "http://localhost:5000/see";
+
+    fetch(fetchUrl, fetchBody);
 };
 
 /**
