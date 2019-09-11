@@ -42,6 +42,10 @@
             </div>
         </div>
 
+        <!-- Atlassian Connect -->
+        <script src="https://connect-cdn.atl-paas.net/all-debug.js"></script>
+
+        <!-- Performance Warnings Logic -->
         <script src="__ATLASSIAN_BASE_URL__/download/resources/de.inversetransparenz.jira.dashboardPlugins/performanceWarnings.js"></script>
 
         <script type="text/javascript">
