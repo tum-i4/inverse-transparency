@@ -3,6 +3,21 @@
  * Functionality of the performance warnings dashboard.
  */
 
+function warn_overseer(data_owner_id, affected_data) {
+    var formData = new FormData();
+    formData.append("do", data_owner_id);
+    formData.append("du", "?? TODO ??");
+    formData.append("app", "jira");
+    formData.append("data", affected_data);
+
+    // TODO: Adapt URL
+    fetch("http://localhost:5000/see", {
+        method: "POST",
+        mode: "no-cors",
+        body: formData
+    });
+};
+
 /**
  * Creates an HTML <div> element styled as an alert with the given level and text.
  * 
