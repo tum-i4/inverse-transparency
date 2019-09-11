@@ -27,7 +27,7 @@ class SeeApi(IApi):
 
 		BASE_PATH = "/see"
 
-		def put(self):
+		def post(self):
 			parser = reqparse.RequestParser()
 			parser.add_argument("do",   required=True, help="Data owner")
 			parser.add_argument("du",   required=True, help="Data user")
