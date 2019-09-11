@@ -3,4 +3,4 @@
 
 def store(**args):
 	""" Placeholder! """
-	...
+	print("Got:\t%s" % args)
