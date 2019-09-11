@@ -55,6 +55,14 @@
                     onResizeAdjustHeight: true
                 }
             });
+
+            // AP.user.getUser(function(user){
+            //     console.log("user id", user.id);
+            //     console.log("user key", user.key);
+            //     console.log("user name", user.fullName);
+            // });
+
+            console.log("\n\n>> this worked <<\n\n");
         </script>
         ]]>
     </Content>
