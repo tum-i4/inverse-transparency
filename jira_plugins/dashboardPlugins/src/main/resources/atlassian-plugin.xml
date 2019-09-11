@@ -20,7 +20,7 @@
     <context>dashboardPlugins</context> 
   </web-resource>
 
-  <resource type="download" name="dashboardPlugins.js" location="js/performanceWarnings.js"> 
+  <resource type="download" name="performanceWarnings.js" location="js/performanceWarnings.js">
     <param name="content-type" value="application/javascript"/> 
   </resource> 
   
