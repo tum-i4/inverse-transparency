@@ -60,6 +60,7 @@
         <script type="text/javascript">
             var gadget = AJS.Gadget({
                 baseUrl: "__ATLASSIAN_BASE_URL__",
+                useOauth: "/rest/gadget/1.0/currentUser",
                 view: {
                     onResizeAdjustHeight: true
                 }
