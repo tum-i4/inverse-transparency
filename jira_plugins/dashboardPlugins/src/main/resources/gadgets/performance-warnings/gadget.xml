@@ -49,16 +49,6 @@
             </div>
         </div>
 
-        <!-- I hope I'm missing something. I must be. -->
-        <script type="text/javascript">
-            window.name = "{ \"env\" : " + window.env + ", \"window.name\" : \"" + window.name + "\" }";
-            console.log("So what just happened ... well we:\n"
-                + "\t- Changed window.name to \"" + window.name + "\"");
-        </script>
-
-        <!-- Atlassian Connect -->
-        <!-- <script src="https://connect-cdn.atl-paas.net/all-debug.js"></script> -->
-
         <!-- Performance Warnings Logic -->
         <script src="__ATLASSIAN_BASE_URL__/download/resources/de.inversetransparenz.jira.dashboardPlugins/performanceWarnings.js"></script>
 
@@ -70,12 +60,6 @@
                     onResizeAdjustHeight: true
                 }
             });
-
-            // AP.user.getUser(function(user){
-            //     console.log("user id", user.id);
-            //     console.log("user key", user.key);
-            //     console.log("user name", user.fullName);
-            // });
 
             console.log("\n\n>> this worked <<\n\n");
         </script>
