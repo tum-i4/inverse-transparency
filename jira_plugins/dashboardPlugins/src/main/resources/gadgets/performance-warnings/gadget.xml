@@ -65,11 +65,16 @@
 
             // Globals
             window.currentUser = "";
+
+            gadget.showLoading();
         </script>
 
         <!-- Performance Warnings Logic -->
         <script src="__ATLASSIAN_BASE_URL__/download/resources/de.inversetransparenz.jira.dashboardPlugins/performanceWarnings.js"></script>
 
+        <script type="text/javascript">
+            gadget.hideLoading();
+        </script>
         ]]>
     </Content>
 </Module>
