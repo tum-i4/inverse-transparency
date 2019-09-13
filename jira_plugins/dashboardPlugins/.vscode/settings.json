@@ -3,4 +3,5 @@
 		"**/target/**": true
 	},
 	"editor.formatOnSave": true,
+	"xml.format.splitAttributes": true,
 }
