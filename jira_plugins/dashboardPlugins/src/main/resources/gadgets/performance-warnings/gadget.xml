@@ -58,14 +58,13 @@
                 view: {
                     onResizeAdjustHeight: true,
                     // Required!
-                    template: function (args) {},
+                    template: function (args) { },
                     args: [{ }]
                 }
             });
 
+            // Globals
             window.currentUser = "";
-
-            console.log("\n\n>> this worked <<\n\n");
         </script>
 
         <!-- Performance Warnings Logic -->
