@@ -4,6 +4,31 @@
  */
 
 function warn_overseer(data_owner_id, affected_data) {
+    if (!currentUser) {
+        fetch("/jira/rest/auth/1/session")
+            .then(function (r) {
+                if (r.ok) {
+                    return r.json();
+                } else {
+                    console.error("JIRA API call failed");
+                    return "undefined";
+                }
+            })
+            .then(function (rJson) {
+                if (!rJson) {
+                    currentUser = "NOT_SET";
+                } else {
+                    currentUser = rJson.name;
+                }
+
+                // Reentrance after completion
+                warn_overseer(data_owner_id, affected_data);
+            });
+
+        // Reentrance happens in the callback
+        return;
+    }
+
     var formData = new FormData();
     formData.append("do", data_owner_id);
     formData.append("du", currentUser);
