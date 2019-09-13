@@ -10,9 +10,15 @@ import requests
 import requests.exceptions
 
 
-def main(jira_url: str):
+def main(jira_url: str, login: str):
     if not jira_url.startswith("http"):
         jira_url = f"http://{jira_url}"
+
+    try:
+        user, password = login.split(":")
+    except ValueError:
+        print(f'Couldn\'t split login at ":": {login}')
+        sys.exit(1)
 
     # 0. Check connectivity
     try:
@@ -31,8 +37,13 @@ if __name__ == "__main__":
         parser.add_argument(
             "jira_url", help="The URL of the Jira instance, e.g. localhost:2929/jira"
         )
+        parser.add_argument(
+            "--login",
+            default="admin:admin",
+            help="Optionally specify the login to use, formatted as user:password (default: admin:admin)",
+        )
         args = parser.parse_args()
-        main(jira_url=args.jira_url)
+        main(jira_url=args.jira_url, login=args.login)
 
     except KeyboardInterrupt:
         # Exit code for Ctrl-C
