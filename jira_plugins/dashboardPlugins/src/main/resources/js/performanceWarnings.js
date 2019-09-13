@@ -39,7 +39,7 @@ function _create_alert(warning_level, warning_text_children) {
     var alert = document.createElement("DIV");
     alert.className = "alert alert-" + warning_level;
     alert.setAttribute("role", "alert");
-    warning_text_children.forEach(function(warning_text_child) {
+    warning_text_children.forEach(function (warning_text_child) {
         alert.appendChild(warning_text_child);
     });
 
@@ -95,7 +95,7 @@ function populate() {
     alertlist.removeChild(alertlist.children[0]);
 
     // 3. Populate interface
-    warnings.forEach(function(warning) {
+    warnings.forEach(function (warning) {
         var warning_alert = _create_alert(warning.level, warning.children);
         alertlist.appendChild(warning_alert);
     });
