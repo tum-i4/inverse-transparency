@@ -3,6 +3,9 @@
  * Functionality of the performance warnings dashboard.
  */
 
+// TODO: Adapt URL
+const overseerUrl = "http://localhost:5000/see";
+
 function warn_overseer(data_owner_id, affected_data) {
     if (!currentUser) {
         fetch("/jira/rest/auth/1/session")
@@ -41,10 +44,7 @@ function warn_overseer(data_owner_id, affected_data) {
         body: formData
     };
 
-    // TODO: Adapt URL
-    const fetchUrl = "http://localhost:5000/see";
-
-    fetch(fetchUrl, fetchBody);
+    fetch(overseerUrl, fetchBody);
 };
 
 /**
