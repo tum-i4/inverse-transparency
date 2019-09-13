@@ -50,9 +50,6 @@
             </div>
         </div>
 
-        <!-- Performance Warnings Logic -->
-        <script src="__ATLASSIAN_BASE_URL__/download/resources/de.inversetransparenz.jira.dashboardPlugins/performanceWarnings.js"></script>
-
         <!-- Initialize some global Atlassian stuff for our logic below. -->
         <script type="text/javascript">
             var gadget = AJS.Gadget({
@@ -68,6 +65,10 @@
 
             console.log("\n\n>> this worked <<\n\n");
         </script>
+
+        <!-- Performance Warnings Logic -->
+        <script src="__ATLASSIAN_BASE_URL__/download/resources/de.inversetransparenz.jira.dashboardPlugins/performanceWarnings.js"></script>
+
         ]]>
     </Content>
 </Module>
