@@ -26,7 +26,8 @@
             type="html"
             view="profile">
         <![CDATA[
-        <!-- #requireResource("com.atlassian.gadgets.publisher:ajs-gadgets") -->
+        <!-- Required for the Atlassian gadget framework -->
+        #requireResource("com.atlassian.gadgets.publisher:ajs-gadgets")
         #requireResource("com.atlassian.jira.gadgets:common")
 
         #includeResources()
@@ -52,12 +53,16 @@
         <!-- Performance Warnings Logic -->
         <script src="__ATLASSIAN_BASE_URL__/download/resources/de.inversetransparenz.jira.dashboardPlugins/performanceWarnings.js"></script>
 
+        <!-- Initialize some global Atlassian stuff for our logic below. -->
         <script type="text/javascript">
             var gadget = AJS.Gadget({
                 baseUrl: "__ATLASSIAN_BASE_URL__",
                 useOauth: "/rest/gadget/1.0/currentUser",
                 view: {
-                    onResizeAdjustHeight: true
+                    onResizeAdjustHeight: true,
+                    // Required!
+                    template: function (args) {},
+                    args: [{ }]
                 }
             });
 
