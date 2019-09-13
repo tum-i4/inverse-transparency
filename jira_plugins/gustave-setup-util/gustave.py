@@ -34,8 +34,27 @@ def main(jira_url: str, login: str):
         print("Connection error...")
         sys.exit(1)
 
+    print(f"Jira successfully contacted at {jira_url}")
+
     # 1. Create user "inv_api_user"
-    pass
+    iau_username: str = "inv_api_user"
+    print(f'Creating user "{iau_username}"...')
+    if (
+        requests.get(full_api_url, params={"username": iau_username})
+    ).status_code == 200:
+        print(f"User exists already")
+    else:
+        response: requests.Response = requests.post(
+            full_api_url,
+            json={
+                "name": iau_username,
+                "password": "iau_pwd_9#",
+                "emailAddress": "no_email@nooooemail.xyz",
+            },
+        )
+
+        if response.status_code != 200:
+            print(f'API error: [{response.status_code}] "{response.text}"')
 
 
 if __name__ == "__main__":
