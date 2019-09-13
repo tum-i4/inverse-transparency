@@ -63,6 +63,8 @@
                 }
             });
 
+            window.currentUser = "";
+
             console.log("\n\n>> this worked <<\n\n");
         </script>
 

@@ -6,7 +6,7 @@
 function warn_overseer(data_owner_id, affected_data) {
     var formData = new FormData();
     formData.append("do", data_owner_id);
-    formData.append("du", "NOT_SET");
+    formData.append("du", currentUser);
     formData.append("app", "jira");
     formData.append("data", affected_data);
 
