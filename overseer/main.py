@@ -20,4 +20,4 @@ see_api: IApi = SeeApi()
 see_api.add_resources(app_api=app_api)
 
 # Flask handles Ctrl-C
-app.run(debug=True)
+app.run(debug=True, port="5421")
