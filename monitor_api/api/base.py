@@ -1,14 +1,14 @@
 # encoding=utf-8
 """ API wrapper base """
 
-from abc import ABC, abstractmethod
 import logging
+from abc import ABC, abstractmethod
 from typing import Dict, List, Optional, Tuple
 
-from flask import request
-from flask_restful import Resource
 import requests
 import requests.auth
+from flask import request
+from flask_restful import Resource
 
 import api.auth
 import api.tools

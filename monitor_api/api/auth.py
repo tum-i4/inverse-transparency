@@ -1,16 +1,15 @@
 # encoding=utf-8
 """ API authentication """
 
-from abc import ABC, abstractmethod
 import base64
 import re
 import secrets
+from abc import ABC, abstractmethod
 from typing import Dict, List, Optional, Tuple
 
 import flask
 
 import api.sec
-
 
 # TODO We currently fake a user DB with this
 _USERS: Dict[str, Tuple[str, str, str, bytes]] = {
@@ -103,4 +102,3 @@ class BasicAuth(Auth):
         if not basic_auth_header:
             return False
         return BasicAuth.is_authorized_header(basic_auth_header)
-

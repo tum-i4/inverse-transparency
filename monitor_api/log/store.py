@@ -1,8 +1,8 @@
 # encoding=utf-8
 """ Log storage """
 
-import time
 import json
+import time
 
 from log.entry import Entry
 import log.format

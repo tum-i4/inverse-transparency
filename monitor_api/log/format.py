@@ -4,7 +4,6 @@
 import json
 from logging import Formatter
 
-
 ISO_DATE_FORMAT: str = "%Y-%m-%dT%H:%M:%S%z"
 
 READABLE_LOG_FORMAT: str = "%(asctime)s (%(name)s | %(levelname)s) %(message)s"

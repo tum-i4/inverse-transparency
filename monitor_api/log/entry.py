@@ -38,4 +38,3 @@ class Entry(object):
             "request_params": self.request_params,
             "response_content": self.response_content,
         }
-

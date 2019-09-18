@@ -6,13 +6,12 @@ import logging
 from typing import Dict, List, Tuple
 
 import apiu.path
-from flask import request
-from flask_restful import Resource, reqparse
 import requests
 import requests.auth
+from flask import request
+from flask_restful import Resource, reqparse
 
 from api.base import IApi, WrappedResourceBase
-
 
 API_BASE_PATH = "rest/api/"
 with open("config.json", "r") as config:
@@ -102,4 +101,3 @@ class ConfluenceApi(IApi):
             """ Return the history of a particular piece of content. """
             self.target_url = self._build_url(id)
             return self._get()
-
