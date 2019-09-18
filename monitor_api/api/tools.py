@@ -35,7 +35,7 @@ def requests_Response_to_flask_Response(
 def requests_Response_is_json(req_response: requests.Response) -> bool:
     """ Safely determine whether the given response consists of JSON data. """
 
-    if not req_response.headers["content-type"] == "application/json":
+    if not req_response.headers["content-type"].startswith("application/json"):
         return False
 
     try:
