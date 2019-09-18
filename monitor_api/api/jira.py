@@ -5,11 +5,11 @@ import json
 import logging
 from typing import Dict, List, Tuple
 
+import apiu.path
 from flask_restful import Resource
 import requests.auth
 
 from api.base import IApi, WrappedResourceBase
-import api.path
 
 
 API_BASE_PATH = "rest/"
@@ -56,13 +56,13 @@ class JiraApi(IApi):
 		""" api/2/configuration """
 
 		NAME = "configuration"
-		RELATIVE_URL = api.path.join(API_BASE_PATH, API_2_PATH, NAME)
+		RELATIVE_URL = apiu.path.join(API_BASE_PATH, API_2_PATH, NAME)
 
 		def __init__(self, base_url:str, logger_base:str):
 			super().__init__(
 				resource_name=self.NAME,
 				api_name=JiraApi.NAME,
-				target_url=api.path.join(base_url, self.RELATIVE_URL),
+				target_url=apiu.path.join(base_url, self.RELATIVE_URL),
 				logger_base=logger_base,
 				auth=JiraApi.AUTH
 			)

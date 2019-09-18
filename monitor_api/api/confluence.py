@@ -5,13 +5,13 @@ import json
 import logging
 from typing import Dict, List, Tuple
 
+import apiu.path
 from flask import request
 from flask_restful import Resource, reqparse
 import requests
 import requests.auth
 
 from api.base import IApi, WrappedResourceBase
-import api.path
 
 
 API_BASE_PATH = "rest/api/"
@@ -65,13 +65,13 @@ class ConfluenceApi(IApi):
 		""" /search """
 
 		NAME = "search"
-		RELATIVE_URL = api.path.join(API_BASE_PATH, NAME)
+		RELATIVE_URL = apiu.path.join(API_BASE_PATH, NAME)
 
 		def __init__(self, base_url:str, logger_base:str):
 			super().__init__(
 				resource_name=self.NAME,
 				api_name=ConfluenceApi.NAME,
-				target_url=api.path.join(base_url, self.RELATIVE_URL),
+				target_url=apiu.path.join(base_url, self.RELATIVE_URL),
 				logger_base=logger_base,
 				auth=ConfluenceApi.AUTH,
 			)
@@ -85,7 +85,7 @@ class ConfluenceApi(IApi):
 		""" /content/{id}/history """
 
 		NAME = "content_history"
-		_TEMPLATE_URL = api.path.join(API_BASE_PATH, "content", "%s", "history")
+		_TEMPLATE_URL = apiu.path.join(API_BASE_PATH, "content", "%s", "history")
 		RELATIVE_URL = _TEMPLATE_URL % "<int:id>"
 
 		def __init__(self, base_url:str, logger_base:str):
@@ -94,7 +94,7 @@ class ConfluenceApi(IApi):
 				api_name=ConfluenceApi.NAME,
 				logger_base=logger_base,
 				auth=ConfluenceApi.AUTH,
-				template_url=api.path.join(base_url, self._TEMPLATE_URL),
+				template_url=apiu.path.join(base_url, self._TEMPLATE_URL),
 			)
 
 		def get(self, id):
