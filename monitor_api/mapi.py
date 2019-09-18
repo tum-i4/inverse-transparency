@@ -3,7 +3,7 @@
 """ Monitor API """
 
 if __name__ != "__main__":
-	raise ImportError("This module may only be run, not imported")
+    raise ImportError("This module may only be run, not imported")
 
 import logging
 
@@ -23,22 +23,33 @@ app_api = Api(app)
 
 # TODO configure logger
 logging.basicConfig(
-	format=log.format.READABLE_LOG_FORMAT,
-	datefmt=log.format.ISO_DATE_FORMAT
+    format=log.format.READABLE_LOG_FORMAT, datefmt=log.format.ISO_DATE_FORMAT
 )
 logger = logging.getLogger(MY_LOGGER_PATH)
 
 # Connect Confluence API
 logger.info("Initializing Confluence API")
 confluence_base_path = apiu.path.join(API_BASE_PATH, "confluence")
-for resource, relative_path, kwargs_dict in ConfluenceApi(logger_base=MY_LOGGER_PATH).get_resources():
-	app_api.add_resource(resource, apiu.path.join(confluence_base_path, relative_path), resource_class_kwargs=kwargs_dict)
+for resource, relative_path, kwargs_dict in ConfluenceApi(
+    logger_base=MY_LOGGER_PATH
+).get_resources():
+    app_api.add_resource(
+        resource,
+        apiu.path.join(confluence_base_path, relative_path),
+        resource_class_kwargs=kwargs_dict,
+    )
 
 # Connect JIRA API
 logger.info("Initializing JIRA API")
 jira_base_path = apiu.path.join(API_BASE_PATH, "jira")
-for resource, relative_path, kwargs_dict in JiraApi(logger_base=MY_LOGGER_PATH).get_resources():
-	app_api.add_resource(resource, apiu.path.join(jira_base_path, relative_path), resource_class_kwargs=kwargs_dict)
+for resource, relative_path, kwargs_dict in JiraApi(
+    logger_base=MY_LOGGER_PATH
+).get_resources():
+    app_api.add_resource(
+        resource,
+        apiu.path.join(jira_base_path, relative_path),
+        resource_class_kwargs=kwargs_dict,
+    )
 
 # TODO connect further APIs
 

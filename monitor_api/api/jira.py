@@ -6,20 +6,19 @@ import logging
 from typing import Dict, List, Tuple
 
 import apiu.path
-from flask_restful import Resource
 import requests.auth
+from flask_restful import Resource
 
 from api.base import IApi, WrappedResourceBase
-
 
 API_BASE_PATH = "rest/"
 # This part is not used for all API endpoints!
 API_2_PATH = "api/2/"
 with open("config.json", "r") as config:
-	config_content = json.load(config)["jira"]
-	BASE_URL = config_content["base_url"]
-	USER = config_content["user"]
-	PASSWORD = config_content["password"]
+    config_content = json.load(config)["jira"]
+    BASE_URL = config_content["base_url"]
+    USER = config_content["user"]
+    PASSWORD = config_content["password"]
 
 
 # Paths – ? = not explored, o = explored, t = to implement, x = done
@@ -32,41 +31,43 @@ with open("config.json", "r") as config:
 
 class JiraApi(IApi):
 
-	NAME = "jira"
-	AUTH = requests.auth.HTTPBasicAuth(username=USER, password=PASSWORD)
+    NAME = "jira"
+    AUTH = requests.auth.HTTPBasicAuth(username=USER, password=PASSWORD)
 
-	def __init__(self, logger_base:str):
-		my_path:str = logger_base + "." + JiraApi.NAME
-		self.logger = logging.getLogger(name=my_path)
+    def __init__(self, logger_base: str):
+        my_path: str = logger_base + "." + JiraApi.NAME
+        self.logger = logging.getLogger(name=my_path)
 
-		# TODO create all resources with the given logger attached
+        # TODO create all resources with the given logger attached
 
-		# Resource, URL, kwargs
-		self.resources:List[Tuple[Resource, str, Dict[str, object]]] = [
-			(JiraApi.ConfigurationResource,
-				JiraApi.ConfigurationResource.RELATIVE_URL,
-				{"base_url" : BASE_URL, "logger_base" : my_path}),
-		]
+        # Resource, URL, kwargs
+        self.resources: List[Tuple[Resource, str, Dict[str, object]]] = [
+            (
+                JiraApi.ConfigurationResource,
+                JiraApi.ConfigurationResource.RELATIVE_URL,
+                {"base_url": BASE_URL, "logger_base": my_path},
+            )
+        ]
 
-	def get_resources(self) -> List[Tuple[Resource, str, Dict[str, object]]]:
-		return self.resources
+    def get_resources(self) -> List[Tuple[Resource, str, Dict[str, object]]]:
+        return self.resources
 
+    class ConfigurationResource(WrappedResourceBase):
+        """ api/2/configuration """
 
-	class ConfigurationResource(WrappedResourceBase):
-		""" api/2/configuration """
+        NAME = "configuration"
+        RELATIVE_URL = apiu.path.join(API_BASE_PATH, API_2_PATH, NAME)
 
-		NAME = "configuration"
-		RELATIVE_URL = apiu.path.join(API_BASE_PATH, API_2_PATH, NAME)
+        def __init__(self, base_url: str, logger_base: str):
+            super().__init__(
+                resource_name=self.NAME,
+                api_name=JiraApi.NAME,
+                target_url=apiu.path.join(base_url, self.RELATIVE_URL),
+                logger_base=logger_base,
+                auth=JiraApi.AUTH,
+            )
 
-		def __init__(self, base_url:str, logger_base:str):
-			super().__init__(
-				resource_name=self.NAME,
-				api_name=JiraApi.NAME,
-				target_url=apiu.path.join(base_url, self.RELATIVE_URL),
-				logger_base=logger_base,
-				auth=JiraApi.AUTH
-			)
+        def get(self):
+            """ Returns the information if the optional features in JIRA are enabled or disabled. """
+            return self._get()
 
-		def get(self):
-			""" Returns the information if the optional features in JIRA are enabled or disabled. """
-			return self._get()
