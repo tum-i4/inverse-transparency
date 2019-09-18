@@ -6,8 +6,10 @@ if __name__ != "__main__":
     raise ImportError("This module may only be run, not imported")
 
 import logging
+import sys
 
 import apiu.path
+import requests
 from flask import Flask
 from flask_restful import Api
 
@@ -17,6 +19,7 @@ import log.format
 
 MY_LOGGER_PATH = "mapi"
 API_BASE_PATH = ""
+OVERSEER_URL = "http://localhost:5421/see"
 
 app = Flask(__name__)
 app_api = Api(app)
@@ -52,6 +55,13 @@ for resource, relative_path, kwargs_dict in JiraApi(
     )
 
 # TODO connect further APIs
+
+# Try to connect to Overseer
+try:
+    requests.get(OVERSEER_URL)
+except requests.exceptions.ConnectionError:
+    print(f"Overseer not reachable at {OVERSEER_URL}")
+    sys.exit(1)
 
 # Flask handles Ctrl-C
 app.run(debug=True)
