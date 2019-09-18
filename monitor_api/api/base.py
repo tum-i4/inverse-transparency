@@ -13,7 +13,7 @@ from flask_restful import Resource
 import api.auth
 import api.tools
 from log.entry import Entry
-from log.store import Storage
+from see.connector import SeeConnector
 
 
 class IApi(ABC):
@@ -58,7 +58,7 @@ class WrappedResourceBase(Resource):
         self.template_url = template_url
         self.logger = logging.getLogger(name=logger_base + "." + resource_name)
         self.auth = auth
-        self.storage = Storage(filename="/var/log/mapi.log", api=api_name)
+        self.see_connector = SeeConnector(app=api_name)
 
         # TODO debug
         self.logger.setLevel(logging.DEBUG)
@@ -96,7 +96,9 @@ class WrappedResourceBase(Resource):
 
         with requests.Session() as s:
             # TODO The timeouts are very low for debug purposes – might need to be increased for production!
-            response_requests = s.send(s.prepare_request(req), timeout=(0.1, 1))
+            response_requests: requests.Response = s.send(
+                s.prepare_request(req), timeout=(0.1, 1)
+            )
 
         # TODO Check if the timeout was activated and warn?
 
@@ -119,6 +121,6 @@ class WrappedResourceBase(Resource):
             response_content=response_flask.get_json(),
         )
         self.logger.info(entry)
-        self.storage.add(entry)
+        self.see_connector.send(entry)
 
         return response_flask
