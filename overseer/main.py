@@ -4,10 +4,11 @@
 
 import logging
 
-from api.base import IApi
-from api.see import SeeApi
 from flask import Flask
 from flask_restful import Api
+
+from api.base import IApi
+from api.see import SeeApi
 
 app = Flask(__name__)
 app_api = Api(app)

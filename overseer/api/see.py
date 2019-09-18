@@ -3,10 +3,11 @@
 
 from typing import Dict
 
-import dao
-from api.base import IApi
 from flask import request
 from flask_restful import Api, Resource, reqparse
+
+import dao
+from api.base import IApi
 
 
 class SeeApi(IApi):
