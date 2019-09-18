@@ -16,10 +16,10 @@ from flask_restful import Api
 from api.confluence import ConfluenceApi
 from api.jira import JiraApi
 import log.format
+from see import OVERSEER_URL
 
 MY_LOGGER_PATH = "mapi"
 API_BASE_PATH = ""
-OVERSEER_URL = "http://localhost:5421/see"
 
 app = Flask(__name__)
 app_api = Api(app)
