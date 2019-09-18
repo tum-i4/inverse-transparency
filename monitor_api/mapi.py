@@ -62,6 +62,7 @@ try:
 except requests.exceptions.ConnectionError:
     print(f"Overseer not reachable at {OVERSEER_URL}")
     sys.exit(1)
+print("Overseer online ✔")
 
 # Flask handles Ctrl-C
 app.run(debug=True)
