@@ -1,5 +1,6 @@
 """ <see> API class """
 
+import datetime as dt
 from typing import Dict
 
 from flask import request
@@ -25,6 +26,8 @@ class SeeApi(IApi):
         BASE_PATH = "/see"
 
         def post(self):
+            """ Add a new entry to the seen db. """
+
             parser = reqparse.RequestParser()
             parser.add_argument("do", required=True, help="Data owner")
             parser.add_argument("du", required=True, help="Data user")
@@ -32,6 +35,7 @@ class SeeApi(IApi):
             parser.add_argument("data", required=True, help="Affected data")
             args: Dict = parser.parse_args(strict=True)
 
+            args["time"] = dt.datetime.now().strftime("%Y-%m-%dT%H:%M:%S%z")
             dao.store(**args)
 
             return ("Got it", 200)
