@@ -4,15 +4,15 @@
 import sys
 from typing import List, Tuple
 
-# pylint: disable-msg=no-name-in-module
-from PySide2.QtWidgets import (QMainWindow, QApplication, QStatusBar, QMessageBox, QMenuBar, QMenu, QAction,
-	QTableWidget, QTableWidgetItem, QWidget)
-from PySide2.QtCore import Qt, QFile, QAbstractTableModel, QAbstractItemModel, QModelIndex
-from PySide2.QtUiTools import QUiLoader
-
-from gui.main_ui import Ui_MainWindow
 import log_dao
-
+from gui.main_ui import Ui_MainWindow
+from PySide2.QtCore import (QAbstractItemModel, QAbstractTableModel, QFile,
+                            QModelIndex, Qt)
+from PySide2.QtUiTools import QUiLoader
+import log_dao
+from PySide2.QtWidgets import (QAction, QApplication, QMainWindow, QMenu,
+                               QMenuBar, QMessageBox, QStatusBar, QTableWidget,
+                               QTableWidgetItem, QWidget)
 
 VERSION = 0.1
 

@@ -7,4 +7,4 @@ import main
 
 
 def test_func():
-	assert(3+3 == 6)
+    assert 3 + 3 == 6
