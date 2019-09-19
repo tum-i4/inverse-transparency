@@ -95,6 +95,7 @@ class WrappedResourceBase(Resource):
 
         with requests.Session() as s:
             # TODO The timeouts are very low for debug purposes – might need to be increased for production!
+            # TODO What if Jira suddenly requires us to authenticate with a Captcha?
             response_requests: requests.Response = s.send(
                 s.prepare_request(req), timeout=(0.1, 1)
             )
