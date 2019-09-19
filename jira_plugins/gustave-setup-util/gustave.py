@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!.venv/bin/python3
 """ gustave sets up Jira
 Name inspired by: M. Gustave, the concierge in "The Grand Budapest Hotel" """
 
