@@ -1,4 +1,3 @@
-# encoding=utf-8
 """ <see> API class """
 
 from typing import Dict

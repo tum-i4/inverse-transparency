@@ -1,4 +1,3 @@
-# encoding=utf-8
 """ Confluence API endpoints """
 
 import json

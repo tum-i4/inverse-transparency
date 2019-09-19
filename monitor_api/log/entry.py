@@ -1,4 +1,3 @@
-# encoding=utf-8
 """ Entry class """
 
 import json

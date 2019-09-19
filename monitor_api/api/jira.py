@@ -1,4 +1,3 @@
-# encoding=utf-8
 """ JIRA API endpoints """
 
 import json

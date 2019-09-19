@@ -1,4 +1,3 @@
-# encoding=utf-8
 """ API wrapper base """
 
 import logging

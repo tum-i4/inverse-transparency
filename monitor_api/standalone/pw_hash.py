@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# encoding=utf-8
 """ Generate password hash """
 
 if __name__ != "__main__":

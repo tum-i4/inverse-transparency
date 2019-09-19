@@ -1,5 +1,4 @@
 #!.venv/bin/python3
-# encoding=utf-8
 """ Monitor API """
 
 if __name__ != "__main__":

@@ -1,4 +1,3 @@
-# encoding=utf-8
 """ DAO module """
 
 import datetime as dt
