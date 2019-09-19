@@ -6,7 +6,7 @@ import os
 import os.path
 
 
-def store(**args):
+def store(**kwargs):
     """ Placeholder! """
 
     if os.path.basename(os.getcwd()) != "overseer":
@@ -14,5 +14,5 @@ def store(**args):
 
     with dbm.open("dao/seen.dbm", "c") as db:
         key: str = dt.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
-        db[key] = str(args)
-        print("Stored:\t%s" % args)
+        db[key] = str(kwargs)
+        print("Stored:\t%s" % kwargs)
