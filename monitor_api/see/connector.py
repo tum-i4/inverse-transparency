@@ -20,11 +20,11 @@ class SeeConnector(object):
         """ Alert the Overseer about a data access. """
 
         entry_dict: Dict[str, str] = entry.to_dict()
-        du: str = entry_dict.pop("user")
+        data_user: str = entry_dict.pop("user")
 
         request_body: Dict = {
             "do": "NOT_YET_DETERMINED",
-            "du": entry.user,
+            "du": data_user,
             "app": self.app,
             "data": entry_dict,
         }
