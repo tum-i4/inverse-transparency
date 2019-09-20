@@ -26,6 +26,8 @@ class Block(object):
         timestamp_dt = timestamp_dt or dt.datetime.now()
         self.timestamp: str = timestamp_dt.strftime("%Y-%m-%dT%H:%M:%S%z")
 
+        self.hash = self._hash()
+
     def _hash(self) -> str:
         """ Hash the block contents with SHA3_256 and return the hex digest. """
         stringified: str = reduce(
