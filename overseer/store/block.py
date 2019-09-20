@@ -1,6 +1,7 @@
 """ Block class """
 
 import datetime as dt
+from functools import reduce
 import json
 from hashlib import sha3_256
 from typing import Optional
@@ -27,13 +28,9 @@ class Block(object):
 
     def _hash(self) -> str:
         """ Hash the block contents with SHA3_256 and return the hex digest. """
-        stringified: str = json.dumps(
-            {
-                "index": self.index,
-                "content": self.content,
-                "previous_hash": self.previous_hash,
-                "timestamp": self.timestamp,
-            },
-            sort_keys=True,
+        stringified: str = reduce(
+            (lambda x, y: x + y),
+            map(str, [self.index, self.content, self.previous_hash, self.timestamp]),
+            "",
         )
         return sha3_256(stringified.encode()).hexdigest()
