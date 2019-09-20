@@ -14,14 +14,16 @@ class Block(object):
         index: int,
         content,
         previous_hash: str,
-        timestamp: Optional[dt.datetime] = None,
+        timestamp_dt: Optional[dt.datetime] = None,
     ):
         """ If timestamp is not given, the current time is assumed. """
 
         self.index: int = index
         self.content = content
         self.previous_hash: str = previous_hash
-        self.timestamp: dt.datetime = timestamp or dt.datetime.now()  # .strftime("%Y-%m-%dT%H:%M:%S")
+
+        timestamp_dt = timestamp_dt or dt.datetime.now()
+        self.timestamp: str = timestamp_dt.strftime("%Y-%m-%dT%H:%M:%S%z")
 
     def _hash(self) -> str:
         """ Hash the block contents with SHA3_256 and return the hex digest. """
