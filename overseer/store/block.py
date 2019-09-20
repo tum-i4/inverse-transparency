@@ -17,7 +17,7 @@ class Block(object):
         previous_hash: str,
         timestamp_dt: Optional[dt.datetime] = None,
     ):
-        """ If timestamp is not given, the current time is assumed. """
+        """ Ctor. If timestamp is not given, the current time is assumed. """
 
         self.index: int = index
         self.content = content
