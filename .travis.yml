@@ -9,11 +9,11 @@ matrix:
         - pipenv install
       script: make test
 
-    - language: python
-      python: 3.6
-      before_install:
-        - cd monitor_api
-      install:
-        - pip install pipenv
-        - pipenv install
-      script: pytest
+    # - language: python
+    #   python: 3.6
+    #   before_install:
+    #     - cd monitor_api
+    #   install:
+    #     - pip install pipenv
+    #     - pipenv install
+    #   script: pytest
