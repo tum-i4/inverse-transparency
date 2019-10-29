@@ -41,7 +41,21 @@ def read_csv(file_path: str, data: List[Dict]) -> List[str]:
 
     Returns: List of keys found
     """
-    raise NotImplementedError()
+
+    list_of_rows: List[List[str]] = []
+    with open(file_path, newline="") as file_pointer:
+        file_reader = csv.reader(file_pointer, delimiter=",", quotechar='"')
+        for row in file_reader:
+            list_of_rows.append(row)
+
+    keys, vals = list_of_rows[0], list_of_rows[1:]
+    for row in vals:
+        row_dict: Dict = dict()
+        for k, v in zip(keys, row):
+            row_dict[k] = v
+        data.append(row_dict)
+
+    return keys
 
 
 if __name__ == "__main__":
