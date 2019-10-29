@@ -1,0 +1,1045 @@
+Summary,Issue key,Issue id,Issue Type,Status,Project key,Project name,Project type,Project lead,Project description,Project url,Priority,Resolution,Assignee,Reporter,Creator,Created,Updated,Last Viewed,Resolved,Affects Version/s,Affects Version/s,Fix Version/s,Fix Version/s,Component/s,Component/s,Component/s,Due Date,Votes,Labels,Description,Environment,Original Estimate,Remaining Estimate,Time Spent,Work Ratio,Σ Original Estimate,Σ Remaining Estimate,Σ Time Spent,Security Level,Outward issue link (Cloners),Outward issue link (Related),Outward issue link (Sequence),Outward issue link (Superset),Attachment,Attachment,Custom field (3Scale PT Tested upstream),Custom field (3scale PT Docs),Custom field (3scale PT Product Specs),Custom field (3scale PT Product Update Ready),Custom field (3scale PT Released In Saas),Custom field (3scale PT Verified Product),Custom field (Affected EPP Document),Custom field (Affected Jars),Custom field (Affects),Custom field (Affects Build),Custom field (Analysis Document),Custom field (Background and Context),Custom field (Blocked Tests),Custom field (Bugzilla References),Custom field (CDW blocker),Custom field (CDW devel_ack),Custom field (CDW docs_ack),Custom field (CDW exception),Custom field (CDW pm_ack),Custom field (CDW qa_ack),Custom field (CDW release),Custom field (Class of work),Custom field (Code Sample),Custom field (Component Fix Version(s)),Custom field (Customer Name),Custom field (Date of First Comment),Custom field (Defect Tracker URL),Custom field (Deployment Notes),Custom field (Developer),Custom field (Doc Required),Custom field (Docs QE Status),Custom field (EAP Docs SME),Custom field (EAP PT Analysis Document (AD)),Custom field (EAP PT Community Docs (CD)),Custom field (EAP PT Docs Analysis (DA)),Custom field (EAP PT Pre-Checked (PC)),Custom field (EAP PT Product Docs (PD)),Custom field (EAP PT Test Dev (TD)),Custom field (EAP PT Test Plan (TP)),Custom field (EAP Testing By),Custom field (Eng. priority),Custom field (Engineering Response),Custom field (Epic Colour),Custom field (Epic Link),Custom field (Epic Name),Custom field (Epic Status),Custom field (Epic Type),Custom field (Estimated Difficulty),Custom field (External Issue URL),Custom field (External issue ID),Custom field (External issue ID),Custom field (Features),Custom field (Fix Build),Custom field (Forum Reference),Custom field (GSS Priority),Custom field (Git Pull Request),Custom field (Git Pull Request),Custom field (Help Desk Ticket Reference),Custom field (Microrelease version),Custom field (Migration Text),Custom field (NEEDINFO),Custom field (NEEDINFO Due Date),Custom field (Notes),Custom field (Number of attachments),Custom field (Number of comments),Custom field (Original story points),Custom field (PDD Priority),Custom field (Parent Link),Custom field (Patch Instructions),Custom field (Patch Repository Link),Custom field (Percent complete),Custom field (Percent confident),Custom field (Primary SME),Custom field (Product Management Response),Custom field (QE Acceptance Test Link),Custom field (QE Estimate),Custom field (QE Status),Custom field (QE Test Coverage),Custom field (QE priority),Custom field (Rank),Custom field (Rank (Obsolete)),Custom field (Regression Test),Custom field (Release Notes Docs Status),Custom field (Release Notes Text),Custom field (SFDC Cases Counter),Custom field (SFDC Cases Links),Custom field (SVN / CVS Isolated Branch),Custom field (SourceForge Reference),Sprint,Custom field (Stackoverflow ID),Custom field (Steps to Reproduce),Custom field (Story Points),Custom field (Support Case Reference),Custom field (Target Release),Custom field (Target end),Custom field (Target start),Custom field (Team),Custom field (Test Plan),Custom field (Test Work Items),Custom field (Tester),Custom field (UXD Engagement Level),Custom field (Upstream Jira),Custom field (Urgency),Custom field (User Story),Custom field (Workaround Description),Custom field (Writer),Custom field (cee_cir),Custom field (cee_docs_prio),Custom field (ip owner),Comment,Comment,Comment,Comment,Comment,Comment,Comment,Comment
+AuthenticationForwardingSLSFTestCase in the manualmode integration tests fails with the JDK9,WFLY-9527,12719726,Bug,Closed,WFLY,WildFly,software,brian.stansberry,"<h3>WildFly Application Server</h3>
+For more information about the WildFly project, please see <a href=""http://wildfly.org/about/"">the project ""About"" page</a>.",http://wildfly.org,Major,Out of Date,baranowb,zhfeng,zhfeng,07/Nov/17 1:34 AM,10/Mar/19 8:13 PM,29/Oct/19 12:21 PM,10/Mar/19 8:13 PM,,,,,EJB,Security,Test Suite,,0,jdk9,"{noformat}
+[ERROR] Tests run: 14, Failures: 1, Errors: 5, Skipped: 1, Time elapsed: 15.372 s <<< FAILURE! - in org.wildfly.test.manual.elytron.seccontext.AuthenticationForwardingSLSFTestCase
+[ERROR] testServer2ExceptionFromForwardedAuthn(org.wildfly.test.manual.elytron.seccontext.AuthenticationForwardingSLSFTestCase)  Time elapsed: 0.129 s  <<< ERROR!
+org.jboss.ejb.client.RequestSendFailedException: EJBCLIENT000409: No more destinations are available
+	at org.jboss.ejb.client.EJBClientInvocationContext.getResult(EJBClientInvocationContext.java:567)
+	at org.jboss.ejb.client.EJBClientInvocationContext.getResult(EJBClientInvocationContext.java:503)
+	at org.jboss.ejb.protocol.remote.RemotingEJBClientInterceptor.handleInvocationResult(RemotingEJBClientInterceptor.java:56)
+	at org.jboss.ejb.client.EJBClientInvocationContext.getResult(EJBClientInvocationContext.java:569)
+	at org.jboss.ejb.client.EJBClientInvocationContext.getResult(EJBClientInvocationContext.java:503)
+	at org.jboss.ejb.client.TransactionPostDiscoveryInterceptor.handleInvocationResult(TransactionPostDiscoveryInterceptor.java:133)
+	at org.jboss.ejb.client.EJBClientInvocationContext.getResult(EJBClientInvocationContext.java:569)
+	at org.jboss.ejb.client.EJBClientInvocationContext.getResult(EJBClientInvocationContext.java:503)
+	at org.jboss.ejb.client.DiscoveryEJBClientInterceptor.handleInvocationResult(DiscoveryEJBClientInterceptor.java:108)
+	at org.jboss.ejb.client.EJBClientInvocationContext.getResult(EJBClientInvocationContext.java:569)
+	at org.jboss.ejb.client.EJBClientInvocationContext.getResult(EJBClientInvocationContext.java:503)
+	at org.jboss.ejb.client.NamingEJBClientInterceptor.handleInvocationResult(NamingEJBClientInterceptor.java:78)
+	at org.jboss.ejb.client.EJBClientInvocationContext.getResult(EJBClientInvocationContext.java:569)
+	at org.jboss.ejb.client.EJBClientInvocationContext.getResult(EJBClientInvocationContext.java:503)
+	at org.jboss.ejb.client.TransactionInterceptor.handleInvocationResult(TransactionInterceptor.java:172)
+	at org.jboss.ejb.client.EJBClientInvocationContext.getResult(EJBClientInvocationContext.java:569)
+	at org.jboss.ejb.client.EJBClientInvocationContext.getResult(EJBClientInvocationContext.java:503)
+	at org.jboss.ejb.client.EJBClientInvocationContext.awaitResponse(EJBClientInvocationContext.java:913)
+	at org.jboss.ejb.client.EJBInvocationHandler.invoke(EJBInvocationHandler.java:177)
+	at org.jboss.ejb.client.EJBInvocationHandler.invoke(EJBInvocationHandler.java:112)
+	at com.sun.proxy.$Proxy25.whoAmIAndServer2Exception(Unknown Source)
+	at org.wildfly.test.manual.elytron.seccontext.AbstractSecurityContextPropagationTestBase.lambda$getWhoAmIAndServer2ExceptionCallable$2(AbstractSecurityContextPropagationTestBase.java:492)
+	at org.wildfly.common.context.Contextual.runCallable(Contextual.java:127)
+	at org.wildfly.test.manual.elytron.seccontext.AbstractAuthenticationForwardingTestCase.testServer2ExceptionFromForwardedAuthn(AbstractAuthenticationForwardingTestCase.java:359)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)
+	at org.jboss.arquillian.junit.Arquillian$8$1.invoke(Arquillian.java:379)
+	at org.jboss.arquillian.container.test.impl.execution.LocalTestExecuter.execute(LocalTestExecuter.java:60)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:96)
+	at org.jboss.arquillian.core.impl.EventContextImpl.invokeObservers(EventContextImpl.java:103)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:85)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:143)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:114)
+	at org.jboss.arquillian.core.impl.EventImpl.fire(EventImpl.java:67)
+	at org.jboss.arquillian.container.test.impl.execution.ClientTestExecuter.execute(ClientTestExecuter.java:53)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:96)
+	at org.jboss.arquillian.core.impl.EventContextImpl.invokeObservers(EventContextImpl.java:103)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:85)
+	at org.jboss.arquillian.container.test.impl.client.ContainerEventController.createContext(ContainerEventController.java:142)
+	at org.jboss.arquillian.container.test.impl.client.ContainerEventController.createTestContext(ContainerEventController.java:129)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:96)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:92)
+	at org.jboss.arquillian.test.impl.TestContextHandler.createSuiteContext(TestContextHandler.java:73)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:96)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:92)
+	at org.jboss.arquillian.test.impl.TestContextHandler.createTestContext(TestContextHandler.java:130)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:96)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:92)
+	at org.jboss.arquillian.test.impl.TestContextHandler.createClassContext(TestContextHandler.java:92)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:96)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:92)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:143)
+	at org.jboss.arquillian.test.impl.EventTestRunnerAdaptor.test(EventTestRunnerAdaptor.java:136)
+	at org.jboss.arquillian.junit.Arquillian$8.evaluate(Arquillian.java:372)
+	at org.jboss.arquillian.junit.Arquillian$4.evaluate(Arquillian.java:246)
+	at org.jboss.arquillian.junit.Arquillian.multiExecute(Arquillian.java:431)
+	at org.jboss.arquillian.junit.Arquillian.access$200(Arquillian.java:55)
+	at org.jboss.arquillian.junit.Arquillian$5.evaluate(Arquillian.java:260)
+	at org.jboss.arquillian.junit.Arquillian$7$1.invoke(Arquillian.java:324)
+	at org.jboss.arquillian.container.test.impl.execution.ClientBeforeAfterLifecycleEventExecuter.execute(ClientBeforeAfterLifecycleEventExecuter.java:99)
+	at org.jboss.arquillian.container.test.impl.execution.ClientBeforeAfterLifecycleEventExecuter.on(ClientBeforeAfterLifecycleEventExecuter.java:72)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:96)
+	at org.jboss.arquillian.core.impl.EventContextImpl.invokeObservers(EventContextImpl.java:103)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:85)
+	at org.jboss.arquillian.container.test.impl.client.ContainerEventController.createContext(ContainerEventController.java:142)
+	at org.jboss.arquillian.container.test.impl.client.ContainerEventController.createBeforeContext(ContainerEventController.java:124)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:96)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:92)
+	at org.jboss.arquillian.test.impl.TestContextHandler.createSuiteContext(TestContextHandler.java:73)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:96)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:92)
+	at org.jboss.arquillian.test.impl.TestContextHandler.createTestContext(TestContextHandler.java:130)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:96)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:92)
+	at org.jboss.arquillian.test.impl.TestContextHandler.createClassContext(TestContextHandler.java:92)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+	at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:96)
+	at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:92)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:143)
+	at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:114)
+	at org.jboss.arquillian.test.impl.EventTestRunnerAdaptor.fireCustomLifecycle(EventTestRunnerAdaptor.java:159)
+	at org.jboss.arquillian.junit.Arquillian$7.evaluate(Arquillian.java:317)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
+	at org.jboss.arquillian.junit.Arquillian$2.evaluate(Arquillian.java:205)
+	at org.jboss.arquillian.junit.Arquillian.multiExecute(Arquillian.java:431)
+	at org.jboss.arquillian.junit.Arquillian.access$200(Arquillian.java:55)
+	at org.jboss.arquillian.junit.Arquillian$3.evaluate(Arquillian.java:219)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
+	at org.jboss.arquillian.junit.Arquillian.run(Arquillian.java:167)
+	at org.junit.runners.Suite.runChild(Suite.java:128)
+	at org.junit.runners.Suite.runChild(Suite.java:27)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
+	at org.apache.maven.surefire.junitcore.JUnitCore.run(JUnitCore.java:55)
+	at org.apache.maven.surefire.junitcore.JUnitCoreWrapper.createRequestAndRun(JUnitCoreWrapper.java:137)
+	at org.apache.maven.surefire.junitcore.JUnitCoreWrapper.executeEager(JUnitCoreWrapper.java:107)
+	at org.apache.maven.surefire.junitcore.JUnitCoreWrapper.execute(JUnitCoreWrapper.java:83)
+	at org.apache.maven.surefire.junitcore.JUnitCoreWrapper.execute(JUnitCoreWrapper.java:75)
+	at org.apache.maven.surefire.junitcore.JUnitCoreProvider.invoke(JUnitCoreProvider.java:159)
+	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:373)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:334)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:119)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:407)
+	Suppressed: org.jboss.ejb.client.RequestSendFailedException
+		at org.jboss.ejb.protocol.remote.RemoteEJBReceiver$1.handleFailed(RemoteEJBReceiver.java:101)
+		at org.jboss.ejb.protocol.remote.RemoteEJBReceiver$1.handleFailed(RemoteEJBReceiver.java:74)
+		at org.xnio.IoFuture$HandlingNotifier.notify(IoFuture.java:215)
+		at org.xnio.AbstractIoFuture$NotifierRunnable.run(AbstractIoFuture.java:720)
+		at org.jboss.remoting3.EndpointImpl$TrackingExecutor.lambda$execute$0(EndpointImpl.java:926)
+		at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)
+		at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)
+		at java.base/java.lang.Thread.run(Thread.java:844)
+	Caused by: javax.security.sasl.SaslException: PLAIN: authorization ID and password must be specified
+		at java.security.sasl/com.sun.security.sasl.PlainClient.<init>(PlainClient.java:58)
+		at java.security.sasl/com.sun.security.sasl.ClientFactoryImpl.createSaslClient(ClientFactoryImpl.java:97)
+		at org.wildfly.security.sasl.util.SecurityProviderSaslClientFactory.createSaslClient(SecurityProviderSaslClientFactory.java:110)
+		at org.wildfly.security.sasl.util.AbstractDelegatingSaslClientFactory.createSaslClient(AbstractDelegatingSaslClientFactory.java:66)
+		at org.wildfly.security.sasl.util.ProtocolSaslClientFactory.createSaslClient(ProtocolSaslClientFactory.java:50)
+		at org.wildfly.security.sasl.util.AbstractDelegatingSaslClientFactory.createSaslClient(AbstractDelegatingSaslClientFactory.java:66)
+		at org.wildfly.security.sasl.util.ServerNameSaslClientFactory.createSaslClient(ServerNameSaslClientFactory.java:50)
+		at org.wildfly.security.sasl.util.AbstractDelegatingSaslClientFactory.createSaslClient(AbstractDelegatingSaslClientFactory.java:66)
+		at org.wildfly.security.sasl.util.PropertiesSaslClientFactory.createSaslClient(PropertiesSaslClientFactory.java:54)
+		at org.wildfly.security.sasl.util.AbstractDelegatingSaslClientFactory.createSaslClient(AbstractDelegatingSaslClientFactory.java:66)
+		at org.wildfly.security.sasl.util.ServerNameSaslClientFactory.createSaslClient(ServerNameSaslClientFactory.java:50)
+		at org.wildfly.security.sasl.util.FilterMechanismSaslClientFactory.createSaslClient(FilterMechanismSaslClientFactory.java:102)
+		at org.wildfly.security.sasl.util.AbstractDelegatingSaslClientFactory.createSaslClient(AbstractDelegatingSaslClientFactory.java:66)
+		at org.wildfly.security.sasl.util.LocalPrincipalSaslClientFactory.createSaslClient(LocalPrincipalSaslClientFactory.java:74)
+		at org.wildfly.security.sasl.util.PrivilegedSaslClientFactory.lambda$createSaslClient$0(PrivilegedSaslClientFactory.java:64)
+		at java.base/java.security.AccessController.doPrivileged(Native Method)
+		at org.wildfly.security.sasl.util.PrivilegedSaslClientFactory.createSaslClient(PrivilegedSaslClientFactory.java:64)
+		at org.wildfly.security.auth.client.AuthenticationConfiguration.createSaslClient(AuthenticationConfiguration.java:1320)
+		at org.wildfly.security.auth.client.AuthenticationContextConfigurationClient.createSaslClient(AuthenticationContextConfigurationClient.java:395)
+		at org.jboss.remoting3.remote.ClientConnectionOpenListener$Capabilities.handleEvent(ClientConnectionOpenListener.java:420)
+		at org.jboss.remoting3.remote.ClientConnectionOpenListener$Capabilities.handleEvent(ClientConnectionOpenListener.java:242)
+		at org.xnio.ChannelListeners.invokeChannelListener(ChannelListeners.java:92)
+		at org.xnio.conduits.ReadReadyHandler$ChannelListenerHandler.readReady(ReadReadyHandler.java:66)
+		at org.xnio.nio.NioSocketConduit.handleReady(NioSocketConduit.java:89)
+		at org.xnio.nio.WorkerThread.run(WorkerThread.java:591)
+		at ...asynchronous invocation...(Unknown Source)
+		at org.jboss.remoting3.EndpointImpl.connect(EndpointImpl.java:570)
+		at org.jboss.remoting3.EndpointImpl.connect(EndpointImpl.java:536)
+		at org.jboss.remoting3.ConnectionInfo$None.getConnection(ConnectionInfo.java:82)
+		at org.jboss.remoting3.ConnectionInfo.getConnection(ConnectionInfo.java:55)
+		at org.jboss.remoting3.EndpointImpl.doGetConnection(EndpointImpl.java:487)
+		at org.jboss.remoting3.EndpointImpl.getConnectedIdentity(EndpointImpl.java:433)
+		at org.jboss.remoting3.UncloseableEndpoint.getConnectedIdentity(UncloseableEndpoint.java:51)
+		at org.jboss.remoting3.Endpoint.getConnectedIdentity(Endpoint.java:122)
+		at org.jboss.ejb.protocol.remote.RemoteEJBReceiver.lambda$getConnection$2(RemoteEJBReceiver.java:185)
+		at java.base/java.security.AccessController.doPrivileged(Native Method)
+		at org.jboss.ejb.protocol.remote.RemoteEJBReceiver.getConnection(RemoteEJBReceiver.java:185)
+		at org.jboss.ejb.protocol.remote.RemoteEJBReceiver.processInvocation(RemoteEJBReceiver.java:128)
+		at org.jboss.ejb.client.EJBClientInvocationContext.sendRequest(EJBClientInvocationContext.java:454)
+		at org.jboss.ejb.protocol.remote.RemotingEJBClientInterceptor.handleInvocation(RemotingEJBClientInterceptor.java:51)
+		at org.jboss.ejb.client.EJBClientInvocationContext.sendRequest(EJBClientInvocationContext.java:466)
+		at org.jboss.ejb.client.TransactionPostDiscoveryInterceptor.handleInvocation(TransactionPostDiscoveryInterceptor.java:79)
+		at org.jboss.ejb.client.EJBClientInvocationContext.sendRequest(EJBClientInvocationContext.java:466)
+		at org.jboss.ejb.client.DiscoveryEJBClientInterceptor.handleInvocation(DiscoveryEJBClientInterceptor.java:89)
+		at org.jboss.ejb.client.EJBClientInvocationContext.sendRequest(EJBClientInvocationContext.java:466)
+		at org.jboss.ejb.client.NamingEJBClientInterceptor.handleInvocation(NamingEJBClientInterceptor.java:66)
+		at org.jboss.ejb.client.EJBClientInvocationContext.sendRequest(EJBClientInvocationContext.java:466)
+		at org.jboss.ejb.client.TransactionInterceptor.handleInvocation(TransactionInterceptor.java:165)
+		at org.jboss.ejb.client.EJBClientInvocationContext.sendRequest(EJBClientInvocationContext.java:466)
+		at org.wildfly.common.context.Contextual.runExConsumer(Contextual.java:203)
+		at org.jboss.ejb.client.EJBClientInvocationContext.sendRequestInitial(EJBClientInvocationContext.java:302)
+		at org.jboss.ejb.client.EJBInvocationHandler.invoke(EJBInvocationHandler.java:173)
+		at org.jboss.ejb.client.EJBInvocationHandler.invoke(EJBInvocationHandler.java:112)
+		at com.sun.proxy.$Proxy25.whoAmIAndServer2Exception(Unknown Source)
+		at org.wildfly.test.manual.elytron.seccontext.AbstractSecurityContextPropagationTestBase.lambda$getWhoAmIAndServer2ExceptionCallable$2(AbstractSecurityContextPropagationTestBase.java:492)
+		at org.wildfly.common.context.Contextual.runCallable(Contextual.java:127)
+		at org.wildfly.test.manual.elytron.seccontext.AbstractAuthenticationForwardingTestCase.testServer2ExceptionFromForwardedAuthn(AbstractAuthenticationForwardingTestCase.java:359)
+		at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+		at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+		at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+		at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+		at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)
+		at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+		at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)
+		at org.jboss.arquillian.junit.Arquillian$8$1.invoke(Arquillian.java:379)
+		at org.jboss.arquillian.container.test.impl.execution.LocalTestExecuter.execute(LocalTestExecuter.java:60)
+		at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+		at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+		at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+		at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+		at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:96)
+		at org.jboss.arquillian.core.impl.EventContextImpl.invokeObservers(EventContextImpl.java:103)
+		at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:85)
+		at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:143)
+		at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:114)
+		at org.jboss.arquillian.core.impl.EventImpl.fire(EventImpl.java:67)
+		at org.jboss.arquillian.container.test.impl.execution.ClientTestExecuter.execute(ClientTestExecuter.java:53)
+		at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+		at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+		at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+		at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+		at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:96)
+		at org.jboss.arquillian.core.impl.EventContextImpl.invokeObservers(EventContextImpl.java:103)
+		at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:85)
+		at org.jboss.arquillian.container.test.impl.client.ContainerEventController.createContext(ContainerEventController.java:142)
+		at org.jboss.arquillian.container.test.impl.client.ContainerEventController.createTestContext(ContainerEventController.java:129)
+		at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+		at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+		at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+		at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+		at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:96)
+		at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:92)
+		at org.jboss.arquillian.test.impl.TestContextHandler.createSuiteContext(TestContextHandler.java:73)
+		at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+		at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+		at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+		at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+		at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:96)
+		at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:92)
+		at org.jboss.arquillian.test.impl.TestContextHandler.createTestContext(TestContextHandler.java:130)
+		at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+		at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+		at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+		at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+		at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:96)
+		at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:92)
+		at org.jboss.arquillian.test.impl.TestContextHandler.createClassContext(TestContextHandler.java:92)
+		at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+		at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+		at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+		at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+		at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:96)
+		at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:92)
+		at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:143)
+		at org.jboss.arquillian.test.impl.EventTestRunnerAdaptor.test(EventTestRunnerAdaptor.java:136)
+		at org.jboss.arquillian.junit.Arquillian$8.evaluate(Arquillian.java:372)
+		at org.jboss.arquillian.junit.Arquillian$4.evaluate(Arquillian.java:246)
+		at org.jboss.arquillian.junit.Arquillian.multiExecute(Arquillian.java:431)
+		at org.jboss.arquillian.junit.Arquillian.access$200(Arquillian.java:55)
+		at org.jboss.arquillian.junit.Arquillian$5.evaluate(Arquillian.java:260)
+		at org.jboss.arquillian.junit.Arquillian$7$1.invoke(Arquillian.java:324)
+		at org.jboss.arquillian.container.test.impl.execution.ClientBeforeAfterLifecycleEventExecuter.execute(ClientBeforeAfterLifecycleEventExecuter.java:99)
+		at org.jboss.arquillian.container.test.impl.execution.ClientBeforeAfterLifecycleEventExecuter.on(ClientBeforeAfterLifecycleEventExecuter.java:72)
+		at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+		at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+		at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+		at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+		at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:96)
+		at org.jboss.arquillian.core.impl.EventContextImpl.invokeObservers(EventContextImpl.java:103)
+		at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:85)
+		at org.jboss.arquillian.container.test.impl.client.ContainerEventController.createContext(ContainerEventController.java:142)
+		at org.jboss.arquillian.container.test.impl.client.ContainerEventController.createBeforeContext(ContainerEventController.java:124)
+		at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+		at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+		at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+		at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+		at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:96)
+		at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:92)
+		at org.jboss.arquillian.test.impl.TestContextHandler.createSuiteContext(TestContextHandler.java:73)
+		at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+		at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+		at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+		at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+		at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:96)
+		at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:92)
+		at org.jboss.arquillian.test.impl.TestContextHandler.createTestContext(TestContextHandler.java:130)
+		at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+		at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+		at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+		at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+		at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:96)
+		at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:92)
+		at org.jboss.arquillian.test.impl.TestContextHandler.createClassContext(TestContextHandler.java:92)
+		at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+		at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+		at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+		at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+		at org.jboss.arquillian.core.impl.ObserverImpl.invoke(ObserverImpl.java:96)
+		at org.jboss.arquillian.core.impl.EventContextImpl.proceed(EventContextImpl.java:92)
+		at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:143)
+		at org.jboss.arquillian.core.impl.ManagerImpl.fire(ManagerImpl.java:114)
+		at org.jboss.arquillian.test.impl.EventTestRunnerAdaptor.fireCustomLifecycle(EventTestRunnerAdaptor.java:159)
+		at org.jboss.arquillian.junit.Arquillian$7.evaluate(Arquillian.java:317)
+		at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)
+		at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)
+		at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)
+		at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
+		at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
+		at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
+		at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
+		at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
+		at org.jboss.arquillian.junit.Arquillian$2.evaluate(Arquillian.java:205)
+		at org.jboss.arquillian.junit.Arquillian.multiExecute(Arquillian.java:431)
+		at org.jboss.arquillian.junit.Arquillian.access$200(Arquillian.java:55)
+		at org.jboss.arquillian.junit.Arquillian$3.evaluate(Arquillian.java:219)
+		at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
+		at org.jboss.arquillian.junit.Arquillian.run(Arquillian.java:167)
+		at org.junit.runners.Suite.runChild(Suite.java:128)
+		at org.junit.runners.Suite.runChild(Suite.java:27)
+		at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
+		at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
+		at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
+		at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
+		at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
+		at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
+		at org.apache.maven.surefire.junitcore.JUnitCore.run(JUnitCore.java:55)
+		at org.apache.maven.surefire.junitcore.JUnitCoreWrapper.createRequestAndRun(JUnitCoreWrapper.java:137)
+		at org.apache.maven.surefire.junitcore.JUnitCoreWrapper.executeEager(JUnitCoreWrapper.java:107)
+		at org.apache.maven.surefire.junitcore.JUnitCoreWrapper.execute(JUnitCoreWrapper.java:83)
+		at org.apache.maven.surefire.junitcore.JUnitCoreWrapper.execute(JUnitCoreWrapper.java:75)
+		at org.apache.maven.surefire.junitcore.JUnitCoreProvider.invoke(JUnitCoreProvider.java:159)
+		at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:373)
+		at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:334)
+		at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:119)
+		at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:407)
+{noformat}
+
+NOTE, the manulmode should  run with the maven-surefire-plugin 2.20.1 in the JDK-9",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2018-02-26 09:07:39.0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,0.0,0.0,,,,,,,,,,,,,,,"1|hzt7en:",9223372036854775807,,,,0.0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Refactor scopes for Servlet API jar,RESTEASY-2041,12774558,Bug,Resolved,RESTEASY,RESTEasy,software,ron_sigal,,http://jboss.org/resteasy,Major,Done,ron_sigal,ron_sigal,ron_sigal,15/Oct/18 8:31 PM,11/Mar/19 4:28 AM,29/Oct/19 12:21 PM,11/Mar/19 4:28 AM,4.0.0.Beta5,,4.0.0.CR1,,,,,,0,WildFlyUnrelated,"When I added a reference to ServletContext in resteasy-core, a test in resteasy-rxjava failed because it couldn't find ServletContext. That's because the test doesn't run in Wildfly, so jboss-servlet-api_3.1_spec doesn't get provided. We're saying that resteasy-rxjava needs to have an explicit dependency on jboss-servlet-api_3.1_spec, even though it doesn't directly reference anything in jboss-servlet-api_3.1_spec.
+
+For RESTEasy applications running in Wildfly, jboss-servlet-api_3.1_spec is ""provided"" by the servlet container. For a standalone program using, say, resteasy-netty4, NettyJaxrsServer is serving as an embedded servlet container, and, by analogy, it should supply jboss-servlet-api_3.1_spec. That is, it should have a dependency on jboss-servlet-api_3.1_spec with scope ""compile"".
+
+The same change would appropriate for resteasy-netty and resteasy-undertow.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,0.0,2.0,,,,,,,,,,,,,,,"1|z00iy8:",9223372036854775807,,,,0.0,,,,,,,,,,,,,,,,,,,,,,,,,"09/Mar/19 9:03 PM;ron_sigal;Adding
+{code}
+        <dependency>
+            <groupId>org.jboss.spec.javax.servlet</groupId>
+            <artifactId>jboss-servlet-api_4.0_spec</artifactId>
+            <scope>compile</scope>
+        </dependency>
+{code}
+resteasy-undertow, mvn dependency:tree gives
+{code}
+INFO] +- org.jboss.resteasy:resteasy-undertow:jar:4.0.0-SNAPSHOT:compile
+[INFO] |  +- io.undertow:undertow-servlet:jar:2.0.16.Final:compile
+[INFO] |  |  \- org.jboss.spec.javax.annotation:jboss-annotations-api_1.2_spec:jar:1.0.2.Final:compile
+[INFO] |  +- io.undertow:undertow-core:jar:2.0.16.Final:compile
+[INFO] |  |  +- org.jboss.xnio:xnio-api:jar:3.3.8.Final:compile
+[INFO] |  |  \- org.jboss.xnio:xnio-nio:jar:3.3.8.Final:runtime
+[INFO] |  \- org.jboss.spec.javax.servlet:jboss-servlet-api_4.0_spec:jar:1.0.0.Final:provided
+{code}
+\[Note that resteasy-undertow needs the servlet api to compile.\] Adding
+{code}
+        <dependency>
+            <groupId>org.jboss.spec.javax.servlet</groupId>
+            <artifactId>jboss-servlet-api_4.0_spec</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+{code}
+to resteasy-netty, resteasy-netty4, and resteasy-netty4-cdi, mvn dependency:tree gives
+{code}
+[INFO] +- org.jboss.resteasy:resteasy-netty:jar:4.0.0-SNAPSHOT:test
+[INFO] |  +- io.netty:netty:jar:3.10.6.Final:test
+[INFO] |  \- org.jboss.spec.javax.servlet:jboss-servlet-api_4.0_spec:jar:1.0.0.Final:provided
+{code}
+{code}
+[INFO] +- org.jboss.resteasy:resteasy-netty4:jar:4.0.0-SNAPSHOT:test
+[INFO] |  +- io.netty:netty-all:jar:4.1.32.Final:test
+[INFO] |  \- org.jboss.spec.javax.servlet:jboss-servlet-api_4.0_spec:jar:1.0.0.Final:provided
+{code}
+and
+{code}
+[INFO] +- org.jboss.resteasy:resteasy-netty4-cdi:jar:4.0.0-SNAPSHOT:test
+[INFO] |  +- org.jboss.resteasy:resteasy-netty4:jar:4.0.0-SNAPSHOT:test
+[INFO] |  |  \- io.netty:netty-all:jar:4.1.32.Final:test
+[INFO] |  +- org.jboss.weld:weld-api:jar:3.0.SP4:test
+[INFO] |  |  \- javax.enterprise:cdi-api:jar:2.0.SP1:provided
+[INFO] |  |     \- javax.inject:javax.inject:jar:1:provided
+[INFO] |  \- org.jboss.spec.javax.servlet:jboss-servlet-api_4.0_spec:jar:1.0.0.Final:provided
+{code}
+respectively.","09/Mar/19 9:33 PM;ron_sigal;Pull request: https://github.com/resteasy/Resteasy/pull/1915",,,,,,
+Broken link for FQDN gateways listed in VirtualService details page,KIALI-2402,12792685,Bug,Released,KIALI,Kiali,software,alissabonas,,https://github.com/kiali/,Major,Done,burmanm,xeviknal,xeviknal,18/Feb/19 7:07 AM,13/May/19 4:27 AM,29/Oct/19 12:21 PM,11/Mar/19 5:05 AM,,,0.16.0,,,,,,0,,"Gateway link broken in Virtual Service Details page. Link is broken when the GW is specified as a FQDN. It points to same namespace and uses the whole FDQN as name of the GW.
+
+Kiali shows:
+1. the details of that Gateway.
+2. Notification of not found Gateway error.
+3. Change the URL to: /namespaces/bookinfo/istio/gateways/bookinfo-gateway.istio-system.svc.cluster.local
+which is should be /namespaces/istio-system/istio/gateways/bookinfo-gateway
+
+",,,,,,,,,,,,,,"18/Feb/19 6:57 AM;xeviknal;Screenshot of Kiali Console (41).png;https://issues.jboss.org/secure/attachment/12447064/Screenshot+of+Kiali+Console+%2841%29.png","18/Feb/19 7:06 AM;xeviknal;Screenshot of Kiali Console (42).png;https://issues.jboss.org/secure/attachment/12447063/Screenshot+of+Kiali+Console+%2842%29.png",,,,,,,,,,,,,,,,,,,,,,,,,,2019-03-11 05:06:04.0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2.0,2.0,,,,,,,,,,,,,,,"1|z03aks:",9223372036854775807,,,,0.0,,,,Kiali Sprint #19,,,,,,,,79,,,,,,,,,,,,,"11/Mar/19 5:06 AM;burmanm;(just fixing the status)","12/Mar/19 9:53 AM;hhovsepy;Verified, testcase added: https://polarion.engineering.redhat.com/polarion/#/project/SwiftSunshine/workitem?id=SWSQE-595",,,,,,
+Define a separate CI profile for LRA,JBTM-3104,12791647,Task,Resolved,JBTM,JBoss Transaction Manager,software,tomjenkinson,The JBoss Transaction Manager project.,http://jboss.org/jbosstm,Major,Done,ochaloup,tomjenkinson,tomjenkinson,12/Feb/19 4:50 AM,28/Mar/19 10:16 AM,29/Oct/19 12:21 PM,11/Mar/19 4:23 AM,,,5.9.5.Final,,Build System,LRA,,,0,,"This could be similar to how the XTS and RTS profile is constructed.
+
+Changes are anticipated in the narayana.sh, maybe pom IDK, and the pull job and main job",,,,,,,,,,,JBTM-3115,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2019-02-12 12:14:29.0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,https://github.com/jbosstm/narayana/pull/1420,,,,,,,,0.0,3.0,,,,,,,,,,,,,,,"1|z035fw:",9223372036854775807,,,,0.0,,,,,,,,,,,,,,,,,,,,,,,,,"12/Feb/19 12:14 PM;mmusgrov;The XTS and RTS profiles are for testing with WildFly whereas LRA is a standard module. The tests for LRA are just standard module tests and we do not use profiles to disable tests. Also profiles were introduced to speed up PR testing and the LRA module does not take long to run.
+
+The current issue with code coverage tests failing on LRA arose because I accidentally reverted my fix to disable the site plugin (JBTM-3093). I have just raised [PR 1404|https://github.com/jbosstm/narayana/pull/1404] to disable the site plugin for LRA.
+
+[~tomjenkinson] do you mind if I close this as will not fix?
+
+
+","04/Mar/19 10:36 AM;mmusgrov;[~ochaloup] I am reassigning to you since you understand how the set of profiles in the lra-test module interact with each other. Note also that I had to disable running the TCK by default (see JBTM-3115).
+
+But do let me know if you disagree and I will take another look.","06/Mar/19 5:20 AM;ochaloup;No problem. I will take a look at this, hopefully this week.",,,,,
+Rules activation not canceled in Case Management subprocess,JBPM-8249,12792558,Bug,Resolved,JBPM,jBPM,software,swiderski.maciej,"jBPM is a flexible business process management suite.
+",http://jboss.org/jbpm,Major,Done,swiderski.maciej,bvanderwalt,bvanderwalt,15/Feb/19 11:08 AM,11/Mar/19 6:07 AM,29/Oct/19 12:21 PM,11/Mar/19 6:07 AM,7.16.0.Final,7.17.0.Final,7.19.0.Final,,KieServer,,,,0,,"Rules activation not canceled in Case Management subprocess.
+
+I have the scenario where two objects of type GeneralRiskRating are inserted into the rules engine by one of many rules that looks like this (see file smoking_risk.gdst):
+
+rule ""Row 1 smoking_risk""
+	agenda-group ""calculate-risk-rating""
+	dialect ""mvel""
+	when
+		$question : Question( questionId == ""a.isSmoking"" , strAnswer == ""No"" )
+	then
+		GeneralRiskRating $risk = new GeneralRiskRating();
+		insert( $risk );
+		
+end
+
+These two objects trigger the activation of another rule (name: ""Create new General RiskRatingRollup if not exist"" in file: rollup_risk_ratings_insured.drl ) in a different agenda group (the next rule task in the process flow):
+
+rule ""Create new General RiskRatingRollup if not exist""                                                                                        
+  	agenda-group ""rollup-risk-ratings"" 
+	dialect ""mvel""                                            	                                                  
+when    	
+	$risk : GeneralRiskRating(riskType != null)
+	$ratings : ArrayList(size > 0)
+            		from collect( GeneralRiskRating(riskType == $risk.riskType) )
+      
+     not RiskRatingRollup(riskType == $risk.riskType ) 
+	
+then         
+
+	RiskRatingRollup $rollup = new RiskRatingRollup();
+	
+	$rollup.setRiskType($risk.getRiskType());
+	insert($rollup );
+		
+end
+
+The rule is activated to fire for each of the two newly inserted GeneralRiskRating objects, 
+but the condition of the rule (condition: not RiskRatingRollup(riskType == $risk.riskType ) ) is suppose to cancel the activation of the rule for the second object after it fired once for the first GeneralRiskRating object.
+
+The problem is that the rule ""Create new General RiskRatingRollup if not exist"" is firing two (2) times instead of one (1) time, thus not canceling the second activation of the rule.
+
+If the rules are executed outside of a bpm workflow it works fine. If the milestone in the process flow is replaces with a new exact copy the rules fire correctly (thus canceling the second activations) 
+
+To reproduce the issue all that is needed is to create a new case by using the rest interface:
+
+POST: http://localhost:8080/kie-server/services/rest/server/containers/sample-rules_1.0.0/cases/insurance.application.process/instances
+
+with payload:
+
+{ 
+	""case-data"" : { },
+	""case-user-assignments"" : { ""applicant"" : ""{{pam_user_id}}"", 
+								""manager"" : ""{{pam_user_id}}"", 
+								""admin"" : ""{{pam_user_id}}"",
+								""underwriter"" : ""{{pam_user_id}}"" 
+		
+	}, 
+	""case-group-assignments"" : {""underwriter"" : ""underwriter"" 
+		
+	}
+	
+}
+
+just replace the ""pam_user_id"" with your username you use to log into jBPM. Also make sure to use the same username/pw for the basic auth in the HTTP request.
+
+When the request is made, it will start the process (application_process.bpmn2) and all the rules will fire in the subprocess (calculate_questionnaire_risk). 
+In the server log you will observe the following log statement TWO times instead of just once:
+
+******* Create GENERAL RiskRatingRollup for type[SMOKER] ****************
+
+If the process diagram is reduced to only the rules and no milestone things start to work correctly again. It appears that this given setup (see attached zip file) will allow you to reproduce the issue and hopefully you should be able to identify the issue. 
+
+",JBPM version 7.17 running on wildfly,,,,,,,,,,,,,"15/Feb/19 11:08 AM;bvanderwalt;sample_case_management_project_for_jbpm_7.17.zip;https://issues.jboss.org/secure/attachment/12447025/sample_case_management_project_for_jbpm_7.17.zip",,,,,,,,,,,,,,,,,,,,,,,,,,,2019-02-28 14:49:34.0,,,,,NEW,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,1.0,2.0,,,,,,,,,,,,NEW,,,"1|z03hc0:",9223372036854775807,,,,0.0,,,,2019 Week 08-10,,"I have the scenario where two objects of type GeneralRiskRating are inserted into the rules engine by one of many rules that looks like this (see file smoking_risk.gdst):
+
+rule ""Row 1 smoking_risk""
+	agenda-group ""calculate-risk-rating""
+	dialect ""mvel""
+	when
+		$question : Question( questionId == ""a.isSmoking"" , strAnswer == ""No"" )
+	then
+		GeneralRiskRating $risk = new GeneralRiskRating();
+		insert( $risk );
+		
+end
+
+These two objects trigger the activation of another rule (name: ""Create new General RiskRatingRollup if not exist"" in file: rollup_risk_ratings_insured.drl ) in a different agenda group (the next rule task in the process flow):
+
+rule ""Create new General RiskRatingRollup if not exist""                                                                                        
+  	agenda-group ""rollup-risk-ratings"" 
+	dialect ""mvel""                                            	                                                  
+when    	
+	$risk : GeneralRiskRating(riskType != null)
+	$ratings : ArrayList(size > 0)
+            		from collect( GeneralRiskRating(riskType == $risk.riskType) )
+      
+     not RiskRatingRollup(riskType == $risk.riskType ) 
+	
+then         
+
+	RiskRatingRollup $rollup = new RiskRatingRollup();
+	
+	$rollup.setRiskType($risk.getRiskType());
+	insert($rollup );
+		
+end
+
+The rule is activated to fire for each of the two newly inserted GeneralRiskRating objects, 
+but the condition of the rule (condition: not RiskRatingRollup(riskType == $risk.riskType ) ) is suppose to cancel the activation of the rule for the second object after it fired once for the first GeneralRiskRating object.
+
+The problem is that the rule ""Create new General RiskRatingRollup if not exist"" is firing two (2) times instead of one (1) time, thus not canceling the second activation of the rule.
+
+If the rules are executed outside of a bpm workflow it works fine. If the milestone in the process flow is replaces with a new exact copy the rules fire correctly (thus canceling the second activations) 
+
+To reproduce the issue all that is needed is to create a new case by using the rest interface:
+
+POST: http://localhost:8080/kie-server/services/rest/server/containers/sample-rules_1.0.0/cases/insurance.application.process/instances
+
+with payload:
+
+{ 
+	""case-data"" : { },
+	""case-user-assignments"" : { ""applicant"" : ""{{pam_user_id}}"", 
+								""manager"" : ""{{pam_user_id}}"", 
+								""admin"" : ""{{pam_user_id}}"",
+								""underwriter"" : ""{{pam_user_id}}"" 
+		
+	}, 
+	""case-group-assignments"" : {""underwriter"" : ""underwriter"" 
+		
+	}
+	
+}
+
+just replace the ""pam_user_id"" with your username you use to log into jBPM. Also make sure to use the same username/pw for the basic auth in the HTTP request.
+
+When the request is made, it will start the process (application_process.bpmn2) and all the rules will fire in the subprocess (calculate_questionnaire_risk). 
+In the server log you will observe the following log statement TWO times instead of just once:
+
+******* Create GENERAL RiskRatingRollup for type[SMOKER] ****************
+
+If the process diagram is reduced to only the rules and no milestone things start to work correctly again. It appears that this given setup (see attached zip file) will allow you to reproduce the issue and hopefully you should be able to identify the issue.",,,,,,,,,,,,,,,,,,,"28/Feb/19 2:49 PM;swiderski.maciej;[~bvanderwalt] first of all, thanks a lot for detailed description/steps to reproduce and the reproducer. This helped a lot to track the problem down. I created PR with the fix, if you have the option please give it a try and let me know if it works fine for your use case.
+
+As a workaround you can also mark the node after milestone as async ( Is Async = true in designer) to make it work as well. ","28/Feb/19 2:55 PM;bvanderwalt;Hi [~swiderski.maciej]. Fist of all thanks a lot, you are the man! I really appreciate you looking into this and fixing it. I will definitely give it a try. Also thanks for the work around.",,,,,,
+Add method to jBPM JUnit support to retrieve active nodes,JBPM-8152,12788428,Bug,Resolved,JBPM,jBPM,software,swiderski.maciej,"jBPM is a flexible business process management suite.
+",http://jboss.org/jbpm,Major,Done,elguardian,McCloud,McCloud,21/Jan/19 8:40 PM,11/Mar/19 4:22 AM,29/Oct/19 12:21 PM,11/Mar/19 4:22 AM,7.16.0.Final,,7.19.0.Final,,Runtime Engine,,,,0,,"The JbpmUnitBaseTestCase class is nice because it provides some useful  methods like:
+
+public void assertProcessInstanceActive(ProcessName processName)
+
+public void assertNodeActive(long processId, String nodeName)
+
+etc…  However, what would be nice is to have a method to get what process/node IS active.  If you’re coding a junit test and asserting that the processes/nodes you EXPECT to be active, then if they’re NOT active, then .. .what IS active?  Right now, there’s no way to easily determine that.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2019-03-06 04:51:21.0,,,,,NEW,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,0.0,2.0,,,,,,,,,,,,NEW,,,"1|z02ngo:",9223372036854775807,,,,0.0,,,,,,,,,,,,,,,,,,,,,,,,,"06/Mar/19 4:51 AM;elguardian;[~McCloud] can you check the PR... Not really sure if I understood the requirements of this jira
+
+https://github.com/kiegroup/jbpm/pull/1455","06/Mar/19 5:03 AM;McCloud;[~elguardian]Yes, that looks like what the customer asked for, but would like [[~rhn-gps-abaumann] to comment as well (was his original request).
+
+[[~rhn-gps-abaumann]: can you take a look at this PR to verify that this covers your customer's request?
+
+[~elguardian]: One question: why is there a different approach to retrieve active nodes when sessionPersistence is enabled? ",,,,,,
+(7.2.z) RESTEASY-2148 - Add the ability to disable Filename encoding in Content-Disposition,JBEAP-16427,12793415,Bug,Verified,JBEAP,JBoss Enterprise Application Platform,software,tomjenkinson,"JBoss Enterprise Application Platform:
+
+Cloud-ready, market-leading enterprise platform for next-generation, highly transactional enterprise Java applications",http://www.redhat.com/products/jbossenterprisemiddleware/application-platform/,Critical,Done,spyrkob,bmaxwell,bmaxwell,20/Feb/19 10:27 AM,29/May/19 10:30 AM,29/Oct/19 12:21 PM,11/Mar/19 5:35 AM,,,7.2.2.CR1,7.2.2.GA,REST,,,,0,regression,"A change was introduced for RESTEASY-2046 to encode non-US-ASCII filenames per RFC 5987, but the fix was incorrect/incomplete.
+Also latest RFC for multipart messages inside HTTP is defined in [RFC-7578|https://tools.ietf.org/html/rfc7578#section-4.2] and there is stated:
+* NOTE: The encoding method described in RFC5987, which would add a ""filename*"" parameter to the Content-Disposition header field, MUST NOT be used.
+
+Commons FileUpload library cannot consume file correctly if filename is like *filename\*=utf-8''Test%20file.pdf*
+Therefore, please add into method *MultipartFormDataOutput.addFormData(String key, Object entity, MediaType mediaType, String filename)* the parameter that will disable filename encoding
+
+----
+
+WF receives this by:
+* Firefox client: Content-Disposition: form-data; name=""key""; filename=""La_R��gle_du_jeu""
+* Jersey client: Content-Disposition: form-data; filename=""La_R��gle_du_jeu""; modification-date=""Thu, 07 Feb 2019 08:11:20 GMT""; size=4; name=""key""
+* RESTEasy 3.0.24 client (WF11): Content-Disposition: form-data; name=""key""; filename=""La_R��gle_du_jeu""
+* RESTEasy 3.6.1 client (WF14): Content-Disposition: form-data; name=""key""; filename*=utf-8''La_R%C3%A8gle_du_jeu
+
+Default behaviour should be '{{filename=""non-encoded-characters""}}', we can consider to use some optional client parameters that allows to use ""%"" encoding. According to [chapter 2 of rfc7578|https://tools.ietf.org/html/rfc7578#section-2], we can consider to use something like 'filename=""La_R%C3%A8gle_du_jeu""' if this approach is required by some client (java) property (because of backward compatibility). In this case, RESTEASY-2046 issue needs to be considered as well.
+
+----
+
+Cloned from RESTEASY-2148",,,,,,,,,,JBEAP-16359,,,RESTEASY-2148,,,,,,,,,,,,,,,,,,+,?,,+,+,+,,,,,2019-02-20 10:36:45.0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,https://github.com/resteasy/Resteasy/pull/1896,,,,,,,,0.0,2.0,,,,,,,,,,,,,,,"1|z03e7g:",9223372036854775807,,,,0.0,,,,,,,,,7.2.z.GA,,,,,,,,,,,,,,,,"20/Feb/19 10:36 AM;jboss-set;[OnPayloadWithout3Acks] Issue in on the payload but is missing some acks.
+
+BugClerk (automated tool) lives at this address: https://github.com/jboss-set/bug-clerk","29/May/19 10:30 AM;dcihak;Verified with EAP 7.2.2.CP.CR1.",,,,,,
+[DOC RHEL] Log directories section uses a Zookeeper path,ENTMQST-723,12788647,Bug,Done,ENTMQST,AMQ Streams,software,scholzj,,,Major,Done,laidan6000,rmarting,rmarting,22/Jan/19 11:08 AM,11/Mar/19 5:37 AM,29/Oct/19 12:21 PM,11/Mar/19 5:37 AM,1.0.0.RHEL.GA,,1.1.0.GA,,documentation,,,,0,,"Log directories section[1] uses a Zookeeper path to define the folder to store the kafka logs.
+
+log.dirs=/var/lib/zookeeper
+
+This property is defined in Kafka Community documentation[2] as:
+
+log.dirs=/tmp/kafka-logs
+
+It could be useful to define other similar to:
+
+log.dirs=/var/lib/kafka
+
+[1] https://access.redhat.com/documentation/en-us/red_hat_amq/7.2/html-single/using_amq_streams_on_red_hat_enterprise_linux_rhel/#con-kafka-commit-log-configuration-str
+[2] http://kafka.apache.org/20/documentation.html#brokerconfigs
+",,,,,,,,,,,,,,,,,,,,,,,,"Documentation (Ref Guide, User Guide, etc.)",,,,,,,,,,,,,,,,,2019-01-22 11:17:37.0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,0.0,4.0,,,,,,,,,,,,,,,"1|z02oe0:",9223372036854775807,,,,0.0,,,,,,,,,1.1.0.GA,,,,,,,,,,,,,,,,"22/Jan/19 11:17 AM;scholzj;This has been already fixed in PR https://github.com/rh-messaging/amq-streams-docs/pull/34 ... I'm not sure whether [~laidan6000] plans to do any updates to the downstream docs, but it should get there latest with AMQ Streams 1.1. ","22/Jan/19 11:37 AM;rmarting;Ok, thanks! Waiting for the next release of documentation.","07/Feb/19 1:15 PM;scholzj;Should we move this issue to Done state since it has been already done?","11/Mar/19 5:37 AM;scholzj;This has been fixed.",,,,
+Feature Request: Possibility to define default sub-domain for kafka cluster routes,ENTMQST-600,12779051,Task,Done,ENTMQST,AMQ Streams,software,scholzj,,,Major,Done,,cpandey,cpandey,12/Nov/18 8:16 PM,11/Mar/19 4:35 AM,29/Oct/19 12:21 PM,11/Mar/19 4:35 AM,1.0.0.OCP.GA,,1.1.0.GA,,openshift-integration,,,,0,enhancement,"- The default sub domain is set up with a certificate signed by a trusted CA. Customer manage these in a loadbalancer in front of Openshift, to limit the number of machines/clusters that need to be changed when customer get a new certificate. In Openshift we use the selfsigned certificate so the setup in the loadbalancer is tls reencrypt to this domain.This makes the tls handshake to the kafka cluster fail. 
+- Customer would like to have the possibility to setup a seperate subdomain for kafka clusters in openshift so that he can set the loadbalancer for routes on this subdomain to use passthrough and not reencrypt",OpenShift,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2018-11-15 05:23:10.0,,,,,,,,,,,,,,,,,,ENTMQST-49,,,,,,,,,,,,,,,,,,,,0.0,8.0,,,,,,,,,,,,,,,"1|z03cm5:i",9223372036854775807,,,,0.0,,,,2019.3,,,1.0,,1.1.0.GA,,,,,,,,,,,,,,,,"15/Nov/18 5:23 AM;scholzj;The workaround for this is to manually edit the address in the Routes - the CO will take the address, run rolling update to change the broker configs and certificates and use the new manually set address. That should help everyone who needs this until this feature is implemented.","16/Nov/18 2:56 AM;cpandey;KCS:
+https://access.redhat.com/solutions/3698311","17/Feb/19 1:28 PM;scholzj;Hi [~cpandey] ... I'm looking into this currently. But I'm a bit confused. I haven't found any reference to sub-domain field in the Route specification. Is setting the spec.host field what you are asking for here? Or is there some sub-domain field I missed?","19/Feb/19 2:51 AM;scholzj;This should be addressed in PR [Strimzi#1348|https://github.com/strimzi/strimzi-kafka-operator/pull/1348]","19/Feb/19 11:30 AM;laidan6000;Does this need a linked documentation task?","21/Feb/19 7:16 AM;scholzj;[~cpandey] Ok, no problem. Hopefully after 1.1.0 release they will be able to get off that workaround.","27/Feb/19 12:33 PM;asorokht;[~scholzj] I see errors after setting this config:
+
+{noformat}
+listeners:
+      external:
+        type: route
+        authentication:
+          type: tls
+        overrides:
+          bootstrap:
+            address: asoroktest.hostname
+    config:
+{noformat}
+
+
+{noformat}
+2019-02-27 17:26:22 INFO  ClusterOperator:113 - Started operator for KafkaConnectS2I kind
+2019-02-27 17:26:22 INFO  ClusterOperator:116 - Setting up periodical reconciliation for namespace myproject
+2019-02-27 17:26:22 INFO  ClusterOperator:170 - ClusterOperator is now ready (health server listening on 8080)
+2019-02-27 17:26:22 INFO  Main:148 - Cluster Operator verticle started in namespace myproject
+2019-02-27 17:27:40 INFO  AbstractAssemblyOperator:299 - Reconciliation #0(watch) Kafka(myproject/my-cluster): Kafka my-cluster in namespace myproject was ADDED
+2019-02-27 17:27:40 WARN  VersionUsageUtils:55 - The client is using resource type 'kafkas' with unstable version 'v1alpha1'
+2019-02-27 17:27:41 INFO  AbstractAssemblyOperator:170 - Reconciliation #0(watch) Kafka(myproject/my-cluster): Assembly my-cluster should be created or updated
+2019-02-27 17:27:43 WARN  VersionUsageUtils:55 - The client is using resource type 'poddisruptionbudgets' with unstable version 'v1beta1'
+2019-02-27 17:28:22 INFO  ClusterOperator:118 - Triggering periodic reconciliation for namespace myproject...
+2019-02-27 17:28:22 WARN  VersionUsageUtils:55 - The client is using resource type 'kafkamirrormakers' with unstable version 'v1alpha1'
+2019-02-27 17:28:22 WARN  VersionUsageUtils:55 - The client is using resource type 'kafkaconnects' with unstable version 'v1alpha1'
+2019-02-27 17:28:22 WARN  VersionUsageUtils:55 - The client is using resource type 'kafkaconnects2is' with unstable version 'v1alpha1'
+2019-02-27 17:28:24 ERROR AbstractAssemblyOperator:179 - Reconciliation #0(watch) Kafka(myproject/my-cluster): createOrUpdate failed
+java.lang.NullPointerException: null
+	at java.util.ArrayList.addAll(ArrayList.java:581) ~[?:1.8.0_191]
+	at io.strimzi.operator.cluster.model.KafkaCluster.getExternalListenerBrokerOverride(KafkaCluster.java:1203) ~[cluster-operator-0.12.0-SNAPSHOT.jar:0.12.0-SNAPSHOT]
+	at io.strimzi.operator.cluster.model.KafkaCluster.getExternalServiceAdvertisedHostOverride(KafkaCluster.java:1248) ~[cluster-operator-0.12.0-SNAPSHOT.jar:0.12.0-SNAPSHOT]
+	at io.strimzi.operator.cluster.operator.assembly.KafkaAssemblyOperator$ReconciliationState.lambda$kafkaReplicaRoutesReady$71(KafkaAssemblyOperator.java:1375) ~[cluster-operator-0.12.0-SNAPSHOT.jar:0.12.0-SNAPSHOT]
+	at io.vertx.core.impl.ContextImpl.lambda$executeBlocking$1(ContextImpl.java:273) ~[cluster-operator-0.12.0-SNAPSHOT.jar:0.12.0-SNAPSHOT]
+	at io.vertx.core.impl.TaskQueue.run(TaskQueue.java:76) ~[cluster-operator-0.12.0-SNAPSHOT.jar:0.12.0-SNAPSHOT]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149) ~[?:1.8.0_191]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624) ~[?:1.8.0_191]
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) [cluster-operator-0.12.0-SNAPSHOT.jar:0.12.0-SNAPSHOT]
+	at java.lang.Thread.run(Thread.java:748) [?:1.8.0_191]
+2019-02-27 17:28:24 INFO  AbstractAssemblyOperator:170 - Reconciliation #1(timer) Kafka(myproject/my-cluster): Assembly my-cluster should be created or updated
+2019-02-27 17:28:25 ERROR AbstractAssemblyOperator:179 - Reconciliation #1(timer) Kafka(myproject/my-cluster): createOrUpdate failed
+
+{noformat}
+","01/Mar/19 9:58 AM;scholzj;The NPE was a bug in CO. It was addressed in [Strimzi#1386|https://github.com/strimzi/strimzi-kafka-operator/pull/1386]."
+Allow specifying IP addresses or DNS names manually,ENTMQST-476,12772069,Task,Done,ENTMQST,AMQ Streams,software,scholzj,,,Major,Done,,scholzj,scholzj,30/Sep/18 11:18 AM,15/Jun/19 9:19 AM,29/Oct/19 12:21 PM,11/Mar/19 4:34 AM,,,1.1.0.GA,,,,,,1,enhancement,,,,,,,,,,,,,,,,,,,,,,,,,Release Notes,,,,,,,,,,,,,,,,,2019-01-23 09:12:35.0,,,,,,,,,,,,,,,,,,ENTMQST-49,,,,,,,,,,,,,,,,,,,,0.0,2.0,,,,,,,,,,,,,,,"1|z03cm5:",9223372036854775807,,,,1.0,02296490,,,2019.3,,,1.0,,1.1.0.GA,,,,,,,,,,,,,,,,"19/Feb/19 2:50 AM;scholzj;This should be addressed in PR [Strimzi#1348|https://github.com/strimzi/strimzi-kafka-operator/pull/1348]","19/Feb/19 11:28 AM;laidan6000;Does this need a linked documentation task?",,,,,,
+Module dependency conflicts in wildfly-camel,ENTESB-10313,12796557,Task,Resolved,ENTESB,Red Hat Fuse,software,janstey,,http://developers.redhat.com/products/fuse,Blocker,Done,thomas.diesler,janstey,janstey,10/Mar/19 7:13 PM,19/Mar/19 1:35 PM,29/Oct/19 12:21 PM,11/Mar/19 6:35 AM,,,fuse-7.3,,Build,WildFly Camel,,,0,QA_IGNORE,"wildfly-camel is failing in the pipeline (https://fusesource-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/fuse-7.3-release-pipeline/141/console). We need this one passing to build CR1 candidate for 7.3. Build log snippet:
+
+{code}
+[INFO] Wildfly Camel :: Feature :: ExtrasC ................ SUCCESS [  0.753 s]
+[INFO] Wildfly Camel :: Feature :: Pack ................... FAILURE [ 11.066 s]
+[INFO] Wildfly Camel :: Catalog ........................... SKIPPED
+[INFO] Wildfly Camel :: Enricher .......................... SKIPPED
+[INFO] Wildfly Camel :: Testsuite ......................... SKIPPED
+[INFO] Wildfly Camel :: Testsuite :: Common ............... SKIPPED
+[INFO] Wildfly Camel :: Testsuite :: Camel ................ SKIPPED
+[INFO] Wildfly Camel :: Testsuite :: Standalone ........... SKIPPED
+[INFO] Wildfly Camel :: Testsuite :: Standalone :: Smoke .. SKIPPED
+[INFO] Wildfly Camel :: Testsuite :: Standalone :: Basic .. SKIPPED
+[INFO] Wildfly Camel :: Testsuite :: Standalone :: Extra .. SKIPPED
+[INFO] Wildfly Camel :: Testsuite :: Standalone :: Docker . SKIPPED
+[INFO] Wildfly Camel :: Archetypes ........................ SKIPPED
+[INFO] Wildfly Camel :: Archetypes :: CDI ................. SKIPPED
+[INFO] Wildfly Camel :: Archetypes :: Spring .............. SKIPPED
+[INFO] Wildfly Camel :: Patch ............................. SKIPPED
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 01:04 min
+[INFO] Finished at: 2019-03-08T19:39:16+00:00
+[INFO] Final Memory: 369M/1389M
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.codehaus.gmaven:groovy-maven-plugin:2.0:execute (module-check) on project wildfly-camel-feature-pack: Execution module-check of goal org.codehaus.gmaven:groovy-maven-plugin:2.0:execute failed: org.apache.maven.plugin.MojoExecutionException: Module dependency conflicts were detected. Please fix your module dependencies. -> [Help 1]
+org.apache.maven.lifecycle.LifecycleExecutionException: Failed to execute goal org.codehaus.gmaven:groovy-maven-plugin:2.0:execute (module-check) on project wildfly-camel-feature-pack: Execution module-check of goal org.codehaus.gmaven:groovy-maven-plugin:2.0:execute failed: org.apache.maven.plugin.MojoExecutionException: Module dependency conflicts were detected. Please fix your module dependencies.
+	at org.apache.maven.lifecycle.internal.MojoExecutor.execute(MojoExecutor.java:212)
+	at org.apache.maven.lifecycle.internal.MojoExecutor.execute(MojoExecutor.java:153)
+	at org.apache.maven.lifecycle.internal.MojoExecutor.execute(MojoExecutor.java:145)
+	at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject(LifecycleModuleBuilder.java:116)
+	at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject(LifecycleModuleBuilder.java:80)
+	at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build(SingleThreadedBuilder.java:51)
+	at org.apache.maven.lifecycle.internal.LifecycleStarter.execute(LifecycleStarter.java:128)
+	at org.apache.maven.DefaultMaven.doExecute(DefaultMaven.java:307)
+	at org.apache.maven.DefaultMaven.doExecute(DefaultMaven.java:193)
+	at org.apache.maven.DefaultMaven.execute(DefaultMaven.java:106)
+	at org.apache.maven.cli.MavenCli.execute(MavenCli.java:863)
+	at org.apache.maven.cli.MavenCli.doMain(MavenCli.java:288)
+	at org.apache.maven.cli.MavenCli.main(MavenCli.java:199)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced(Launcher.java:289)
+	at org.codehaus.plexus.classworlds.launcher.Launcher.launch(Launcher.java:229)
+	at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode(Launcher.java:415)
+	at org.codehaus.plexus.classworlds.launcher.Launcher.main(Launcher.java:356)
+Caused by: org.apache.maven.plugin.PluginExecutionException: Execution module-check of goal org.codehaus.gmaven:groovy-maven-plugin:2.0:execute failed: org.apache.maven.plugin.MojoExecutionException: Module dependency conflicts were detected. Please fix your module dependencies.
+	at org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo(DefaultBuildPluginManager.java:145)
+	at org.apache.maven.lifecycle.internal.MojoExecutor.execute(MojoExecutor.java:207)
+	... 20 more
+Caused by: java.lang.RuntimeException: org.apache.maven.plugin.MojoExecutionException: Module dependency conflicts were detected. Please fix your module dependencies.
+	at com.google.common.base.Throwables.propagate(Throwables.java:160)
+	at org.codehaus.gmaven.adapter.impl.GroovyRuntimeImpl$3.call(GroovyRuntimeImpl.java:145)
+	at groovy.lang.Closure.call(Closure.java:427)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:90)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:233)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1085)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:909)
+	at groovy.lang.MetaClassImpl.invokePropertyOrMissing(MetaClassImpl.java:1131)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1087)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:909)
+	at org.codehaus.groovy.runtime.callsite.PogoMetaClassSite.callCurrent(PogoMetaClassSite.java:66)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCallCurrent(CallSiteArray.java:49)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callCurrent(AbstractCallSite.java:133)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callCurrent(AbstractCallSite.java:141)
+	at module-checker.run(module-checker.groovy:367)
+	at groovy.lang.GroovyShell.evaluate(GroovyShell.java:518)
+	at org.codehaus.gmaven.adapter.impl.ScriptExecutorImpl.execute(ScriptExecutorImpl.java:80)
+	at org.codehaus.gmaven.plugin.ExecuteMojo$1.run(ExecuteMojo.java:100)
+	at org.codehaus.gmaven.plugin.util.SystemNoExitGuard.run(SystemNoExitGuard.java:45)
+	at org.codehaus.gmaven.plugin.ExecuteMojo.run(ExecuteMojo.java:96)
+	at org.codehaus.gmaven.plugin.MojoSupport.execute(MojoSupport.java:45)
+	at org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo(DefaultBuildPluginManager.java:134)
+	... 21 more
+Caused by: org.apache.maven.plugin.MojoExecutionException: Module dependency conflicts were detected. Please fix your module dependencies.
+	at org.codehaus.gmaven.plugin.FailClosureTarget.call(FailClosureTarget.java:83)
+	at org.codehaus.gmaven.adapter.impl.GroovyRuntimeImpl$3.call(GroovyRuntimeImpl.java:142)
+	... 45 more
+[ERROR] 
+{code}",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2019-03-11 04:57:31.0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,0.0,3.0,,,,,,,,,,,,,,,"1|hxzelz:p45f",9223372036854775807,,,,0.0,,,,Fuse 7.3 Sprint 42 - Bug fix,,,,,,,,,,,,,,,,,,,,,"11/Mar/19 4:57 AM;thomas.diesler;Should be fixed by https://github.com/jboss-fuse/wildfly-camel/pull/277","11/Mar/19 6:35 AM;thomas.diesler;Done","11/Mar/19 7:52 AM;janstey;[~thomas.diesler] thanks for getting this done so quickly!",,,,,
+Align to AMQ 7.2.3 release,ENTESB-10205,12793447,Task,Closed,ENTESB,Red Hat Fuse,software,janstey,,http://developers.redhat.com/products/fuse,Major,Done,jpoth,janstey,janstey,20/Feb/19 11:38 AM,15/Apr/19 5:06 AM,29/Oct/19 12:21 PM,11/Mar/19 5:08 AM,,,fuse-7.3,,,,,,0,CR2,,,,,,,,,,,,ENTESB-9638,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2019-03-11 05:09:22.0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,https://github.com/jboss-fuse/redhat-fuse/pull/45,https://github.com/jboss-fuse/fabric8/pull/1207,,,,,,,0.0,1.0,,,,,,,,,,,,,,,"1|z03ee4:",9223372036854775807,,,,0.0,,,,Fuse 7.3 Sprint 42 - Bug fix,,,,,,,,,,,llowinge,,,,,,,,,,"15/Apr/19 5:06 AM;llowinge;Verified with CR3.",,,,,,,
+Remove duplicated versions from fabric8-project-bom-camel-spring-boot-3.0.11.fuse-730026.pom,ENTESB-10054,12788991,Bug,Closed,ENTESB,Red Hat Fuse,software,janstey,,http://developers.redhat.com/products/fuse,Critical,Done,tcunning,jbouska,jbouska,24/Jan/19 7:23 AM,19/Mar/19 9:57 AM,29/Oct/19 11:53 AM,10/Mar/19 3:20 PM,fuse-7.3,,fuse-7.3,,Build,Camel,,,0,,"Some versions are duplicated/overwritten in [fabric8-project-bom-camel-spring-boot-3.0.11.fuse-730026.pom|http://origin-repository.jboss.org/nexus/content/groups/ea/io/fabric8/fabric8-project-bom-camel-spring-boot/3.0.11.fuse-730026/fabric8-project-bom-camel-spring-boot-3.0.11.fuse-730026.pom].
+
+For example you can see both:
+{code}
+<version.commons-io.commons-io>2.6</version.commons-io.commons-io>
+<version.commons-io.commons-io>2.4</version.commons-io.commons-io>
+{code}
+
+Here is the list of dupplicated tags:
+{code}
+version.commons-io.commons-io
+version.io.fabric8.hawt-app-maven-plugin
+version.io.fabric8.kubernetes-api
+version.io.fabric8.kubernetes-assertions
+version.io.fabric8.kubernetes-client
+version.io.fabric8.openshift-client
+version.javax.annotation.jsr250-api
+version.javax.inject.javax.inject
+version.javax.servlet.servlet-api
+version.javax.validation.validation-api
+version.javax.ws.rs.javax.ws.rs-api
+version.junit.junit
+version.org.apache.avro.avro-mapred
+version.org.apache.camel.camel-core
+version.org.apache.cxf.cxf-rt-rs-service-description-swagger
+version.org.apache.httpcomponents.httpasyncclient
+version.org.apache.httpcomponents.httpclient
+version.org.apache.httpcomponents.httpclient-cache
+version.org.apache.httpcomponents.httpclient-osgi
+version.org.apache.httpcomponents.httpcore
+version.org.apache.httpcomponents.httpcore-nio
+version.org.apache.httpcomponents.httpmime
+version.org.optaplanner.optaplanner-wb-domain-editor-api
+version.org.optaplanner.optaplanner-wb-domain-editor-backend
+version.org.optaplanner.optaplanner-wb-domain-editor-client
+version.org.optaplanner.optaplanner-wb-guided-rule-editor-api
+version.org.optaplanner.optaplanner-wb-guided-rule-editor-backend
+version.org.optaplanner.optaplanner-wb-guided-rule-editor-client
+version.org.optaplanner.optaplanner-wb-solver-editor-api
+version.org.optaplanner.optaplanner-wb-solver-editor-backend
+version.org.optaplanner.optaplanner-wb-solver-editor-client
+version.org.optaplanner.optaplanner-wb-upstream-model
+version.org.optaplanner.optaplanner-webexamples
+version.org.springframework.boot.spring-boot
+version.org.springframework.boot.spring-boot-test
+version.xml-apis.xml-apis
+{code}
+",,,,,,,,,,,ENTESB-10123,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2019-03-07 09:43:12.0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,0.0,4.0,,,,,,,,,,,,,,,"1|hy0q4k:i1r0e4",9223372036854775807,,,,0.0,,,,Fuse 7.3 Sprint 42 - Bug fix,,,,,,,,,,,jbouska,,,,,,,,,,"08/Feb/19 3:23 AM;jbouska;[~janstey] Can you assign this to somebody? We should avoid version duplicity. ","08/Mar/19 5:53 PM;tcunning;The versions here are generated from sundrio-maven-plugin - there's no way I know to get them to unique in the case where the artifact is different.    For instance, avro-mapred is listed as duplicate, but it is not really ""duplicated"" because there are two different avro-mapred artifacts, one with a hadoop classifier being represented in the pom.xml.
+
+The real problem here is that some of these artifacts are duplicated - some with different versions.
+
+Duplicated, need removal
+version.commons-io.commons-io  
+version.io.fabric8.kubernetes-api 
+version.io.fabric8.kubernetes-assertions
+version.io.fabric8.kubernetes-client
+version.io.fabric8.openshift-client
+version.javax.annotation.jsr250-api
+version.javax.inject.javax.inject
+version.javax.validation.validation-api
+version.junit.junit
+version.org.apache.cxf.cxf-rt-rs-service-description-swagger
+version.org.apache.httpcomponents.httpasyncclient
+version.org.apache.httpcomponents.httpclient
+version.org.apache.httpcomponents.httpclient-cache
+version.org.apache.httpcomponents.httpclient-osgi
+version.org.apache.httpcomponents.httpcore
+version.org.apache.httpcomponents.httpcore-nio
+version.org.apache.httpcomponents.httpmime
+version.xml-apis.xml-apis
+
+Not Duplicate artifacts
+version.io.fabric8.hawt-app-maven-plugin - not duplicated - listed as a dependency and a plugin
+version.javax.servlet.servlet-api - different groupids
+version.javax.ws.rs.javax.ws.rs-api - not duplicated
+version.org.apache.avro.avro-mapred - different classifiers
+version.org.apache.camel.camel-core - different classifiers
+version.org.optaplanner.optaplanner-wb-domain-editor-api - classifiers
+version.org.optaplanner.optaplanner-wb-domain-editor-backend - classifiers
+version.org.optaplanner.optaplanner-wb-domain-editor-client - classifiers
+version.org.optaplanner.optaplanner-wb-guided-rule-editor-api - classifiers
+version.org.optaplanner.optaplanner-wb-guided-rule-editor-backend - classifiers
+version.org.optaplanner.optaplanner-wb-guided-rule-editor-client - classifiers
+version.org.optaplanner.optaplanner-wb-solver-editor-api - classifiers
+version.org.optaplanner.optaplanner-wb-solver-editor-backend - classifiers
+version.org.optaplanner.optaplanner-wb-solver-editor-client - classifiers
+version.org.optaplanner.optaplanner-wb-upstream-model - classifiers
+version.org.optaplanner.optaplanner-webexamples - classifiers
+version.org.springframework.boot.spring-boot
+version.org.springframework.boot.spring-boot-test
+
+","10/Mar/19 3:20 PM;tcunning;https://github.com/jboss-fuse/fabric8/pull/1210","19/Mar/19 9:57 AM;jbouska;Verified with http://origin-repository.jboss.org/nexus/content/groups/ea/io/fabric8/fabric8-project-bom-camel-spring-boot/3.0.11.fuse-730062/fabric8-project-bom-camel-spring-boot-3.0.11.fuse-730062.pom",,,,
+[DMN Designer][IE11] Missing Structure option,DROOLS-3205,12776840,Bug,Closed,DROOLS,Drools,software,mfusco,The Drools project.,http://jboss.org/drools,Minor,Done,dadossan,jomarko,jomarko,30/Oct/18 4:15 AM,11/Mar/19 4:43 AM,29/Oct/19 12:21 PM,11/Mar/19 4:43 AM,7.14.0.Final,,7.19.0.Final,,DMN Editor,,,,0,drools-tools,"The *manage custom data type* dialog misses the *Structure* option for the IE11, see the attached screenshot. Other browsers works fine.",,,,,,,,,,,,RHDM-869,,"30/Oct/18 4:12 AM;jomarko;Screenshot from 2018-10-30 09-09-52.png;https://issues.jboss.org/secure/attachment/12442561/Screenshot+from+2018-10-30+09-09-52.png",,,,,,,,,,,,,,,,,,,,,,,,,,,2018-10-30 05:08:23.0,,,,,NEW,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,1.0,4.0,,,,,,,,,,,,NEW,,,"1|hxzfx3:000004d9",9223372036854775807,,,,0.0,,,,,,"- Open any existing DMN model
+- Select decision node
+- Click manage output data type
+- Click add
+- Edit added entry
+- Try to select Structure as data type",,,,,,,,,jomarko,,,,,,,,,,"30/Oct/18 5:08 AM;manstis;Sorry [~dadossan] would you mind taking a look ([~karreiro] can point you to the right place in the code).","30/Oct/18 7:45 AM;karreiro;Here https://github.com/kiegroup/kie-wb-common/blob/9ac3c83fc8dd97f2ce36eda579cedd5050dbc2b5/kie-wb-common-dmn/kie-wb-common-dmn-client/src/main/java/org/kie/workbench/common/dmn/client/editors/types/listview/DataTypeSelectView.java#L97-L102 ;-)
+
+Thanks.","30/Oct/18 7:49 AM;dadossan;Sure!","11/Mar/19 4:43 AM;jomarko;Not reproducible after RHDM-869 fix.",,,,
+RecordsStreamProducer fails on DataException for null value ,DBZ-1171,12795626,Bug,Closed,DBZ,Debezium,software,gunnar.morling,Debezium provides a data streaming platform for change data capture (CDC).,https://debezium.io/,Major,Explained,jpechanec,wouter.bancken.aca,wouter.bancken.aca,05/Mar/19 9:33 AM,11/Mar/19 3:56 AM,29/Oct/19 12:21 PM,11/Mar/19 3:56 AM,0.9.2.Final,,,,postgresql-connector,,,,0,,"h4. Environment
+Debezium Version: 0.9.2.Final
+Plugin: wal2json
+Connector: Postgresql
+Environment: Amazon RDS
+
+h4. Summary
+We are encountering a DataException when Debezium is processing changes from a data migration.
+
+h4. Details
+When Debezium is restarted after a data migration we are getting the following stacktrace:
+
+{code}
+Mar 05 12:47:38.929	2019-03-05 11:47:38,833 DEBUG || [Consumer clientId=consumer-2, groupId=debezium-kafka-connect-acc] Node 1 sent a full fetch response with 1 response partition(s) [org.apache.kafka.clients.FetchSessionHandler]
+Mar 05 12:47:38.631	at java.lang.Thread.run(Thread.java:748)
+Mar 05 12:47:38.631	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+Mar 05 12:47:38.631	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+Mar 05 12:47:38.631	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+Mar 05 12:47:38.631	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+Mar 05 12:47:38.630	at io.debezium.connector.postgresql.RecordsStreamProducer.lambda$start$0(RecordsStreamProducer.java:119)
+Mar 05 12:47:38.630	at io.debezium.connector.postgresql.RecordsStreamProducer.streamChanges(RecordsStreamProducer.java:133)
+Mar 05 12:47:38.630	at io.debezium.connector.postgresql.connection.PostgresReplicationConnection$1.read(PostgresReplicationConnection.java:254)
+Mar 05 12:47:38.630	at io.debezium.connector.postgresql.connection.PostgresReplicationConnection$1.deserializeMessages(PostgresReplicationConnection.java:269)
+Mar 05 12:47:38.630	at io.debezium.connector.postgresql.connection.wal2json.NonStreamingWal2JsonMessageDecoder.processMessage(NonStreamingWal2JsonMessageDecoder.java:62)
+Mar 05 12:47:38.630	at io.debezium.connector.postgresql.RecordsStreamProducer.lambda$streamChanges$1(RecordsStreamProducer.java:133)
+Mar 05 12:47:38.630	at io.debezium.connector.postgresql.RecordsStreamProducer.process(RecordsStreamProducer.java:264)
+Mar 05 12:47:38.630	at io.debezium.connector.postgresql.RecordsStreamProducer.generateUpdateRecord(RecordsStreamProducer.java:352)
+Mar 05 12:47:38.630	at io.debezium.connector.base.ChangeEventQueue.enqueue(ChangeEventQueue.java:124)
+Mar 05 12:47:38.630	java.lang.InterruptedException
+Mar 05 12:47:38.630	2019-03-05 11:47:38,558 ERROR Postgres|audit|records-stream-producer unexpected exception while streaming logical changes [io.debezium.connector.postgresql.RecordsStreamProducer]
+Mar 05 12:47:38.630	at java.lang.Thread.run(Thread.java:748)
+Mar 05 12:47:38.630	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+Mar 05 12:47:38.630	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+Mar 05 12:47:38.630	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+Mar 05 12:47:38.630	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+Mar 05 12:47:38.630	at io.debezium.connector.postgresql.RecordsStreamProducer.lambda$start$0(RecordsStreamProducer.java:119)
+Mar 05 12:47:38.630	at io.debezium.connector.postgresql.RecordsStreamProducer.streamChanges(RecordsStreamProducer.java:133)
+Mar 05 12:47:38.630	at io.debezium.connector.postgresql.connection.PostgresReplicationConnection$1.read(PostgresReplicationConnection.java:254)
+Mar 05 12:47:38.630	at io.debezium.connector.postgresql.connection.PostgresReplicationConnection$1.deserializeMessages(PostgresReplicationConnection.java:269)
+Mar 05 12:47:38.630	at io.debezium.connector.postgresql.connection.wal2json.NonStreamingWal2JsonMessageDecoder.processMessage(NonStreamingWal2JsonMessageDecoder.java:62)
+Mar 05 12:47:38.630	at io.debezium.connector.postgresql.RecordsStreamProducer.lambda$streamChanges$1(RecordsStreamProducer.java:133)
+Mar 05 12:47:38.630	at io.debezium.connector.postgresql.RecordsStreamProducer.process(RecordsStreamProducer.java:264)
+Mar 05 12:47:38.630	at io.debezium.connector.postgresql.RecordsStreamProducer.generateUpdateRecord(RecordsStreamProducer.java:325)
+Mar 05 12:47:38.630	at io.debezium.relational.TableSchema.keyFromColumnData(TableSchema.java:124)
+Mar 05 12:47:38.630	at io.debezium.relational.TableSchemaBuilder.lambda$createKeyGenerator$1(TableSchemaBuilder.java:174)
+Mar 05 12:47:38.629	at org.apache.kafka.connect.data.Struct.put(Struct.java:216)
+Mar 05 12:47:38.629	at org.apache.kafka.connect.data.ConnectSchema.validateValue(ConnectSchema.java:220)
+Mar 05 12:47:38.629	org.apache.kafka.connect.errors.DataException: Invalid value: null used for required field: ""certificate_id"", schema type: BYTES
+{code}
+
+Surrounding logs:
+{code}
+2019-03-05 11:47:38,557 ERROR  Postgres|audit|records-stream-producer  Failed to properly convert key value for 'platform_felix.certificate_eligiblecountries.certificate_id' of type numeric for row [AL, null]:   
+2019-03-05 11:47:38,549 DEBUG  Postgres|audit|records-stream-producer  Mapped columns for table 'platform_felix.certificate_eligiblecountries' to schema: {""name"" : ""audit.platform_felix.certificate_eligiblecountries.Value"", ""type"" : ""STRUCT"", ""optional"" : ""true"", ""fields"" : [{""name"" : ""eligible_country"", ""index"" : ""0"", ""schema"" : {""type"" : ""STRING"", ""optional"" : ""false""}}, {""name"" : ""certificate_id"", ""index"" : ""1"", ""schema"" : {""name"" : ""org.apache.kafka.connect.data.Decimal"", ""type"" : ""BYTES"", ""optional"" : ""false"", ""version"" : ""1""}}]}   [io.debezium.relational.TableSchemaBuilder]
+2019-03-05 11:47:38,548 DEBUG  Postgres|audit|records-stream-producer  Mapped primary key for table 'platform_felix.certificate_eligiblecountries' to schema: {""name"" : ""audit.platform_felix.certificate_eligiblecountries.Key"", ""type"" : ""STRUCT"", ""optional"" : ""false"", ""fields"" : [{""name"" : ""eligible_country"", ""index"" : ""0"", ""schema"" : {""type"" : ""STRING"", ""optional"" : ""false""}}, {""name"" : ""certificate_id"", ""index"" : ""1"", ""schema"" : {""name"" : ""org.apache.kafka.connect.data.Decimal"", ""type"" : ""BYTES"", ""optional"" : ""false"", ""version"" : ""1""}}]}   [io.debezium.relational.TableSchemaBuilder]
+2019-03-05 11:47:38,548 DEBUG  Postgres|audit|records-stream-producer  - field 'certificate_id' (BYTES) from column certificate_id numeric(19, 0) NOT NULL   [io.debezium.relational.TableSchemaBuilder]
+2019-03-05 11:47:38,548 DEBUG  Postgres|audit|records-stream-producer  - field 'certificate_id' (BYTES) from column certificate_id numeric(19, 0) NOT NULL   [io.debezium.relational.TableSchemaBuilder]
+2019-03-05 11:47:38,546 DEBUG  Postgres|audit|records-stream-producer  - field 'eligible_country' (STRING) from column eligible_country varchar(2, 0) NOT NULL   [io.debezium.relational.TableSchemaBuilder]
+2019-03-05 11:47:38,546 DEBUG  Postgres|audit|records-stream-producer  - field 'eligible_country' (STRING) from column eligible_country varchar(2, 0) NOT NULL   [io.debezium.relational.TableSchemaBuilder]
+2019-03-05 11:47:38,545 DEBUG  Postgres|audit|records-stream-producer  Mapping table 'platform_felix.certificate_eligiblecountries' to schemas under 'audit.platform_felix.certificate_eligiblecountries'   [io.debezium.relational.TableSchemaBuilder]
+{code}
+
+Specifically the following data migration seems to cause issues:
+1. Add the column 'certificate_id'
+2. Fill column 'certificate_id'
+3. Include 'certificate_id' in the primary key
+
+The data migration is done while Debezium is down to make sure we don't run into the known limitation described at https://debezium.io/docs/connectors/postgresql/#streaming-changes
+
+Our deployment process includes the following steps:
+1. Place the application in read-only mode
+2. Stop Debezium
+3. Deploy a new version of the application (which includes automatic data migration)
+4. Start Debezium",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2019-03-07 04:57:38.0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,0.0,3.0,,,,,,,,,,,,,,,"1|z03qf0:",9223372036854775807,,,,0.0,,,,,,,,,,,,,,,,,,,,,,,,,"07/Mar/19 4:57 AM;jpechanec;Hi,
+
+I cannot reproduce the issue. Could you please check theis page - https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_PostgreSQL.html and let me know which commit of wal2json plugin is used for you database version.
+
+Also I 'd really appreaciate if you could prepare an example sequence of DDL + DML statements that lead to the above described error. Important! It is necessary also to record TX boundaries.
+Also could you please use {{pg_recvlogical}} to provide me with a sample of JSON replication message that is sent by postgres database?
+
+So far I've believe I am failing to reproduce due to one on of the following reasons
+1) {{wal2json}} plugin does not send {{""columnoptionals"" }} field
+2) A specific TX boundaries come into play that desync optionality metadata
+
+Thanks a lot for your help","08/Mar/19 9:43 AM;wouter.bancken.aca;[~jpechanec]
+
+I can already provide you the following information:
+
+1. Our wal2json plugin commit is 9e962ba
+2. Example json (as logged by Kafka Connect):
+{code}
+{
+  ""xid"": 22904396,
+  ""timestamp"": ""2019-02-28 10:34:42.903946+00"",
+  ""change"": [
+    {
+      ""kind"": ""update"",
+      ""schema"": ""platform_felix"",
+      ""table"": ""certificate_eligiblecountries"",
+      ""columnnames"": [
+        ""qualified_monitoring_person_id"",
+        ""eligible_country"",
+        ""certificate_id""
+      ],
+      ""columntypes"": [
+        ""numeric(19,0)"",
+        ""character varying(2)"",
+        ""numeric(19,0)""
+      ],
+      ""columnvalues"": [
+        1,
+        ""AF"",
+        50
+      ],
+      ""oldkeys"": {
+        ""keynames"": [
+          ""qualified_monitoring_person_id"",
+          ""eligible_country""
+        ],
+        ""keytypes"": [
+          ""numeric(19,0)"",
+          ""character varying(2)""
+        ],
+        ""keyvalues"": [
+          1,
+          ""AF""
+        ]
+      }
+    },
+    ...
+  ]
+}
+{code}
+This seems to indicate that the columnoptionals field is not included? At the time this event was created `certificate_id` was nullable. 
+3. For DDL and DML I'll try to produce a limited example
+","08/Mar/19 12:01 PM;wouter.bancken.aca;[~jpechanec]
+
+I think I found the cause for my issue. 
+* We recently did a Postgres update on Amazon which also bumped the commit of wal2json that is used. 
+* The old version used commit 645ab69 which did not support the ""include-not-null"" option yet which is responsible for introducing the columnoptionals field. * Our new version does support the option so the problem was probably in the replication slot for the connector that was created with the old postgres version and that was now reused. 
+
+This also explains why the issue could not be reproduced locally.
+
+I think we can close this issue, my apologies for the interruption.
+",,,,,
+Create a new GitHub repo,AEROGEAR-8640,12794741,Task,Closed,AEROGEAR,AeroGear,software,weil,Mobile Services,http://aerogear.org,Major,Done,cmacedo86,cmacedo86,cmacedo86,28/Feb/19 9:47 AM,11/Mar/19 5:09 AM,29/Oct/19 12:21 PM,11/Mar/19 5:09 AM,,,,,,,,,0,team-customer-success,"h1. WHAT
+
+Create new public repository on GitHub to store code.
+
+- aerogearcatalog org in github. 
+- aerogearcatalog org in dockerhub
+
+Need to check the repo naming convention for existing mobile services and stay consistent between all repos for the security service also.
+
+h1. WHY
+
+The code needs to be made publicly available for use by other developers and for our team to collaborate
+
+[Trello link|https://trello.com/c/OudHdpiw]",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,2019-03-08 05:52:19.0,,,,,,,,,,,,,,,,,,AEROGEAR-8618,,,,,,,,,,,,https://github.com/aerogear/mobile-security-service-operator,,,,,,,,0.0,4.0,,,,,,,,,,,,,,,"1|z03lf8:",9223372036854775807,,,,0.0,,,,,,,,,,,,,,,,,,,,,,,,,"08/Mar/19 5:52 AM;endaphelan;[~lfitzgerald] can this be closed? I'm not sure if this is related to the server/UI or something else like an operator.","08/Mar/19 7:12 AM;lfitzgerald;It depends on whether we do an apb. If we do we need to create the repo.","10/Mar/19 7:15 AM;cmacedo86;Hi [~dffrench],
+
+I created the repo: https://github.com/aerogear/mobile-security-service-operator for we do the operator. In this way, I believe that we can close this JIRA as done. Is it make sense? Has any other reason for this JIRA be opened? 
+
+[~endaphelan] [~lfitzgerald]","11/Mar/19 5:06 AM;dffrench;[~cmacedo86] Perfect, this JIRA can now be closed.",,,,
