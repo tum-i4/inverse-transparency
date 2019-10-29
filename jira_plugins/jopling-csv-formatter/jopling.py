@@ -31,6 +31,9 @@ def main(file_paths: List[str], outfile: str):
 
     # TODO Fix and update fields
 
+    for issue in data:
+        fix_issue(issue)
+
     # TODO Write out to new file
     # IMPORTANT: Write in REVERSE date order to ensure links can be set as best as possible
 
@@ -56,6 +59,44 @@ def read_csv(file_path: str, data: List[Dict]) -> List[str]:
         data.append(row_dict)
 
     return keys
+
+
+def fix_issue(issue: Dict) -> None:
+    """ Fix the given issue in-place """
+
+    comment_key = "Comment"
+    expected_keys = {comment_key}
+
+    for k in expected_keys:
+        if k not in issue:
+            raise IOError(f'Expected key "{k}" not in row: {issue}')
+
+    # COMMENT update
+    comment: str = issue[comment_key]
+    if comment:
+        # Expected input comment format: 19/Feb/19 9:30 AM;laidan6000;Does this need a linked documentation task?
+        # Target comment format: 05/05/2010 09:20:30; adam; This is a comment.
+        # Changes: Reformat date to dd/dd/dddd dd:dd:dd
+
+        match = re.fullmatch(r"(\d\d/\w{3}/\d\d \d{1,2}:\d\d\s\wM)(;[^;].*)", comment)
+        if not match:
+            raise IOError(
+                f'Comment not in expected format "dd/www/dd dd:dd ww;...":\n  "{comment}"'
+            )
+
+        new_date_s: str = format_date(match.group(1))
+        new_comment = f"{new_date_s}{match.group(2)}"
+        if not re.match(r"^\d\d/\d\d/\d\d \d{1,2}:\d\d:\d\d;[^;]+", new_comment):
+            raise RuntimeError("Invalid conversion; missed own target...")
+
+        issue[comment_key] = new_comment
+
+    raise NotImplementedError()
+
+
+def format_date(date_s: str) -> str:
+    """ Format the given date to be locale independent. Tries en_US locale for input. """
+    raise NotImplementedError()
 
 
 if __name__ == "__main__":
