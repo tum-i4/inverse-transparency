@@ -1,0 +1,118 @@
+{
+  "config.version" : "2.0",
+  "config.project.from.csv" : "true",
+  "config.encoding" : "UTF-8",
+  "config.email.suffix" : "@ma.il",
+  "config.field.mappings" : {
+    "Project name" : {
+      "jira.field" : "project.name"
+    },
+    "Description" : {
+      "jira.field" : "description"
+    },
+    "Project url" : {
+      "jira.field" : "project.url"
+    },
+    "Attachment" : {
+      "jira.field" : "attachment"
+    },
+    "Affects Version/s" : {
+      "jira.field" : "versions"
+    },
+    "Created" : {
+      "jira.field" : "created"
+    },
+    "Fix Version/s" : {
+      "jira.field" : "fixVersions"
+    },
+    "Project type" : {
+      "jira.field" : "project.type"
+    },
+    "Votes" : {
+      "jira.field" : "votes"
+    },
+    "Time Spent" : {
+      "jira.field" : "timespent"
+    },
+    "Resolved" : {
+      "jira.field" : "resolutiondate"
+    },
+    "Remaining Estimate" : {
+      "jira.field" : "timeestimate"
+    },
+    "Issue id" : {
+      "jira.field" : "issue-id"
+    },
+    "Due Date" : {
+      "jira.field" : "duedate"
+    },
+    "Status" : {
+      "jira.field" : "status"
+    },
+    "Assignee" : {
+      "jira.field" : "assignee"
+    },
+    "Outward issue link (Related)" : {
+      "link.type" : "10003"
+    },
+    "Comment" : {
+      "jira.field" : "comment"
+    },
+    "Component/s" : {
+      "jira.field" : "components"
+    },
+    "Updated" : {
+      "jira.field" : "updated"
+    },
+    "Issue key" : {
+      "jira.field" : "issuekey"
+    },
+    "Priority" : {
+      "jira.field" : "priority"
+    },
+    "Reporter" : {
+      "jira.field" : "reporter"
+    },
+    "Labels" : {
+      "jira.field" : "labels"
+    },
+    "Outward issue link (Cloners)" : {
+      "link.type" : "10001"
+    },
+    "Issue Type" : {
+      "jira.field" : "issuetype"
+    },
+    "Project lead" : {
+      "jira.field" : "project.lead"
+    },
+    "Project description" : {
+      "jira.field" : "project.description"
+    },
+    "Project key" : {
+      "jira.field" : "project.key"
+    },
+    "Environment" : {
+      "jira.field" : "environment"
+    },
+    "Summary" : {
+      "jira.field" : "summary"
+    },
+    "Original Estimate" : {
+      "jira.field" : "timeoriginalestimate"
+    },
+    "Resolution" : {
+      "jira.field" : "resolution"
+    }
+  },
+  "config.value.mappings" : { },
+  "config.delimiter" : ",",
+  "config.project" : {
+    "project.type" : null,
+    "project.key" : "SB",
+    "project.description" : null,
+    "project.url" : null,
+    "project.name" : "Some...body!",
+    "project.lead" : null
+  },
+  "config.date.format" : "dd/MMM/yy h:mm a"
+}
