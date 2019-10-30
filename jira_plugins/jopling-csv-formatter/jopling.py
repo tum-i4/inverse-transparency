@@ -46,9 +46,21 @@ def main(file_paths: List[str], outfile: str):
     data.sort(key=lambda issue: issue["Created"])
     # 2. Write out to outfile
 
-    # TODO Write out to new file
-    print([i["Created"] for i in data])
-    raise NotImplementedError()
+    all_keys_sorted: List[str] = sorted(all_keys)
+
+    with open(outfile, "w", newline="") as file_pointer:
+        file_writer = csv.writer(
+            file_pointer,
+            delimiter=DELIMITER,
+            quotechar=QUOTECHAR,
+            quoting=csv.QUOTE_NONNUMERIC,
+        )
+        file_writer.writerow(all_keys_sorted)
+        for issue in data:
+            issue_row: List[str] = csvize_issue(issue, all_keys_sorted)
+            file_writer.writerow(issue_row)
+
+    print(f"Created file {outfile_path} with {len(data)} entries")
 
 
 def read_csv(file_path: str, data: List[Dict]) -> List[str]:
@@ -131,6 +143,11 @@ def format_date(date_s: str) -> str:
     date_dt: dt.datetime = dt.datetime.strptime(date_s, "%d/%b/%y %I:%M %p")
 
     return date_dt.strftime("%Y-%m-%d %H:%M")
+
+
+def csvize_issue(issue: Dict, keys: List[str]) -> List[str]:
+    """ Convert the given issue dict to a list of its values, sorted by key as given in the key list. """
+    raise NotImplementedError()
 
 
 if __name__ == "__main__":
