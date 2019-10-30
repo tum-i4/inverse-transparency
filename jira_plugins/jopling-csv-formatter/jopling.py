@@ -12,6 +12,8 @@ import sys
 from typing import Dict, List, Set
 
 locale.setlocale(locale.LC_TIME, "en_US.UTF-8")
+DELIMITER = ","
+QUOTECHAR = '"'
 
 
 def main(file_paths: List[str], outfile: str):
@@ -53,7 +55,7 @@ def read_csv(file_path: str, data: List[Dict]) -> List[str]:
 
     list_of_rows: List[List[str]] = []
     with open(file_path, newline="") as file_pointer:
-        file_reader = csv.reader(file_pointer, delimiter=",", quotechar='"')
+        file_reader = csv.reader(file_pointer, delimiter=DELIMITER, quotechar=QUOTECHAR)
         for row in file_reader:
             list_of_rows.append(row)
 
