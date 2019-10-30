@@ -91,16 +91,24 @@ def analyze_main(file_paths: List[str]):
 
     print(f"Unique status found: {sorted(all_status)[:51]}")
     print()
-    print("Top projects           # issues")
-    top_projects = sorted(
+
+    # Top / bottom projects
+    projects_sorted = sorted(
         num_issues_per_project.items(), key=lambda t: t[1], reverse=True
-    )[:11]
+    )
+    top_projects = projects_sorted[:10]
+
+    print(f"Top projects {' ' * 22} # issues")
+
     for proj_key, num_issues in top_projects:
         proj_name = project_names[proj_key]
         if len(proj_name) > 20:
             proj_name = proj_name[:18] + "..."
-        print(f"{(proj_name).ljust(22)} {str(num_issues).rjust(8)}")
+        print(
+            f"{proj_key[:9].ljust(10)}  {(proj_name).ljust(22)}  {str(num_issues).rjust(8)}"
+        )
     print()
+
     print(f"Issues:   {len(data)}")
     print(f"Projects: {len(all_projects)}")
     print(f"Status:   {len(all_status)}")
