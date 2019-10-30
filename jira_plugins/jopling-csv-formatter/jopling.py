@@ -147,7 +147,16 @@ def format_date(date_s: str) -> str:
 
 def csvize_issue(issue: Dict, keys: List[str]) -> List[str]:
     """ Convert the given issue dict to a list of its values, sorted by key as given in the key list. """
-    raise NotImplementedError()
+
+    result: List[str] = []
+    for key in keys:
+        if key not in issue:
+            result.append("")
+            continue
+
+        result.append(issue[key])
+
+    return result
 
 
 if __name__ == "__main__":
