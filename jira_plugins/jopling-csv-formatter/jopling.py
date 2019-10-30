@@ -19,12 +19,6 @@ QUOTECHAR = '"'
 def fix_main(file_paths: List[str], outfile_path: str):
     """ Comb through the given files, fix up the issues, and write to outfile. """
 
-    for fp in file_paths:
-        if not os.path.isfile(fp):
-            print(f'Given path "{fp}" is not a valid file.')
-            sys.exit(1)
-
-    outfile_path = os.path.join(os.path.dirname(file_paths[0]), outfile)
     if os.path.lexists(outfile_path):
         print(f"Output file {outfile_path} exists.")
         sys.exit(1)
@@ -173,7 +167,16 @@ if __name__ == "__main__":
             help="The output file",
         )
         args = parser.parse_args()
-        fix_main(file_paths=args.file_path, outfile=args.outfile)
+
+        # Argument check level 2
+        file_paths: List[str] = args.file_path
+        for fp in file_paths:
+            if not os.path.isfile(fp):
+                print(f'Given path "{fp}" is not a valid file.')
+                sys.exit(1)
+
+        outfile_path = os.path.join(os.path.dirname(file_paths[0]), args.outfile)
+        fix_main(file_paths=file_paths, outfile_path=outfile_path)
 
     except KeyboardInterrupt:
         # Exit code for Ctrl-C
