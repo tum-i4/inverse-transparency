@@ -49,7 +49,7 @@ def fix_main(file_paths: List[str], outfile_path: str):
 
     # 2. Write out to outfile
     all_keys_sorted: List[str] = sorted(all_keys)
-    with open(outfile, "w", newline="") as file_pointer:
+    with open(outfile_path, "w", newline="") as file_pointer:
         file_writer = csv.writer(
             file_pointer,
             delimiter=DELIMITER,
