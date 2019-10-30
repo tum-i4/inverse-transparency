@@ -9,7 +9,7 @@ import locale
 import os.path
 import re
 import sys
-from typing import Dict, List, Set
+from typing import Dict, List, Set, Tuple
 
 locale.setlocale(locale.LC_TIME, "en_US.UTF-8")
 DELIMITER = ","
@@ -23,16 +23,9 @@ def fix_main(file_paths: List[str], outfile_path: str):
         print(f"Output file {outfile_path} exists.")
         sys.exit(1)
 
-    data: List[Dict] = []
-    all_keys: Set[str] = set()
-
-    for file_path in file_paths:
-        keys = read_csv(file_path, data)
-        if len(keys) < 2:
-            raise IOError(
-                f'Seem to have misread CSV "{file_path}"...\nParsed keys: {keys}'
-            )
-        all_keys.update(keys)
+    data: List[Dict]
+    all_keys: Set[str]
+    data, all_keys = read_all_csvs(file_paths)
 
     # Fix and update fields
     for issue in data:
@@ -62,6 +55,27 @@ def analyze_main(file_paths: List[str]):
     """ Comb through the given files and analyze them. """
 
     raise NotImplementedError()
+
+
+def read_all_csvs(file_paths: List[str]) -> Tuple[List[Dict], Set[str]]:
+    """
+    Read all given files with read_csv() and store them in a dict.
+
+    Returns: Dict of all issues, List of all keys
+    """
+
+    data: List[Dict] = []
+    all_keys: Set[str] = set()
+
+    for file_path in file_paths:
+        keys = read_csv(file_path, data)
+        if len(keys) < 2:
+            raise IOError(
+                f'Seem to have misread CSV "{file_path}"...\nParsed keys: {keys}'
+            )
+        all_keys.update(keys)
+
+    return data, all_keys
 
 
 def read_csv(file_path: str, data: List[Dict]) -> List[str]:
