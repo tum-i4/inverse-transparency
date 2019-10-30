@@ -65,7 +65,11 @@ def fix_issue(issue: Dict) -> None:
     """ Fix the given issue in-place """
 
     comment_key = "Comment"
-    expected_keys = {comment_key}
+    created_key = "Created"
+    due_key = "Due Date"
+    resolved_key = "Resolved"
+    updated_key = "Updated"
+    expected_keys = {comment_key, created_key, due_key, resolved_key, updated_key}
 
     for k in expected_keys:
         if k not in issue:
@@ -90,6 +94,13 @@ def fix_issue(issue: Dict) -> None:
             raise RuntimeError("Invalid conversion; missed own target...")
 
         issue[comment_key] = new_comment
+
+    # TODO Fix all dates to be locale independent (ISO-like format)
+    # Comment (above)
+    # Created
+    # Due Date
+    # Resolved
+    # Updated
 
     raise NotImplementedError()
 
