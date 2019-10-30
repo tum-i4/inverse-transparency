@@ -102,12 +102,16 @@ def fix_issue(issue: Dict) -> None:
 
         issue[comment_key] = new_comment
 
-    # TODO Fix all dates to be locale independent (ISO-like format)
-    # Comment (above)
-    # Created
-    # Due Date
-    # Resolved
-    # Updated
+    # Fix all dates to be locale independent (ISO-like format)
+    # CREATED, UPDATED update
+    issue[created_key] = format_date(issue[created_key])
+    issue[updated_key] = format_date(issue[updated_key])
+
+    # DUE, RESOLVED update: These may be empty
+    if issue[due_key]:
+        issue[due_key] = format_date(issue[due_key])
+    if issue[resolved_key]:
+        issue[resolved_key] = format_date(issue[resolved_key])
 
 
 def format_date(date_s: str) -> str:
