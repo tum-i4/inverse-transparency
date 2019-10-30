@@ -58,6 +58,12 @@ def fix_main(file_paths: List[str], outfile_path: str):
     print(f"Created file {outfile_path} with {len(data)} entries")
 
 
+def analyze_main(file_paths: List[str]):
+    """ Comb through the given files and analyze them. """
+
+    raise NotImplementedError()
+
+
 def read_csv(file_path: str, data: List[Dict]) -> List[str]:
     """
     Read the given file and drop it into the given list of dicts. Each row will be saved as one dict.
@@ -166,6 +172,7 @@ if __name__ == "__main__":
             default=f"jira_csv_{dt.datetime.now().strftime('%y%m%d-%H%M%S')}.csv",
             help="The output file",
         )
+        parser.add_argument("--mode", "-m", default="fix", choices=["analyze", "fix"])
         args = parser.parse_args()
 
         # Argument check level 2
@@ -175,8 +182,13 @@ if __name__ == "__main__":
                 print(f'Given path "{fp}" is not a valid file.')
                 sys.exit(1)
 
-        outfile_path = os.path.join(os.path.dirname(file_paths[0]), args.outfile)
-        fix_main(file_paths=file_paths, outfile_path=outfile_path)
+        if args.mode == "fix":
+            outfile_path = os.path.join(os.path.dirname(file_paths[0]), args.outfile)
+            fix_main(file_paths=file_paths, outfile_path=outfile_path)
+        elif args.mode == "analyze":
+            analyze_main(file_paths=file_paths)
+        else:
+            raise NotImplementedError(f"Mode {args.mode} not implemented")
 
     except KeyboardInterrupt:
         # Exit code for Ctrl-C
