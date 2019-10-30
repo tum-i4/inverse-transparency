@@ -16,7 +16,9 @@ DELIMITER = ","
 QUOTECHAR = '"'
 
 
-def main(file_paths: List[str], outfile: str):
+def fix_main(file_paths: List[str], outfile_path: str):
+    """ Comb through the given files, fix up the issues, and write to outfile. """
+
     for fp in file_paths:
         if not os.path.isfile(fp):
             print(f'Given path "{fp}" is not a valid file.')
@@ -171,7 +173,7 @@ if __name__ == "__main__":
             help="The output file",
         )
         args = parser.parse_args()
-        main(file_paths=args.file_path, outfile=args.outfile)
+        fix_main(file_paths=args.file_path, outfile=args.outfile)
 
     except KeyboardInterrupt:
         # Exit code for Ctrl-C
