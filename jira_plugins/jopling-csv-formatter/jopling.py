@@ -11,7 +11,11 @@ import re
 import sys
 from typing import Dict, List, Set, Tuple
 
+# Some global settings
 locale.setlocale(locale.LC_TIME, "en_US.UTF-8")
+csv.field_size_limit(sys.maxsize)
+
+# Constants
 DELIMITER = ","
 QUOTECHAR = '"'
 
