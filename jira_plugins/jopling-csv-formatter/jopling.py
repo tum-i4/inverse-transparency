@@ -34,6 +34,8 @@ def main(file_paths: List[str], outfile: str):
     for issue in data:
         fix_issue(issue)
 
+    raise NotImplementedError()
+
     # TODO Write out to new file
     # IMPORTANT: Write in REVERSE date order to ensure links can be set as best as possible
 
@@ -101,8 +103,6 @@ def fix_issue(issue: Dict) -> None:
     # Due Date
     # Resolved
     # Updated
-
-    raise NotImplementedError()
 
 
 def format_date(date_s: str) -> str:
