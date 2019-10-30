@@ -210,38 +210,34 @@ def analyze_main(file_paths: List[str]):
     print()
 
     # Top / bottom projects
-    projects_sorted = sorted(
-        num_issues_per_project.items(), key=lambda t: t[1], reverse=True
-    )
-    top_projects = projects_sorted[:10]
-    bottom_projects = projects_sorted[-10:]
-
-    if len(all_projects) <= 20:
-        print(f"Projects {' ' * 26} # issues")
-        top_projects = projects_sorted
-        bottom_projects = []
-    else:
-        print(f"Top projects {' ' * 22} # issues")
-
-    for proj_key, num_issues in top_projects:
-        proj_name = project_names[proj_key]
-        if len(proj_name) > 20:
-            proj_name = proj_name[:18] + "..."
-        print(
-            f"{proj_key[:9].ljust(10)}  {(proj_name).ljust(22)}  {str(num_issues).rjust(8)}"
-        )
-    print()
-
-    if bottom_projects:
-        print(f"Bottom projects {' ' * 10 } # issues")
-        for proj_key, num_issues in bottom_projects:
+    def print_project_table(
+        projects: List[Tuple[str, int]], project_names: Dict[str, str]
+    ):
+        for proj_key, num_issues in projects:
             proj_name = project_names[proj_key]
             if len(proj_name) > 20:
                 proj_name = proj_name[:18] + "..."
             print(
                 f"{proj_key[:9].ljust(10)}  {(proj_name).ljust(22)}  {str(num_issues).rjust(8)}"
             )
-        print()
+
+    projects_sorted = sorted(
+        num_issues_per_project.items(), key=lambda t: t[1], reverse=True
+    )
+
+    # Show all projects if it's 20 or less, otherwise split top / bottom 10
+    top_projects: List[Tuple[str, int]] = projects_sorted
+    bottom_projects: List[Tuple[str, int]] = []
+    if len(projects_sorted) > 20:
+        top_projects = projects_sorted[:10]
+        bottom_projects = projects_sorted[-10:]
+
+    print(f"Projects {' ' * 26} # issues")
+    print_project_table(top_projects, project_names)
+    if bottom_projects:
+        print("...".ljust(20).rjust(40))
+        print_project_table(bottom_projects, project_names)
+    print()
 
     print(f"Issues:   {len(data)}")
     print(f"Projects: {len(all_projects)}")
