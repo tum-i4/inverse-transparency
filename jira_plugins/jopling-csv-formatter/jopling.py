@@ -58,7 +58,54 @@ def fix_main(file_paths: List[str], outfile_path: str):
 def analyze_main(file_paths: List[str]):
     """ Comb through the given files and analyze them. """
 
-    raise NotImplementedError()
+    data: List[Dict]
+    data, _ = read_all_csvs(file_paths)
+
+    all_projects: Set[str] = set()
+    all_status: Set[str] = set()
+    project_names: Dict[str, str] = dict()
+    status_per_project: Dict[str, Set[str]] = dict()
+    num_issues_per_project: Dict[str, int] = dict()
+
+    for issue in data:
+        project_key: str = issue["Project key"]
+        project_name: str = issue["Project name"]
+        status: str = issue["Status"]
+
+        if project_key not in status_per_project:
+            status_per_project[project_key] = set()
+        if project_key not in num_issues_per_project:
+            num_issues_per_project[project_key] = 0
+
+        all_projects.add((project_key))
+        all_status.add(status)
+        project_names[project_key] = project_name
+        status_per_project[project_key].add(status)
+        num_issues_per_project[project_key] += 1
+
+    for proj_key, statuss in status_per_project.items():
+        print(f"{project_names[proj_key]}:\n  ", end="")
+        for status in statuss:
+            print(f"{status}  ", end="")
+        print("\n")
+
+    print(f"Unique status found: {sorted(all_status)[:51]}")
+    print()
+    print("Top projects           # issues")
+    top_projects = sorted(
+        num_issues_per_project.items(), key=lambda t: t[1], reverse=True
+    )[:11]
+    for proj_key, num_issues in top_projects:
+        proj_name = project_names[proj_key]
+        if len(proj_name) > 20:
+            proj_name = proj_name[:18] + "..."
+        print(f"{(proj_name).ljust(22)} {str(num_issues).rjust(8)}")
+    print()
+    print(f"Issues:   {len(data)}")
+    print(f"Projects: {len(all_projects)}")
+    print(f"Status:   {len(all_status)}")
+    print()
+    print("Analysis done.")
 
 
 def read_all_csvs(file_paths: List[str]) -> Tuple[List[Dict], Set[str]]:
