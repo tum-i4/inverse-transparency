@@ -114,5 +114,5 @@
     "project.name" : "Some...body!",
     "project.lead" : null
   },
-  "config.date.format" : "dd/MMM/yy h:mm a"
+  "config.date.format" : "yyyy-MM-dd HH:mm"
 }
