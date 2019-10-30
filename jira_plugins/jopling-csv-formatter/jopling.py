@@ -100,7 +100,7 @@ def fix_issue(issue: Dict) -> None:
         if k not in issue:
             raise IOError(f'Expected key "{k}" not in row: {issue}')
 
-    # COMMENT update
+    # COMMENT update: Issue may also not have any comments (comment == "")
     comment: str = issue[comment_key]
     if comment:
         # Expected input comment format: 19/Feb/19 9:30 AM;laidan6000;Does this need a linked documentation task?
