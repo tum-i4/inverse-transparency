@@ -44,10 +44,9 @@ def main(file_paths: List[str], outfile: str):
 
     # 1. Order old to new to ensure links can be set as good as possible
     data.sort(key=lambda issue: issue["Created"])
+
     # 2. Write out to outfile
-
     all_keys_sorted: List[str] = sorted(all_keys)
-
     with open(outfile, "w", newline="") as file_pointer:
         file_writer = csv.writer(
             file_pointer,
