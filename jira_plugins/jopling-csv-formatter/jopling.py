@@ -97,8 +97,14 @@ def analyze_main(file_paths: List[str]):
         num_issues_per_project.items(), key=lambda t: t[1], reverse=True
     )
     top_projects = projects_sorted[:10]
+    bottom_projects = projects_sorted[-10:]
 
-    print(f"Top projects {' ' * 22} # issues")
+    if len(all_projects) <= 20:
+        print(f"Projects {' ' * 26} # issues")
+        top_projects = projects_sorted
+        bottom_projects = []
+    else:
+        print(f"Top projects {' ' * 22} # issues")
 
     for proj_key, num_issues in top_projects:
         proj_name = project_names[proj_key]
@@ -108,6 +114,17 @@ def analyze_main(file_paths: List[str]):
             f"{proj_key[:9].ljust(10)}  {(proj_name).ljust(22)}  {str(num_issues).rjust(8)}"
         )
     print()
+
+    if bottom_projects:
+        print(f"Bottom projects {' ' * 10 } # issues")
+        for proj_key, num_issues in bottom_projects:
+            proj_name = project_names[proj_key]
+            if len(proj_name) > 20:
+                proj_name = proj_name[:18] + "..."
+            print(
+                f"{proj_key[:9].ljust(10)}  {(proj_name).ljust(22)}  {str(num_issues).rjust(8)}"
+            )
+        print()
 
     print(f"Issues:   {len(data)}")
     print(f"Projects: {len(all_projects)}")
