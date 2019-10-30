@@ -31,15 +31,17 @@ def main(file_paths: List[str], outfile: str):
             )
         all_keys.update(keys)
 
-    # TODO Fix and update fields
-
+    # Fix and update fields
     for issue in data:
         fix_issue(issue)
 
-    raise NotImplementedError()
+    # 1. Order old to new to ensure links can be set as good as possible
+    data.sort(key=lambda issue: issue["Created"])
+    # 2. Write out to outfile
 
     # TODO Write out to new file
-    # IMPORTANT: Write in REVERSE date order to ensure links can be set as best as possible
+    print([i["Created"] for i in data])
+    raise NotImplementedError()
 
 
 def read_csv(file_path: str, data: List[Dict]) -> List[str]:
