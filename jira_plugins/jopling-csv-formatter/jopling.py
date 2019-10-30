@@ -11,6 +11,8 @@ import re
 import sys
 from typing import Dict, List, Set
 
+locale.setlocale(locale.LC_TIME, "en_US.UTF-8")
+
 
 def main(file_paths: List[str], outfile: str):
     for fp in file_paths:
@@ -92,8 +94,11 @@ def fix_issue(issue: Dict) -> None:
 
         new_date_s: str = format_date(match.group(1))
         new_comment = f"{new_date_s}{match.group(2)}"
-        if not re.match(r"^\d\d/\d\d/\d\d \d{1,2}:\d\d:\d\d;[^;]+", new_comment):
-            raise RuntimeError("Invalid conversion; missed own target...")
+
+        if not re.match(r"^\d\d\d\d-\d\d-\d\d \d\d:\d\d;[^;]+", new_comment):
+            raise RuntimeError(
+                f'Invalid conversion; missed own target...:\n  "{new_comment}"'
+            )
 
         issue[comment_key] = new_comment
 
@@ -106,8 +111,13 @@ def fix_issue(issue: Dict) -> None:
 
 
 def format_date(date_s: str) -> str:
-    """ Format the given date to be locale independent. Tries en_US locale for input. """
-    raise NotImplementedError()
+    """ Format the given date as "yyyy-MM-dd HH:mm" (SimpleDateFormat) to be locale independent.
+    Tries en_US locale for input. """
+
+    assert locale.getlocale(locale.LC_TIME)[0] == "en_US"
+    date_dt: dt.datetime = dt.datetime.strptime(date_s, "%d/%b/%y %I:%M %p")
+
+    return date_dt.strftime("%Y-%m-%d %H:%M")
 
 
 if __name__ == "__main__":
