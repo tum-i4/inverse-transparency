@@ -22,6 +22,11 @@ def main(file_paths: List[str], outfile: str):
             print(f'Given path "{fp}" is not a valid file.')
             sys.exit(1)
 
+    outfile_path = os.path.join(os.path.dirname(file_paths[0]), outfile)
+    if os.path.lexists(outfile_path):
+        print(f"Output file {outfile_path} exists.")
+        sys.exit(1)
+
     data: List[Dict] = []
     all_keys: Set[str] = set()
 
