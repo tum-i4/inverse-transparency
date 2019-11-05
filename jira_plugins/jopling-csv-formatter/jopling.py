@@ -39,6 +39,8 @@ def fix_main(file_paths: List[str], outfile_path: str):
     data.sort(key=lambda issue: issue["Created"])
 
     # 2. Write out to outfile
+    # TODO Deal with a key appearing multiple times!
+    raise NotImplementedError()
     all_keys_sorted: List[str] = sorted(all_keys)
     with open(outfile_path, "w", newline="") as file_pointer:
         file_writer = csv.writer(
@@ -93,7 +95,12 @@ def read_csv(file_path: str, data: List[Dict]) -> List[str]:
     for row in vals:
         row_dict: Dict = dict()
         for k, v in zip(keys, row):
-            row_dict[k] = v
+            if keys.count(k) == 1:
+                row_dict[k] = v
+            else:
+                if k not in row_dict:
+                    row_dict[k] = []
+                row_dict[k].append(v)
         data.append(row_dict)
 
     return keys
