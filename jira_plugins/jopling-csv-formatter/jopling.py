@@ -140,21 +140,14 @@ def fix_issue(issue: Dict[str, List]) -> None:
     if any(comments):
         _fix_comments(issue[comment_key])
 
-    # TODO deal with keys with multiple values!
-    # TODO deal with values being lists!
-    raise NotImplementedError()
-
     # Fix all dates to be locale independent (ISO-like format)
     # CREATED, UPDATED, LAST VIEWED update
-    issue[created_key] = format_date(issue[created_key])
-    issue[updated_key] = format_date(issue[updated_key])
-    issue[last_viewed_key] = format_date(issue[last_viewed_key])
+    for req_key in [created_key, updated_key, last_viewed_key]:
+        _fix_date(issue, req_key, required=True)
 
     # DUE, RESOLVED update: These may be empty
-    if issue[due_key]:
-        issue[due_key] = format_date(issue[due_key])
-    if issue[resolved_key]:
-        issue[resolved_key] = format_date(issue[resolved_key])
+    for opt_key in [due_key, resolved_key]:
+        _fix_date(issue, opt_key, required=False)
 
 
 def _fix_comments(comments: List[str]) -> None:
@@ -184,6 +177,21 @@ def _fix_comments(comments: List[str]) -> None:
             )
 
         comments[i] = new_comment
+
+
+def _fix_date(issue: Dict[str, List], date_key: str, required: bool = True) -> None:
+    """ Fix the single date contained in the list.
+    If the list has more than one element, raise. """
+
+    dates: List[str] = issue[date_key]
+
+    if len(dates) != 1:
+        raise ValueError(f'Date field "{date_key}" may have exactly one value.')
+
+    if required and not dates[0]:
+        raise ValueError(f'Required date value not set in field "{date_key}"!')
+
+    dates[0] = format_date(dates[0])
 
 
 def format_date(date_s: str) -> str:
