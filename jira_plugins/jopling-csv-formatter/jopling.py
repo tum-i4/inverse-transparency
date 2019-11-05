@@ -128,10 +128,12 @@ def fix_issue(issue: Dict) -> None:
         # Target comment format: 05/05/2010 09:20:30; adam; This is a comment.
         # Changes: Reformat date to dd/dd/dddd dd:dd:dd
 
-        match = re.fullmatch(r"(\d\d/\w{3}/\d\d \d{1,2}:\d\d\s\wM)(;[^;].*)", comment)
+        match = re.fullmatch(
+            r"(\d\d/\w{3}/\d\d \d{1,2}:\d\d\s\wM)(;[^;](?:.|\s)*)", comment
+        )
         if not match:
             raise IOError(
-                f'Comment not in expected format "dd/www/dd dd:dd ww;...":\n  "{comment}"'
+                f'Comment not in expected format "dd/www/dd (d)d:dd ww;...":\n  "{comment}"'
             )
 
         new_date_s: str = format_date(match.group(1))
