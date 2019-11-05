@@ -235,12 +235,10 @@ def csvize_issue(issue: Dict, keys_counted: CounterT[str]) -> List[str]:
     result: List[str] = []
     for key in keys_counted:
         if key not in issue:
-            if keys_counted[key] == 1:
-                issue[key] = ""
-            else:
-                issue[key] = [""] * keys_counted[key]
+            issue[key] = [""] * keys_counted[key]
 
         # TODO Deal with keys appearing multiple times!
+        # TODO better to have a counter or a list with each key appearing multiple times?
         raise NotImplementedError()
 
         result.append(issue[key])
