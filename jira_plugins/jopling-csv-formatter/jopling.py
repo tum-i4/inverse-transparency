@@ -29,7 +29,7 @@ def fix_main(file_paths: List[str], outfile_path: str):
         print(f"Output file {outfile_path} exists.")
         sys.exit(1)
 
-    data: List[Dict]
+    data: List[Dict[str, List]]
     all_keys: CounterT[str]
     data, all_keys = read_all_csvs(file_paths)
 
@@ -59,14 +59,14 @@ def fix_main(file_paths: List[str], outfile_path: str):
     print(f"Created file {outfile_path} with {len(data)} entries")
 
 
-def read_all_csvs(file_paths: List[str]) -> Tuple[List[Dict], CounterT[str]]:
+def read_all_csvs(file_paths: List[str]) -> Tuple[List[Dict[str, List]], CounterT[str]]:
     """
     Read all given files with read_csv() and store them in a dict.
 
     Returns: Dict of all issues, List of all keys
     """
 
-    data: List[Dict] = []
+    data: List[Dict[str, List]] = []
     all_keys: CounterT[str] = Counter()
 
     for file_path in file_paths:
@@ -84,7 +84,7 @@ def read_all_csvs(file_paths: List[str]) -> Tuple[List[Dict], CounterT[str]]:
     return data, all_keys
 
 
-def read_csv(file_path: str, data: List[Dict]) -> List[str]:
+def read_csv(file_path: str, data: List[Dict[str, List]]) -> List[str]:
     """
     Read the given file and drop it into the given list of dicts. Each row will be saved as one dict.
 
@@ -102,21 +102,23 @@ def read_csv(file_path: str, data: List[Dict]) -> List[str]:
         raise IOError(f'Seem to have misread CSV "{file_path}"...\nParsed keys: {keys}')
 
     for row in vals:
-        row_dict: Dict = dict()
+        row_dict: Dict[str, List] = dict()
         for k, v in zip(keys, row):
-            if keys.count(k) == 1:
-                row_dict[k] = v
-            else:
-                if k not in row_dict:
-                    row_dict[k] = []
-                row_dict[k].append(v)
+            if k not in row_dict:
+                row_dict[k] = []
+            row_dict[k].append(v)
+
         data.append(row_dict)
 
     return keys
 
 
-def fix_issue(issue: Dict) -> None:
+def fix_issue(issue: Dict[str, List]) -> None:
     """ Fix the given issue in-place """
+
+    # TODO deal with keys with multiple values!
+    # TODO deal with values being lists!
+    raise NotImplementedError()
 
     comment_key = "Comment"
     created_key = "Created"
@@ -207,8 +209,10 @@ def csvize_issue(issue: Dict, keys_counted: CounterT[str]) -> List[str]:
 def analyze_main(file_paths: List[str]):
     """ Comb through the given files and analyze them. """
 
-    data: List[Dict]
+    data: List[Dict[str, List]]
     data, _ = read_all_csvs(file_paths)
+    # TODO deal with dict of lists!
+    raise NotImplementedError()
 
     all_projects: Set[str] = set()
     all_status: Set[str] = set()
