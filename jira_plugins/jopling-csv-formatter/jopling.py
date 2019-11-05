@@ -185,17 +185,19 @@ def format_date(date_s: str) -> str:
     return date_dt.strftime("%Y-%m-%d %H:%M")
 
 
-def csvize_issue(issue: Dict, keys: List[str]) -> List[str]:
+def csvize_issue(issue: Dict, keys_counted: CounterT[str]) -> List[str]:
     """ Convert the given issue dict to a list of its values, sorted by key as given in the key list. """
 
-    # TODO Deal with keys appearing multiple times!
-    raise NotImplementedError()
-
     result: List[str] = []
-    for key in keys:
+    for key in keys_counted:
         if key not in issue:
-            result.append("")
-            continue
+            if keys_counted[key] == 1:
+                issue[key] = ""
+            else:
+                issue[key] = [""] * keys_counted[key]
+
+        # TODO Deal with keys appearing multiple times!
+        raise NotImplementedError()
 
         result.append(issue[key])
 
