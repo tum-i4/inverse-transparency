@@ -70,6 +70,7 @@ def read_all_csvs(file_paths: List[str]) -> Tuple[List[Dict], CounterT[str]]:
     all_keys: CounterT[str] = Counter()
 
     for file_path in file_paths:
+        # This call also adds the issues from the file to `data`
         keys: List[str] = read_csv(file_path, data)
         keys_c: CounterT[str] = Counter(keys)
 
