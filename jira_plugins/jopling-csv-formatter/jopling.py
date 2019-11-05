@@ -9,6 +9,8 @@ import locale
 import os.path
 import re
 import sys
+from collections import Counter
+from typing import Counter as CounterT
 from typing import Dict, List, Set, Tuple
 
 # Some global settings
@@ -28,7 +30,7 @@ def fix_main(file_paths: List[str], outfile_path: str):
         sys.exit(1)
 
     data: List[Dict]
-    all_keys: Set[str]
+    all_keys: CounterT[str]
     data, all_keys = read_all_csvs(file_paths)
 
     # Fix and update fields
@@ -57,7 +59,7 @@ def fix_main(file_paths: List[str], outfile_path: str):
     print(f"Created file {outfile_path} with {len(data)} entries")
 
 
-def read_all_csvs(file_paths: List[str]) -> Tuple[List[Dict], Set[str]]:
+def read_all_csvs(file_paths: List[str]) -> Tuple[List[Dict], CounterT[str]]:
     """
     Read all given files with read_csv() and store them in a dict.
 
@@ -65,11 +67,18 @@ def read_all_csvs(file_paths: List[str]) -> Tuple[List[Dict], Set[str]]:
     """
 
     data: List[Dict] = []
-    all_keys: Set[str] = set()
+    all_keys: CounterT[str] = Counter()
 
     for file_path in file_paths:
         keys: List[str] = read_csv(file_path, data)
-        all_keys.update(keys)
+        keys_c: CounterT[str] = Counter(keys)
+
+        # The count in all_keys will reflect the maximum count of the field in all files found
+        for key in keys:
+            current_count: int = all_keys.get(key) or 0
+            in_file_count: int = keys_c[key]
+            new_count: int = max([current_count, in_file_count])
+            all_keys[key] = new_count
 
     return data, all_keys
 
@@ -177,6 +186,9 @@ def format_date(date_s: str) -> str:
 
 def csvize_issue(issue: Dict, keys: List[str]) -> List[str]:
     """ Convert the given issue dict to a list of its values, sorted by key as given in the key list. """
+
+    # TODO Deal with keys appearing multiple times!
+    raise NotImplementedError()
 
     result: List[str] = []
     for key in keys:
