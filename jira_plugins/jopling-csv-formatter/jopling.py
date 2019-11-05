@@ -56,8 +56,6 @@ def fix_main(file_paths: List[str], outfile_path: str):
             quoting=csv.QUOTE_NONNUMERIC,
         )
         file_writer.writerow(key_row)
-        # TODO Deal with a key appearing multiple times!
-        raise NotImplementedError()
         for issue in data:
             issue_row: List[str] = csvize_issue(issue, all_keys_sorted)
             file_writer.writerow(issue_row)
@@ -237,12 +235,18 @@ def csvize_issue(issue: Dict, keys_counted: CounterT[str]) -> List[str]:
         if key not in issue:
             issue[key] = [""] * keys_counted[key]
 
-        # TODO Deal with keys appearing multiple times!
-        # TODO better to have a counter or a list with each key appearing multiple times?
-        raise NotImplementedError()
+        delta: int = keys_counted[key] - len(issue[key])
+        if delta > 0:  # issue has less values than expected
+            issue[key].extend([""] * delta)
+        elif delta < 0:  # issue has more values than expected
+            raise ValueError(
+                f"Invalid number of items in issue. Expected <= {keys_counted[key]}. Got:"
+                f"\n  {issue[key]}"
+            )
 
-        result.append(issue[key])
+        result.extend(issue[key])
 
+    assert len(result) == sum(keys_counted.values())
     return result
 
 
