@@ -151,7 +151,8 @@ def fix_issue(issue: Dict[str, List]) -> None:
 
 
 def _fix_comments(comments: List[str]) -> None:
-    """ Fix all comments in the given list in-place. Skip over empty strings. """
+    """ Fix all comments in the given list in-place.
+    Skip over empty strings. """
 
     for i in range(len(comments)):
         comment: str = comments[i]
