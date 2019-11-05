@@ -41,9 +41,13 @@ def fix_main(file_paths: List[str], outfile_path: str):
     data.sort(key=lambda issue: issue["Created"])
 
     # 3. Write out to outfile
+
     all_keys_sorted: CounterT[str] = sorted_counter(all_keys)
-    # TODO Deal with a key appearing multiple times!
-    raise NotImplementedError()
+    key_row: List[str] = []
+    for key in all_keys_sorted:
+        key_row.extend([key] * all_keys_sorted[key])
+    assert len(key_row) == sum(all_keys_sorted.values())
+
     with open(outfile_path, "w", newline="") as file_pointer:
         file_writer = csv.writer(
             file_pointer,
@@ -51,7 +55,9 @@ def fix_main(file_paths: List[str], outfile_path: str):
             quotechar=QUOTECHAR,
             quoting=csv.QUOTE_NONNUMERIC,
         )
-        file_writer.writerow(all_keys_sorted)
+        file_writer.writerow(key_row)
+        # TODO Deal with a key appearing multiple times!
+        raise NotImplementedError()
         for issue in data:
             issue_row: List[str] = csvize_issue(issue, all_keys_sorted)
             file_writer.writerow(issue_row)
