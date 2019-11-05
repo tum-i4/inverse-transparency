@@ -68,11 +68,7 @@ def read_all_csvs(file_paths: List[str]) -> Tuple[List[Dict], Set[str]]:
     all_keys: Set[str] = set()
 
     for file_path in file_paths:
-        keys = read_csv(file_path, data)
-        if len(keys) < 2:
-            raise IOError(
-                f'Seem to have misread CSV "{file_path}"...\nParsed keys: {keys}'
-            )
+        keys: List[str] = read_csv(file_path, data)
         all_keys.update(keys)
 
     return data, all_keys
@@ -92,6 +88,9 @@ def read_csv(file_path: str, data: List[Dict]) -> List[str]:
             list_of_rows.append(row)
 
     keys, vals = list_of_rows[0], list_of_rows[1:]
+    if len(keys) < 2:
+        raise IOError(f'Seem to have misread CSV "{file_path}"...\nParsed keys: {keys}')
+
     for row in vals:
         row_dict: Dict = dict()
         for k, v in zip(keys, row):
