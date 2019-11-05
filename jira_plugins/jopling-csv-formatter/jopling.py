@@ -33,14 +33,14 @@ def fix_main(file_paths: List[str], outfile_path: str):
     all_keys: CounterT[str]
     data, all_keys = read_all_csvs(file_paths)
 
-    # Fix and update fields
+    # 1. Fix and update fields
     for issue in data:
         fix_issue(issue)
 
-    # 1. Order old to new to ensure links can be set as good as possible
+    # 2. Order old to new to ensure links can be set as good as possible
     data.sort(key=lambda issue: issue["Created"])
 
-    # 2. Write out to outfile
+    # 3. Write out to outfile
     # TODO Deal with a key appearing multiple times!
     raise NotImplementedError()
     all_keys_sorted: List[str] = sorted(all_keys)
