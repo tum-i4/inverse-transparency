@@ -189,8 +189,10 @@ def _fix_date(issue: Dict[str, List], date_key: str, required: bool = True) -> N
     if len(dates) != 1:
         raise ValueError(f'Date field "{date_key}" may have exactly one value.')
 
-    if required and not dates[0]:
-        raise ValueError(f'Required date value not set in field "{date_key}"!')
+    if not dates[0]:
+        if required:
+            raise ValueError(f'Required date value not set in field "{date_key}"!')
+        return
 
     dates[0] = format_date(dates[0])
 
