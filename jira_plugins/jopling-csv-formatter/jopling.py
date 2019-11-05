@@ -157,6 +157,9 @@ def _fix_comments(comments: List[str]) -> None:
     for i in range(len(comments)):
         comment: str = comments[i]
 
+        if not comment:
+            continue
+
         # Expected input comment format: 19/Feb/19 9:30 AM;laidan6000;Does this need a linked documentation task?
         # Target comment format: 05/05/2010 09:20:30; adam; This is a comment.
         # Changes: Reformat date to dd/dd/dddd dd:dd:dd
