@@ -116,10 +116,6 @@ def read_csv(file_path: str, data: List[Dict[str, List]]) -> List[str]:
 def fix_issue(issue: Dict[str, List]) -> None:
     """ Fix the given issue in-place """
 
-    # TODO deal with keys with multiple values!
-    # TODO deal with values being lists!
-    raise NotImplementedError()
-
     comment_key = "Comment"
     created_key = "Created"
     due_key = "Due Date"
@@ -139,9 +135,34 @@ def fix_issue(issue: Dict[str, List]) -> None:
         if k not in issue:
             raise IOError(f'Expected key "{k}" not in row: {issue}')
 
-    # COMMENT update: Issue may also not have any comments (comment == "")
-    comment: str = issue[comment_key]
-    if comment:
+    # COMMENT update: Issue may also not have any comments (comment == [""])
+    comments: List[str] = issue[comment_key]
+    if any(comments):
+        _fix_comments(issue[comment_key])
+
+    # TODO deal with keys with multiple values!
+    # TODO deal with values being lists!
+    raise NotImplementedError()
+
+    # Fix all dates to be locale independent (ISO-like format)
+    # CREATED, UPDATED, LAST VIEWED update
+    issue[created_key] = format_date(issue[created_key])
+    issue[updated_key] = format_date(issue[updated_key])
+    issue[last_viewed_key] = format_date(issue[last_viewed_key])
+
+    # DUE, RESOLVED update: These may be empty
+    if issue[due_key]:
+        issue[due_key] = format_date(issue[due_key])
+    if issue[resolved_key]:
+        issue[resolved_key] = format_date(issue[resolved_key])
+
+
+def _fix_comments(comments: List[str]) -> None:
+    """ Fix all comments in the given list in-place. Skip over empty strings. """
+
+    for i in range(len(comments)):
+        comment: str = comments[i]
+
         # Expected input comment format: 19/Feb/19 9:30 AM;laidan6000;Does this need a linked documentation task?
         # Target comment format: 05/05/2010 09:20:30; adam; This is a comment.
         # Changes: Reformat date to dd/dd/dddd dd:dd:dd
@@ -162,19 +183,7 @@ def fix_issue(issue: Dict[str, List]) -> None:
                 f'Invalid conversion; missed own target...:\n  "{new_comment}"'
             )
 
-        issue[comment_key] = new_comment
-
-    # Fix all dates to be locale independent (ISO-like format)
-    # CREATED, UPDATED, LAST VIEWED update
-    issue[created_key] = format_date(issue[created_key])
-    issue[updated_key] = format_date(issue[updated_key])
-    issue[last_viewed_key] = format_date(issue[last_viewed_key])
-
-    # DUE, RESOLVED update: These may be empty
-    if issue[due_key]:
-        issue[due_key] = format_date(issue[due_key])
-    if issue[resolved_key]:
-        issue[resolved_key] = format_date(issue[resolved_key])
+        comments[i] = new_comment
 
 
 def format_date(date_s: str) -> str:
