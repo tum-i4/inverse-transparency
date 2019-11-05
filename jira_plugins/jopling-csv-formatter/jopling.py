@@ -107,7 +107,15 @@ def fix_issue(issue: Dict) -> None:
     due_key = "Due Date"
     resolved_key = "Resolved"
     updated_key = "Updated"
-    expected_keys = {comment_key, created_key, due_key, resolved_key, updated_key}
+    last_viewed_key = "Last Viewed"
+    expected_keys = {
+        comment_key,
+        created_key,
+        due_key,
+        resolved_key,
+        updated_key,
+        last_viewed_key,
+    }
 
     for k in expected_keys:
         if k not in issue:
@@ -137,9 +145,10 @@ def fix_issue(issue: Dict) -> None:
         issue[comment_key] = new_comment
 
     # Fix all dates to be locale independent (ISO-like format)
-    # CREATED, UPDATED update
+    # CREATED, UPDATED, LAST VIEWED update
     issue[created_key] = format_date(issue[created_key])
     issue[updated_key] = format_date(issue[updated_key])
+    issue[last_viewed_key] = format_date(issue[last_viewed_key])
 
     # DUE, RESOLVED update: These may be empty
     if issue[due_key]:
