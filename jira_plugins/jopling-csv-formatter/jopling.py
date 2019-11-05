@@ -255,8 +255,11 @@ def analyze_main(file_paths: List[str]):
 
     data: List[Dict[str, List]]
     data, _ = read_all_csvs(file_paths)
-    # TODO deal with dict of lists!
-    raise NotImplementedError()
+
+    def single(elements: List):
+        if len(elements) != 1:
+            raise ValueError("Input to single() may only be a single-element list!")
+        return elements[0]
 
     all_projects: Set[str] = set()
     all_status: Set[str] = set()
@@ -264,10 +267,11 @@ def analyze_main(file_paths: List[str]):
     status_per_project: Dict[str, Set[str]] = dict()
     num_issues_per_project: Dict[str, int] = dict()
 
+    issue: Dict[str, List]
     for issue in data:
-        project_key: str = issue["Project key"]
-        project_name: str = issue["Project name"]
-        status: str = issue["Status"]
+        project_key: str = single(issue["Project key"])
+        project_name: str = single(issue["Project name"])
+        status: str = single(issue["Status"])
 
         if project_key not in status_per_project:
             status_per_project[project_key] = set()
