@@ -41,9 +41,9 @@ def fix_main(file_paths: List[str], outfile_path: str):
     data.sort(key=lambda issue: issue["Created"])
 
     # 3. Write out to outfile
+    all_keys_sorted: CounterT[str] = sorted_counter(all_keys)
     # TODO Deal with a key appearing multiple times!
     raise NotImplementedError()
-    all_keys_sorted: List[str] = sorted(all_keys)
     with open(outfile_path, "w", newline="") as file_pointer:
         file_writer = csv.writer(
             file_pointer,
@@ -208,6 +208,19 @@ def format_date(date_s: str) -> str:
     date_dt: dt.datetime = dt.datetime.strptime(date_s, "%d/%b/%y %I:%M %p")
 
     return date_dt.strftime("%Y-%m-%d %H:%M")
+
+
+def sorted_counter(in_counter: CounterT) -> CounterT:
+    """ Like sorted(), but for a Counter object. """
+
+    out_counter: CounterT = Counter()
+    keys_sorted = sorted(in_counter.keys())
+
+    # Counter objects preserve insertion order
+    for key in keys_sorted:
+        out_counter[key] = in_counter[key]
+
+    return out_counter
 
 
 def csvize_issue(issue: Dict, keys_counted: CounterT[str]) -> List[str]:
