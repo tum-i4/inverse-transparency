@@ -18,6 +18,19 @@
                 "test_files/test_file_1.csv",
                 "test_files/test_file_2.csv"
             ],
+        },
+        {
+            "name": "jopling - analyze test files",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/jopling.py",
+            "console": "integratedTerminal",
+            "args": [
+                "--mode",
+                "analyze",
+                "test_files/test_file_1.csv",
+                "test_files/test_file_2.csv"
+            ],
         }
     ]
 }
