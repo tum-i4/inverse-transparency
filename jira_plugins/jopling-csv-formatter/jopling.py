@@ -356,6 +356,8 @@ if __name__ == "__main__":
             outfile_path = os.path.join(os.path.dirname(file_paths[0]), args.outfile)
             fix_main(file_paths=file_paths, outfile_path=outfile_path)
         elif args.mode == "analyze":
+            if args.outfile:
+                print("Warning: --outfile argument ignored in analysis mode")
             analyze_main(file_paths=file_paths)
         else:
             raise NotImplementedError(f"Mode {args.mode} not implemented")
