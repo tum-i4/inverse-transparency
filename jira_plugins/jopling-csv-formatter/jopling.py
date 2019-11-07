@@ -25,7 +25,9 @@ QUOTECHAR = '"'
 def fix_main(file_paths: List[str], outfile_path: str):
     """ Comb through the given files, fix up the issues, and write to outfile. """
 
-    if os.path.lexists(outfile_path):
+    outfile_is_dev_null = lambda: outfile_path.startswith("/dev/null")
+
+    if not outfile_is_dev_null() and os.path.lexists(outfile_path):
         print(f"Output file {outfile_path} exists.")
         sys.exit(1)
 
@@ -47,6 +49,10 @@ def fix_main(file_paths: List[str], outfile_path: str):
     for key in all_keys_sorted:
         key_row.extend([key] * all_keys_sorted[key])
     assert len(key_row) == sum(all_keys_sorted.values())
+
+    if outfile_is_dev_null():
+        print(f"Output suppressed.")
+        return
 
     with open(outfile_path, "w", newline="") as file_pointer:
         file_writer = csv.writer(
@@ -340,7 +346,7 @@ if __name__ == "__main__":
             "--outfile",
             "-o",
             default=f"jira_csv_{dt.datetime.now().strftime('%y%m%d-%H%M%S')}.csv",
-            help="The output file",
+            help="The output file. Specify '/dev/null' to suppress output.",
         )
         parser.add_argument("--mode", "-m", default="fix", choices=["analyze", "fix"])
         args = parser.parse_args()
