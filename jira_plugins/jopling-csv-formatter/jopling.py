@@ -290,15 +290,6 @@ def analyze_main(file_paths: List[str]):
         status_per_project[project_key].add(status)
         num_issues_per_project[project_key] += 1
 
-    for proj_key, statuss in status_per_project.items():
-        print(f"{project_names[proj_key]}:\n  ", end="")
-        for status in statuss:
-            print(f"{status}  ", end="")
-        print("\n")
-
-    print(f"Unique status found: {sorted(all_status)[:51]}")
-    print()
-
     # Top / bottom projects
     def print_project_table(
         projects: List[Tuple[str, int]], project_names: Dict[str, str]
@@ -310,6 +301,15 @@ def analyze_main(file_paths: List[str]):
             print(
                 f"{proj_key[:9].ljust(10)}  {(proj_name).ljust(22)}  {str(num_issues).rjust(8)}"
             )
+
+    for proj_key, statuss in status_per_project.items():
+        print(f"{project_names[proj_key]}:\n  ", end="")
+        for status in statuss:
+            print(f"{status}  ", end="")
+        print("\n")
+
+    print(f"Unique status found: {sorted(all_status)[:51]}")
+    print()
 
     projects_sorted = sorted(
         num_issues_per_project.items(), key=lambda t: t[1], reverse=True
