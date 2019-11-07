@@ -346,7 +346,7 @@ if __name__ == "__main__":
             "--outfile",
             "-o",
             default=f"jira_csv_{dt.datetime.now().strftime('%y%m%d-%H%M%S')}.csv",
-            help="The output file. Specify '/dev/null' to suppress output.",
+            help="The output file. Specify '/dev/null' to suppress output. Ignored in analyze mode!",
         )
         parser.add_argument("--mode", "-m", default="fix", choices=["analyze", "fix"])
         args = parser.parse_args()
