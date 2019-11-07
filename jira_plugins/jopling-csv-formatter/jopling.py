@@ -302,38 +302,56 @@ def analyze_main(file_paths: List[str]):
                 f"{proj_key[:9].ljust(10)}  {(proj_name).ljust(22)}  {str(num_issues).rjust(8)}"
             )
 
-    for proj_key, statuss in status_per_project.items():
-        print(f"{project_names[proj_key]}:\n  ", end="")
-        for status in statuss:
-            print(f"{status}  ", end="")
-        print("\n")
+    modes: str = "slq"  # summary, list status, quit
+    chosen_mode: str = "s"
 
-    print(f"Unique status found: {sorted(all_status)[:51]}")
-    print()
-
-    projects_sorted = sorted(
-        num_issues_per_project.items(), key=lambda t: t[1], reverse=True
-    )
-
-    # Show all projects if it's 20 or less, otherwise split top / bottom 10
-    top_projects: List[Tuple[str, int]] = projects_sorted
-    bottom_projects: List[Tuple[str, int]] = []
-    if len(projects_sorted) > 20:
-        top_projects = projects_sorted[:10]
-        bottom_projects = projects_sorted[-10:]
-
-    print(f"Projects {' ' * 26} # issues")
-    print_project_table(top_projects, project_names)
-    if bottom_projects:
-        print("...".ljust(20).rjust(40))
-        print_project_table(bottom_projects, project_names)
-    print()
-
-    print(f"Issues:   {len(data)}")
-    print(f"Projects: {len(all_projects)}")
-    print(f"Status:   {len(all_status)}")
-    print()
     print("Analysis done.")
+
+    while True:
+        if chosen_mode == "l":
+            for proj_key, statuss in status_per_project.items():
+                print(f"{project_names[proj_key]}:\n  ", end="")
+                for status in statuss:
+                    print(f"{status}  ", end="")
+                print("\n")
+
+            print(f"Unique status found: {sorted(all_status)[:51]}")
+
+        elif chosen_mode == "t":
+            projects_sorted = sorted(
+                num_issues_per_project.items(), key=lambda t: t[1], reverse=True
+            )
+
+            # Show all projects if it's 20 or less, otherwise split top / bottom 10
+            top_projects: List[Tuple[str, int]] = projects_sorted
+            bottom_projects: List[Tuple[str, int]] = []
+            if len(projects_sorted) > 20:
+                top_projects = projects_sorted[:10]
+                bottom_projects = projects_sorted[-10:]
+
+            print(f"Projects {' ' * 26} # issues")
+            print_project_table(top_projects, project_names)
+            if bottom_projects:
+                print("...".ljust(20).rjust(40))
+                print_project_table(bottom_projects, project_names)
+
+        elif chosen_mode == "s":
+            print(f"Issues:   {len(data)}")
+            print(f"Projects: {len(all_projects)}")
+            print(f"Status:   {len(all_status)}")
+
+        elif chosen_mode == "q":
+            return
+
+        else:
+            print(f'Invalid choice "{chosen_mode}".')
+
+        print()
+        print("What do you want to examine? ")
+
+        chosen_mode = input(
+            "s = summary; t = top / bottom projects; l = all status per project; q = quit\n"
+        )
 
 
 if __name__ == "__main__":
