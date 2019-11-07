@@ -14,7 +14,7 @@
                 "--mode",
                 "fix",
                 "--outfile",
-                "/dev/null/trash.csv",
+                "/dev/null",
                 "test_files/test_file_1.csv",
                 "test_files/test_file_2.csv"
             ],
