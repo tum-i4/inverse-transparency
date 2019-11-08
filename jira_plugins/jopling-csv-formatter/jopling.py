@@ -298,7 +298,7 @@ def analyze_main(file_paths: List[str]):
             proj_name = project_names[proj_key]
             if len(proj_name) > 20:
                 proj_name = proj_name[:18] + "..."
-            print(f"{proj_key[:11].ljust(14)}{(proj_name).ljust(26)}{str(feature)}")
+            print(f"{proj_key[:11].ljust(13)} {(proj_name).ljust(25)} {str(feature)}")
 
     print("✔ Analysis done. What do you want to examine?")
 
