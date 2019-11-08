@@ -334,8 +334,13 @@ def analyze_main(file_paths: List[str]):
             print_project_table(projects=statuss_per_project, header="Statuses")
 
         elif chosen_mode == "u":
-            term: str = "..." if len(all_status) > 100 else ""
-            print(f"Unique statuses found: {', '.join(sorted(all_status)[:101])}{term}")
+            lim: int = 100
+            print(f"Unique statuses: {len(all_status)}")
+            print(f"List:            {', '.join(sorted(all_status)[:1 + lim])}", end="")
+            if len(all_status) > lim:
+                print(f", ... (and {len(all_status) - lim} more)")
+            else:
+                print()
 
         elif chosen_mode == "t":
             projects_sorted: List[Tuple[str, int]] = sorted(
