@@ -260,8 +260,12 @@ def csvize_issue(issue: Dict, keys_counted: CounterT[str]) -> List[str]:
 def analyze_main(file_paths: List[str]):
     """ Comb through the given files and analyze them. """
 
+    print("Reading...", end=" ", flush=True)
+
     data: List[Dict[str, List]]
     data, _ = read_all_csvs(file_paths)
+
+    print("Analyzing...", end=" ", flush=True)
 
     def single(elements: List):
         if len(elements) != 1:
