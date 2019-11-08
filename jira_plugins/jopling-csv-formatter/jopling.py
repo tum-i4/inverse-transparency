@@ -309,8 +309,11 @@ def analyze_main(file_paths: List[str]):
 
     print("✔ Analysis done. What do you want to examine?")
 
-    modes: str = "stlq"  # "?" intentionally omitted
-    modes_listed: str = "s = summary; t = top / bottom projects; l = all status per project; ? = help; q = quit"
+    modes: str = "stluq"  # "?" intentionally omitted
+    modes_listed: str = (
+        "s = summary; t = top / bottom projects; l = all status per project; "
+        "u = unique statuses; ? = help; q = quit"
+    )
     chosen_mode: str = "s"
 
     print(modes_listed)
@@ -330,9 +333,9 @@ def analyze_main(file_paths: List[str]):
 
             print_project_table(projects=statuss_per_project, header="Statuses")
 
-            print()
-            terminator: str = "..." if len(all_status) > 50 else ""
-            print(f"Unique status found: {sorted(all_status)[:51]}{terminator}")
+        elif chosen_mode == "u":
+            term: str = "..." if len(all_status) > 100 else ""
+            print(f"Unique statuses found: {', '.join(sorted(all_status)[:101])}{term}")
 
         elif chosen_mode == "t":
             projects_sorted: List[Tuple[str, int]] = sorted(
