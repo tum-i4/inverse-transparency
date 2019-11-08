@@ -304,7 +304,11 @@ def analyze_main(file_paths: List[str]):
 
     print("✔ Analysis done. What do you want to examine?")
 
+    modes: str = "stlq"
+    modes_listed: str = "s = summary; t = top / bottom projects; l = all status per project; q = quit"
     chosen_mode: str = "s"
+
+    print(modes_listed)
 
     while True:
         print()
@@ -345,15 +349,13 @@ def analyze_main(file_paths: List[str]):
             return
 
         else:
-            if chosen_mode in "stlq":  # summary, top/bottom projects, list status, quit
+            if chosen_mode in modes:
                 raise RuntimeError("Valid user choice ignored?")
             print(f'Invalid choice "{chosen_mode}".')
 
         print()
 
-        chosen_mode = input(
-            "s = summary; t = top / bottom projects; l = all status per project; q = quit\n"
-        )
+        chosen_mode = input(f"[{','.join(modes)}]  ===>  ")
 
 
 if __name__ == "__main__":
