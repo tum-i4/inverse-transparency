@@ -319,13 +319,18 @@ def analyze_main(file_paths: List[str]):
             print(f"Status:   {len(all_status)}")
 
         elif chosen_mode == "l":
+            statuss_per_project: List[Tuple[str, str]] = []
             for proj_key, statuss in status_per_project.items():
-                print(f"{project_names[proj_key]}:\n  ", end="")
-                for status in statuss:
-                    print(f"{status}  ", end="")
-                print("\n")
+                statuss_per_project.append((proj_key, "  ".join(statuss)))
 
-            print(f"Unique status found: {sorted(all_status)[:51]}")
+            print(f"Project key   Project name {' ' * 12} Statuses")
+            print_project_table(
+                projects=statuss_per_project, project_names=project_names
+            )
+
+            print()
+            terminator: str = "..." if len(all_status) > 50 else ""
+            print(f"Unique status found: {sorted(all_status)[:51]}{terminator}")
 
         elif chosen_mode == "t":
             projects_sorted = sorted(
