@@ -308,7 +308,12 @@ def analyze_main(file_paths: List[str]):
     print("Analysis done.")
 
     while True:
-        if chosen_mode == "l":
+        if chosen_mode == "s":
+            print(f"Issues:   {len(data)}")
+            print(f"Projects: {len(all_projects)}")
+            print(f"Status:   {len(all_status)}")
+
+        elif chosen_mode == "l":
             for proj_key, statuss in status_per_project.items():
                 print(f"{project_names[proj_key]}:\n  ", end="")
                 for status in statuss:
@@ -334,11 +339,6 @@ def analyze_main(file_paths: List[str]):
             if bottom_projects:
                 print("...".ljust(20).rjust(40))
                 print_project_table(bottom_projects, project_names)
-
-        elif chosen_mode == "s":
-            print(f"Issues:   {len(data)}")
-            print(f"Projects: {len(all_projects)}")
-            print(f"Status:   {len(all_status)}")
 
         elif chosen_mode == "q":
             return
