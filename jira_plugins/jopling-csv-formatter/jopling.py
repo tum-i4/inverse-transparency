@@ -348,7 +348,10 @@ def analyze_main(file_paths: List[str]):
 
             print_project_table(top_projects, "# Issues")
             if bottom_projects:
-                print("...".ljust(20).rjust(40))
+                number_of_skipped_projects: int = (
+                    len(all_projects) - len(top_projects) - len(bottom_projects)
+                )
+                print(f"...  ({number_of_skipped_projects} other projects)")
                 print_project_table(bottom_projects)
 
         elif chosen_mode == "q":
