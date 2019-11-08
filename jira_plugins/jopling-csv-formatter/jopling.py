@@ -302,7 +302,7 @@ def analyze_main(file_paths: List[str]):
                 f"{proj_key[:9].ljust(10)}  {(proj_name).ljust(22)}  {str(num_issues).rjust(8)}"
             )
 
-    modes: str = "slq"  # summary, list status, quit
+    modes: str = "sltq"  # summary, list status, quit
     chosen_mode: str = "s"
 
     print("Analysis done.")
