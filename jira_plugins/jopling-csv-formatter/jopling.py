@@ -333,7 +333,7 @@ def analyze_main(file_paths: List[str]):
             print(f"Unique status found: {sorted(all_status)[:51]}{terminator}")
 
         elif chosen_mode == "t":
-            projects_sorted = sorted(
+            projects_sorted: List[Tuple[str, int]] = sorted(
                 num_issues_per_project.items(), key=lambda t: t[1], reverse=True
             )
 
