@@ -304,7 +304,7 @@ def analyze_main(file_paths: List[str]):
 
     print("✔ Analysis done. What do you want to examine?")
 
-    modes: str = "stl?q"
+    modes: str = "stlq"  # "?" intentionally omitted
     modes_listed: str = "s = summary; t = top / bottom projects; l = all status per project; ? = help; q = quit"
     chosen_mode: str = "s"
 
@@ -348,8 +348,8 @@ def analyze_main(file_paths: List[str]):
         elif chosen_mode == "q":
             return
 
-        else:  # invalid choice OR ? was typed
-            if chosen_mode in modes and chosen_mode != "?":
+        else:  # invalid choice OR "?"
+            if chosen_mode in modes:
                 raise RuntimeError("Forgot to implement a valid user choice?")
             print(f"{modes_listed}", end="")
 
