@@ -293,9 +293,7 @@ def analyze_main(file_paths: List[str]):
 
     # ANALYSIS RESULTS #
 
-    def print_project_table(
-        projects: List[Tuple[Any, Any]], project_names: Dict[str, str]
-    ):
+    def print_project_table(projects: List[Tuple[Any, Any]]):
         for proj_key, feature in projects:
             proj_name = project_names[proj_key]
             if len(proj_name) > 20:
@@ -324,9 +322,7 @@ def analyze_main(file_paths: List[str]):
                 statuss_per_project.append((proj_key, "  ".join(statuss)))
 
             print(f"Project key   Project name {' ' * 12} Statuses")
-            print_project_table(
-                projects=statuss_per_project, project_names=project_names
-            )
+            print_project_table(projects=statuss_per_project)
 
             print()
             terminator: str = "..." if len(all_status) > 50 else ""
@@ -345,10 +341,10 @@ def analyze_main(file_paths: List[str]):
                 bottom_projects = projects_sorted[-10:]
 
             print(f"Project key   Project name {' ' * 12} # issues")
-            print_project_table(top_projects, project_names)
+            print_project_table(top_projects)
             if bottom_projects:
                 print("...".ljust(20).rjust(40))
-                print_project_table(bottom_projects, project_names)
+                print_project_table(bottom_projects)
 
         elif chosen_mode == "q":
             return
