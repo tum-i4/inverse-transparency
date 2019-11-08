@@ -302,11 +302,13 @@ def analyze_main(file_paths: List[str]):
                 f"{proj_key[:9].ljust(10)}  {(proj_name).ljust(22)}  {str(num_issues).rjust(8)}"
             )
 
-    print("Analysis done.")
+    print("✔ Analysis done. What do you want to examine?")
 
     chosen_mode: str = "s"
 
     while True:
+        print()
+
         if chosen_mode == "s":
             print(f"Issues:   {len(data)}")
             print(f"Projects: {len(all_projects)}")
@@ -348,7 +350,6 @@ def analyze_main(file_paths: List[str]):
             print(f'Invalid choice "{chosen_mode}".')
 
         print()
-        print("What do you want to examine? ")
 
         chosen_mode = input(
             "s = summary; t = top / bottom projects; l = all status per project; q = quit\n"
