@@ -300,7 +300,7 @@ def analyze_main(file_paths: List[str]):
             proj_name = project_names[proj_key]
             if len(proj_name) > 20:
                 proj_name = proj_name[:18] + "..."
-            print(f"{proj_key[:9].ljust(10)}  {(proj_name).ljust(22)}  {str(feature)}")
+            print(f"{proj_key[:11].ljust(14)}{(proj_name).ljust(26)}{str(feature)}")
 
     print("✔ Analysis done. What do you want to examine?")
 
@@ -339,7 +339,7 @@ def analyze_main(file_paths: List[str]):
                 top_projects = projects_sorted[:10]
                 bottom_projects = projects_sorted[-10:]
 
-            print(f"Projects {' ' * 26} # issues")
+            print(f"Project key   Project name {' ' * 12} # issues")
             print_project_table(top_projects, project_names)
             if bottom_projects:
                 print("...".ljust(20).rjust(40))
