@@ -302,10 +302,9 @@ def analyze_main(file_paths: List[str]):
                 f"{proj_key[:9].ljust(10)}  {(proj_name).ljust(22)}  {str(num_issues).rjust(8)}"
             )
 
-    modes: str = "sltq"  # summary, list status, quit
-    chosen_mode: str = "s"
-
     print("Analysis done.")
+
+    chosen_mode: str = "s"
 
     while True:
         if chosen_mode == "s":
@@ -344,6 +343,8 @@ def analyze_main(file_paths: List[str]):
             return
 
         else:
+            if chosen_mode in "stlq":  # summary, top/bottom projects, list status, quit
+                raise RuntimeError("Valid user choice ignored?")
             print(f'Invalid choice "{chosen_mode}".')
 
         print()
