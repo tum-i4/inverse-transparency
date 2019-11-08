@@ -10,6 +10,7 @@ import os.path
 import re
 import sys
 from collections import Counter
+from typing import Any
 from typing import Counter as CounterT
 from typing import Dict, List, Set, Tuple
 
@@ -290,17 +291,16 @@ def analyze_main(file_paths: List[str]):
         status_per_project[project_key].add(status)
         num_issues_per_project[project_key] += 1
 
-    # Top / bottom projects
+    # ANALYSIS RESULTS #
+
     def print_project_table(
-        projects: List[Tuple[str, int]], project_names: Dict[str, str]
+        projects: List[Tuple[Any, Any]], project_names: Dict[str, str]
     ):
-        for proj_key, num_issues in projects:
+        for proj_key, feature in projects:
             proj_name = project_names[proj_key]
             if len(proj_name) > 20:
                 proj_name = proj_name[:18] + "..."
-            print(
-                f"{proj_key[:9].ljust(10)}  {(proj_name).ljust(22)}  {str(num_issues).rjust(8)}"
-            )
+            print(f"{proj_key[:9].ljust(10)}  {(proj_name).ljust(22)}  {str(feature)}")
 
     print("✔ Analysis done. What do you want to examine?")
 
