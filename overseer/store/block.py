@@ -10,6 +10,8 @@ from typing import Optional
 class Block(object):
     """ A block in the chain """
 
+    # TODO: Continue here https://www.ibm.com/developerworks/cloud/library/cl-develop-blockchain-app-in-python/index.html
+
     def __init__(
         self,
         index: int,
