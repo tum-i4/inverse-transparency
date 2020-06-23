@@ -11,6 +11,8 @@ import requests.exceptions
 
 VERSION = "0.1"
 JIRA_API_PATH = "rest/api/2/user"
+REVOLORI_HEALTH_API_PATH = "health"
+REVOLORI_USER_API_PATH = "user"
 
 
 def main():
@@ -120,7 +122,7 @@ def setup_revolori(revolori_url: str, create_users_file: str = None):
     """
 
     try:
-        requests.get(apiu.path.join(revolori_url, "health"))
+        requests.get(apiu.path.join(revolori_url, REVOLORI_HEALTH_API_PATH))
     except requests.exceptions.ConnectionError:
         exit_with_error(f"Revolori not reachable at {revolori_url}")
 
