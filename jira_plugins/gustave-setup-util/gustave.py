@@ -26,14 +26,14 @@ def main():
 
     # Jira setup functionality
     jira_parser = subparsers.add_parser(JIRA_PARSER_NAME, help="Set up Jira")
-
     jira_parser.add_argument(
         "jira_url", help="The URL of the Jira instance, e.g. localhost:2929/jira"
     )
     jira_parser.add_argument(
         "--login",
         default="admin:admin",
-        help="Optionally specify the login to use, formatted as user:password (default: admin:admin)",
+        help="Optionally specify the login to use, formatted as user:password "
+        "(default: admin:admin)",
     )
 
     # Revolori setup functionality
