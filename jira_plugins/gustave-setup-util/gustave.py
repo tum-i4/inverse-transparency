@@ -9,6 +9,8 @@ import requests
 import requests.exceptions
 
 import apiu.path
+
+VERSION = "0.1"
 JIRA_API_PATH = "rest/api/2/user"
 
 
@@ -56,7 +58,12 @@ def main(jira_url: str, login: str):
 
 if __name__ == "__main__":
     try:
-        parser = argparse.ArgumentParser()
+        parser = argparse.ArgumentParser(prog="gustave")
+        parser.add_argument(
+            "--version", "-v", action="version", version="%(prog)s " + str(VERSION)
+        )
+
+        # Jira setup functionality
         parser.add_argument(
             "jira_url", help="The URL of the Jira instance, e.g. localhost:2929/jira"
         )
