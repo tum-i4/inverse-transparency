@@ -171,16 +171,15 @@ def setup_revolori(
         _revo_delete_users(revolori_url, req_auth, delete_users_file)
 
 
-def _revo_create_users(revolori_url: str, req_auth, create_users_file: str):
-    """ Create users in Revolori that are specified in the given file. """
-    print("===== [CREATE USERS MODE] =====")
-
-    if not os.path.isfile(create_users_file):
-        exit_with_error(f"Passed path does not point to a file: {create_users_file}")
-
+def _revo_parse_users_file(users_file: str) -> List[str]:
+    """
+    Parses the given file and returns parsed lines if it is a valid Revolori users file.
+    Asks for permission to continue, exits if not given.
+    ALso exits if the file is malformed.
+    """
     # Read file and make sure each line is valid JSON
-    with open(create_users_file, "r") as users_file:
-        users_file_content: List[str] = users_file.read().split("\n")
+    with open(users_file, "r") as uf:
+        users_file_content: List[str] = uf.read().split("\n")
 
     all_jsons: List[str] = []
     for i, uf_line in enumerate(users_file_content):
@@ -199,12 +198,25 @@ def _revo_create_users(revolori_url: str, req_auth, create_users_file: str):
 
     yn: str = input(
         f"Successfully parsed {len(all_jsons)} users from input file "
-        "{create_users_file}.\nDo you want to continue? [Y/n] "
+        f"{users_file}.\nDo you want to continue? [Y/n] "
     )
 
     if yn.lower() not in "yj":
         print("Cancelled.")
         sys.exit(0)
+
+    return all_jsons
+
+
+def _revo_create_users(revolori_url: str, req_auth, create_users_file: str):
+    """ Create users in Revolori that are specified in the given file. """
+    print("===== [CREATE USERS MODE] =====")
+
+    if not os.path.isfile(create_users_file):
+        exit_with_error(f"Passed path does not point to a file: {create_users_file}")
+
+    # Parse and check the given users file.
+    all_jsons: List[str] = _revo_parse_users_file(create_users_file)
 
     # Call Revolori line by line and create users, collecting the errors
     errors: List[Tuple[int, str]] = []
