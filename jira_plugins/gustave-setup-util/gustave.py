@@ -65,6 +65,12 @@ def main():
         sys.exit(2)
 
 
+def exit_with_error(msg: str, code: int = 1):
+    """ Print the given message and exit the program. """
+    print(f"Error: {msg}")
+    sys.exit(code)
+
+
 def setup_jira(jira_url: str, login: str):
     if not jira_url.startswith("http"):
         jira_url = f"http://{jira_url}"
@@ -74,15 +80,13 @@ def setup_jira(jira_url: str, login: str):
     try:
         user, password = login.split(":")
     except ValueError:
-        print(f'Couldn\'t split login at ":": {login}')
-        sys.exit(1)
+        exit_with_error(f'Couldn\'t split login at ":": {login}')
 
     # 0. Check connectivity
     try:
         requests.get(jira_url)
     except requests.exceptions.ConnectionError:
-        print("Connection error...")
-        sys.exit(1)
+        exit_with_error(f"Jira not reachable at {jira_url}")
 
     print(f"Jira successfully contacted at {jira_url}")
 
@@ -118,8 +122,7 @@ def setup_revolori(revolori_url: str, create_users_file: str = None):
     try:
         requests.get(apiu.path.join(revolori_url, "health"))
     except requests.exceptions.ConnectionError:
-        print(f"Error: Revolori not reachable at {revolori_url}")
-        sys.exit(1)
+        exit_with_error(f"Revolori not reachable at {revolori_url}")
 
     print("Connection to Revolori established.")
 
