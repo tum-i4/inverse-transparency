@@ -59,13 +59,22 @@ def main():
         nargs=2,
         help="Basic authentication credentials to use. Expects user and password.",
     )
+    help_text_user_file: str = (
+        "File is expected to be a text file consisting of lines of individual JSON "
+        "objects that will be supplied to Revolori one by one. Each line represents "
+        "one user."
+    )
     revolori_parser.add_argument(
         "--create-users",
         "-c",
         metavar="PATH",
-        help="Create users supplied in the given file. File is expected to be a text "
-        "file consisting of lines of individual JSON objects that will be supplied to "
-        "Revolori one by one. Each line represents one user.",
+        help=f"Create users supplied in the given file. {help_text_user_file}",
+    )
+    revolori_parser.add_argument(
+        "--delete-users",
+        "-d",
+        metavar="PATH",
+        help=f"Create users supplied in the given file. {help_text_user_file}",
     )
 
     args = parser.parse_args()
@@ -77,6 +86,7 @@ def main():
             revolori_url=args.revo_url,
             auth=args.revo_auth,
             create_users_file=args.create_users,
+            delete_users_file=args.delete_users,
         )
     else:
         parser.print_usage()
@@ -130,7 +140,10 @@ def setup_jira(jira_url: str, login: str):
 
 
 def setup_revolori(
-    revolori_url: str, auth: List[str] = None, create_users_file: str = None
+    revolori_url: str,
+    auth: List[str] = None,
+    create_users_file: str = None,
+    delete_users_file: str = None,
 ):
     """
     Sets up Revolori. Currently supports creating users.
@@ -153,6 +166,9 @@ def setup_revolori(
 
     if create_users_file:
         _revo_create_users(revolori_url, req_auth, create_users_file)
+
+    if delete_users_file:
+        _revo_delete_users(revolori_url, req_auth, delete_users_file)
 
 
 def _revo_create_users(revolori_url: str, req_auth, create_users_file: str):
@@ -220,6 +236,12 @@ def _revo_create_users(revolori_url: str, req_auth, create_users_file: str):
         sys.exit(1)
 
     print("Users created successfully")
+
+
+def _revo_delete_users(revolori_url: str, req_auth, create_users_file: str):
+    """ Create users in Revolori that are specified in the given file. """
+    print("===== [DELETE USERS MODE] =====")
+    return
 
 
 if __name__ == "__main__":
