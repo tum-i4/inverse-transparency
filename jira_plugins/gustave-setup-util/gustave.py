@@ -177,6 +177,10 @@ def _revo_parse_users_file(users_file: str) -> List[str]:
     Asks for permission to continue, exits if not given.
     Also exits if the file is malformed.
     """
+
+    if not os.path.isfile(users_file):
+        exit_with_error(f"Passed path does not point to a file: {users_file}")
+
     # Read file and make sure each line is valid JSON
     with open(users_file, "r") as uf:
         users_file_content: List[str] = uf.read().split("\n")
@@ -254,9 +258,6 @@ def _revo_send_requests(
 def _revo_create_users(revolori_url: str, req_auth, create_users_file: str):
     """ Create users in Revolori that are specified in the given file. """
     print("===== [CREATE USERS MODE] =====")
-
-    if not os.path.isfile(create_users_file):
-        exit_with_error(f"Passed path does not point to a file: {create_users_file}")
 
     # Parse and check the given users file.
     all_jsons: List[str] = _revo_parse_users_file(create_users_file)
