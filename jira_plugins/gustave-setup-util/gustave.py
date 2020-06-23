@@ -208,6 +208,40 @@ def _revo_parse_users_file(users_file: str) -> List[str]:
     return all_jsons
 
 
+def _revo_send_requests(
+    method: str, revolori_url: str, path: str, req_auth, payloads: List[str]
+) -> List[Tuple[int, str]]:
+    """
+    Send all given payloads with `method` to `revolori_url/path`.
+    Authentication can optionally be supplied as `req_auth`.
+    """
+    errors: List[Tuple[int, str]] = []
+    for payload in payloads:
+        r = requests.request(
+            method=method,
+            url=apiu.path.join(revolori_url, REVOLORI_USER_API_PATH),
+            headers={"Content-Type": "application/json"},
+            auth=req_auth,
+            data=payload,
+        )
+
+        if r.status_code == 200:
+            continue
+        # If the request was badly formatted, it might be an isolated incident
+        elif r.status_code == 400:
+            errors.append((r.status_code, payload))
+        elif r.status_code == 401:
+            exit_with_error(
+                f"Revolori returned 401 (Unauthorized); did you supply authentication?"
+            )
+        else:
+            exit_with_error(
+                f"Revolori returned {r.status_code} ({r.reason}) "
+                f'when trying to create "{payload}"'
+            )
+    return errors
+
+
 def _revo_create_users(revolori_url: str, req_auth, create_users_file: str):
     """ Create users in Revolori that are specified in the given file. """
     print("===== [CREATE USERS MODE] =====")
@@ -219,25 +253,13 @@ def _revo_create_users(revolori_url: str, req_auth, create_users_file: str):
     all_jsons: List[str] = _revo_parse_users_file(create_users_file)
 
     # Call Revolori line by line and create users, collecting the errors
-    errors: List[Tuple[int, str]] = []
-    for j in all_jsons:
-        r = requests.post(
-            apiu.path.join(revolori_url, REVOLORI_USER_API_PATH), auth=req_auth, data=j
-        )
-        if r.status_code == 200:
-            continue
-        # If the request was badly formatted, it might be an isolated incident
-        elif r.status_code == 400:
-            errors.append((r.status_code, j))
-        elif r.status_code == 401:
-            exit_with_error(
-                f"Revolori returned 401 (Unauthorized); did you supply authentication?"
-            )
-        else:
-            exit_with_error(
-                f"Revolori returned {r.status_code} ({r.reason}) "
-                f'when trying to create "{j}"'
-            )
+    errors: List[Tuple[int, str]] = _revo_send_requests(
+        method="POST",
+        revolori_url=revolori_url,
+        path=REVOLORI_USER_API_PATH,
+        req_auth=req_auth,
+        payloads=all_jsons,
+    )
 
     # Print a resulting message summarizing the errors
     if errors:
