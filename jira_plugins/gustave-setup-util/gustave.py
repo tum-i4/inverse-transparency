@@ -14,7 +14,7 @@ VERSION = "0.1"
 JIRA_API_PATH = "rest/api/2/user"
 
 
-def main(jira_url: str, login: str):
+def setup_jira(jira_url: str, login: str):
     if not jira_url.startswith("http"):
         jira_url = f"http://{jira_url}"
 
@@ -57,6 +57,8 @@ def main(jira_url: str, login: str):
 
 
 if __name__ == "__main__":
+    JIRA_PARSER_NAME = "jira"
+
     try:
         parser = argparse.ArgumentParser(prog="gustave")
         parser.add_argument(
@@ -65,7 +67,7 @@ if __name__ == "__main__":
         subparsers = parser.add_subparsers(title="modes", dest="mode")
 
         # Jira setup functionality
-        jira_parser = subparsers.add_parser("jira", help="Set up Jira")
+        jira_parser = subparsers.add_parser(JIRA_PARSER_NAME, help="Set up Jira")
 
         jira_parser.add_argument(
             "jira_url", help="The URL of the Jira instance, e.g. localhost:2929/jira"
@@ -76,7 +78,12 @@ if __name__ == "__main__":
             help="Optionally specify the login to use, formatted as user:password (default: admin:admin)",
         )
         args = parser.parse_args()
-        main(jira_url=args.jira_url, login=args.login)
+
+        if args.mode == JIRA_PARSER_NAME:
+            setup_jira(jira_url=args.jira_url, login=args.login)
+        else:
+            parser.print_usage()
+            sys.exit(2)
 
     except KeyboardInterrupt:
         # Exit code for Ctrl-C
