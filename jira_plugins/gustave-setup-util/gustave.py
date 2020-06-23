@@ -7,10 +7,11 @@ import json
 import json.decoder
 import os
 import sys
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
 import apiu.path
 import requests
+import requests.auth
 import requests.exceptions
 
 VERSION = "0.1"
@@ -72,7 +73,11 @@ def main():
     if args.mode == JIRA_PARSER_NAME:
         setup_jira(jira_url=args.jira_url, login=args.login)
     elif args.mode == REVOLORI_PARSER_NAME:
-        setup_revolori(revolori_url=args.revo_url, create_users_file=args.create_users)
+        setup_revolori(
+            revolori_url=args.revo_url,
+            auth=args.revo_auth,
+            create_users_file=args.create_users,
+        )
     else:
         parser.print_usage()
         sys.exit(2)
@@ -124,7 +129,9 @@ def setup_jira(jira_url: str, login: str):
             print(f'API error: [{response.status_code}] "{response.text}"')
 
 
-def setup_revolori(revolori_url: str, create_users_file: str = None):
+def setup_revolori(
+    revolori_url: str, auth: List[str] = None, create_users_file: str = None
+):
     """
     Sets up Revolori. Currently supports creating users.
 
@@ -139,11 +146,16 @@ def setup_revolori(revolori_url: str, create_users_file: str = None):
 
     print("Connection to Revolori established.")
 
+    req_auth: Optional[requests.auth.HTTPBasicAuth] = None
+    if auth:
+        u, p = auth
+        req_auth = requests.auth.HTTPBasicAuth(u, p)
+
     if create_users_file:
-        _revo_create_users(revolori_url, create_users_file)
+        _revo_create_users(revolori_url, req_auth, create_users_file)
 
 
-def _revo_create_users(revolori_url: str, create_users_file: str):
+def _revo_create_users(revolori_url: str, req_auth, create_users_file: str):
     """ Create users in Revolori that are specified in the given file. """
     print("===== [CREATE USERS MODE] =====")
 
@@ -181,7 +193,9 @@ def _revo_create_users(revolori_url: str, create_users_file: str):
     # Call Revolori line by line and create users, collecting the errors
     errors: List[Tuple[int, str]] = []
     for j in all_jsons:
-        r = requests.post(apiu.path.join(revolori_url, REVOLORI_USER_API_PATH), json=j)
+        r = requests.post(
+            apiu.path.join(revolori_url, REVOLORI_USER_API_PATH), auth=req_auth, data=j
+        )
         if r.status_code == 200:
             continue
         # If the request was badly formatted, it might be an isolated incident
