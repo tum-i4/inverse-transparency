@@ -175,7 +175,7 @@ def _revo_parse_users_file(users_file: str) -> List[str]:
     """
     Parses the given file and returns parsed lines if it is a valid Revolori users file.
     Asks for permission to continue, exits if not given.
-    ALso exits if the file is malformed.
+    Also exits if the file is malformed.
     """
     # Read file and make sure each line is valid JSON
     with open(users_file, "r") as uf:
