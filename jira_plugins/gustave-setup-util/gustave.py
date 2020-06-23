@@ -60,7 +60,7 @@ def main():
     if args.mode == JIRA_PARSER_NAME:
         setup_jira(jira_url=args.jira_url, login=args.login)
     elif args.mode == REVOLORI_PARSER_NAME:
-        setup_revolori()
+        setup_revolori(revolori_url=args.revo_url, create_users_file=args.create_users)
     else:
         parser.print_usage()
         sys.exit(2)
@@ -108,7 +108,13 @@ def setup_jira(jira_url: str, login: str):
             print(f'API error: [{response.status_code}] "{response.text}"')
 
 
-def setup_revolori():
+def setup_revolori(revolori_url: str, create_users_file: str = None):
+    """
+    Sets up Revolori. Currently supports creating users.
+
+    : create_users_file : A file consisting of users to be created, with each line
+        representing one JSON payload for Revolori.
+    """
     print("Revolori mode")
 
 
