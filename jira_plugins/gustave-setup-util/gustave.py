@@ -3,7 +3,11 @@
 Name inspired by: M. Gustave, the concierge in "The Grand Budapest Hotel" """
 
 import argparse
+import json
+import json.decoder
+import os
 import sys
+from typing import List, Tuple
 
 import apiu.path
 import requests
@@ -136,7 +140,61 @@ def _revo_create_users(revolori_url: str, create_users_file: str):
     """ Create users in Revolori that are specified in the given file. """
     print("===== [CREATE USERS MODE] =====")
 
-    pass
+    if not os.path.isfile(create_users_file):
+        exit_with_error(f"Passed path does not point to a file: {create_users_file}")
+
+    # Read file and make sure each line is valid JSON
+    with open(create_users_file, "r") as users_file:
+        users_file_content: List[str] = users_file.read().split("\n")
+
+    all_jsons: List[str] = []
+    for i, uf_line in enumerate(users_file_content):
+        # Skip empty lines and comments
+        if uf_line == "" or uf_line.strip().startswith("//"):
+            continue
+        else:
+            try:
+                json.loads(uf_line)
+                all_jsons.append(uf_line)
+            except json.decoder.JSONDecodeError as e:
+                exit_with_error(
+                    f'Could not parse line {i+1}: "{uf_line}". '
+                    f"JSON decoder failed with: {str(e)}"
+                )
+
+    yn: str = input(
+        f"Successfully parsed {len(all_jsons)} users from input file "
+        "{create_users_file}.\nDo you want to continue? [Y/n] "
+    )
+
+    if yn.lower() not in "yj":
+        print("Cancelled.")
+        sys.exit(0)
+
+    # Call Revolori line by line and create users, collecting the errors
+    errors: List[Tuple[int, str]] = []
+    for j in all_jsons:
+        r = requests.post(apiu.path.join(revolori_url, REVOLORI_USER_API_PATH), json=j)
+        if r.status_code == 200:
+            continue
+        # If the request was badly formatted, it might be an isolated incident
+        elif r.status_code == 400:
+            errors.append((r.status_code, j))
+        else:
+            exit_with_error(
+                f"Revolori returned {r.status_code} ({r.reason}) "
+                f'when trying to create "{j}"'
+            )
+
+    # Print a resulting message summarizing the errors
+    if errors:
+        print(f"{len(errors)} requests failed:")
+        print("  Code | Request payload (first 75 characters)")
+        for err in errors:
+            print(f"  {err[0]}  | {err[1][:75]}...")
+        sys.exit(1)
+
+    print("Users created successfully")
 
 
 if __name__ == "__main__":
