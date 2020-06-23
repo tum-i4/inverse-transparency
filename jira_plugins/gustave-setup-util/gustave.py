@@ -210,10 +210,11 @@ def _revo_parse_users_file(users_file: str) -> List[str]:
 
 def _revo_send_requests(
     method: str, revolori_url: str, path: str, req_auth, payloads: List[str]
-) -> List[Tuple[int, str]]:
+):
     """
     Send all given payloads with `method` to `revolori_url/path`.
     Authentication can optionally be supplied as `req_auth`.
+    Exits if at least one request fails.
     """
     errors: List[Tuple[int, str]] = []
     for payload in payloads:
@@ -239,7 +240,15 @@ def _revo_send_requests(
                 f"Revolori returned {r.status_code} ({r.reason}) "
                 f'when trying to create "{payload}"'
             )
-    return errors
+
+    if errors:
+        print(f"{len(errors)} requests failed:")
+        print("  Code | Request payload (first 75 characters)")
+        for err in errors:
+            print(f"  {err[0]}  | {err[1][:75]}...")
+        sys.exit(1)
+
+    return
 
 
 def _revo_create_users(revolori_url: str, req_auth, create_users_file: str):
@@ -252,22 +261,14 @@ def _revo_create_users(revolori_url: str, req_auth, create_users_file: str):
     # Parse and check the given users file.
     all_jsons: List[str] = _revo_parse_users_file(create_users_file)
 
-    # Call Revolori line by line and create users, collecting the errors
-    errors: List[Tuple[int, str]] = _revo_send_requests(
+    # Call Revolori line by line and create users, printing the errors
+    requests_failed = _revo_send_requests(
         method="POST",
         revolori_url=revolori_url,
         path=REVOLORI_USER_API_PATH,
         req_auth=req_auth,
         payloads=all_jsons,
     )
-
-    # Print a resulting message summarizing the errors
-    if errors:
-        print(f"{len(errors)} requests failed:")
-        print("  Code | Request payload (first 75 characters)")
-        for err in errors:
-            print(f"  {err[0]}  | {err[1][:75]}...")
-        sys.exit(1)
 
     print("Users created successfully")
 
