@@ -10,6 +10,7 @@ pylint = "*"
 mypy = "*"
 pytest = "*"
 requests = "*"
+api-utils = "*"
 
 [requires]
 python_version = "3.6"

@@ -8,6 +8,7 @@ import sys
 import requests
 import requests.exceptions
 
+import apiu.path
 JIRA_API_PATH = "rest/api/2/user"
 
 
@@ -15,10 +16,7 @@ def main(jira_url: str, login: str):
     if not jira_url.startswith("http"):
         jira_url = f"http://{jira_url}"
 
-    if not jira_url.endswith("/"):
-        jira_url = f"{jira_url}/"
-
-    full_api_url = f"{jira_url}{JIRA_API_PATH}"
+    full_api_url = apiu.path.join(jira_url, JIRA_API_PATH)
 
     try:
         user, password = login.split(":")
