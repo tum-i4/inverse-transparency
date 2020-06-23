@@ -283,10 +283,34 @@ def _revo_create_users(revolori_url: str, req_auth, create_users_file: str):
     print("Users created successfully")
 
 
-def _revo_delete_users(revolori_url: str, req_auth, create_users_file: str):
-    """ Create users in Revolori that are specified in the given file. """
+def _revo_get_user_ids(user_jsons: List[str]) -> List[str]:
+    """ Parse the given user JSONs and return each user's Revolori ID. """
+    user_ids: List[str] = []
+    for uj in user_jsons:
+        uj_parsed = json.loads(uj)
+        user_ids.append(uj_parsed["email"])
+    return user_ids
+
+
+def _revo_delete_users(revolori_url: str, req_auth, delete_users_file: str):
+    """ Delete users in Revolori that are specified in the given file. """
     print("===== [DELETE USERS MODE] =====")
-    return
+
+    # Parse and check the given users file.
+    user_jsons: List[str] = _revo_parse_users_file(delete_users_file)
+    user_ids: List[str] = _revo_get_user_ids(user_jsons)
+
+    # Call Revolori line by line and delete users, printing the errors
+    request_params: List[Tuple[str, str]] = list(zip(user_ids, [""] * len(user_ids)))
+    requests_failed = _revo_send_requests(
+        method="DELETE",
+        revolori_url=revolori_url,
+        path=REVOLORI_USER_API_PATH,
+        req_auth=req_auth,
+        request_params=request_params,
+    )
+
+    print("Users deleted successfully")
 
 
 if __name__ == "__main__":
