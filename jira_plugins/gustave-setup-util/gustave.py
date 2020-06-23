@@ -1,5 +1,5 @@
 #!.venv/bin/python3
-""" gustave sets up Jira
+""" gustave sets up Jira and Revolori
 Name inspired by: M. Gustave, the concierge in "The Grand Budapest Hotel" """
 
 import argparse
