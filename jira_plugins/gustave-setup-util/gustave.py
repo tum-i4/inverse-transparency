@@ -14,6 +14,42 @@ VERSION = "0.1"
 JIRA_API_PATH = "rest/api/2/user"
 
 
+def main():
+    JIRA_PARSER_NAME = "jira"
+    REVOLORI_PARSER_NAME = "revo"
+
+    parser = argparse.ArgumentParser(prog="gustave")
+    parser.add_argument(
+        "--version", "-v", action="version", version="%(prog)s " + str(VERSION)
+    )
+    subparsers = parser.add_subparsers(title="modes", dest="mode")
+
+    # Jira setup functionality
+    jira_parser = subparsers.add_parser(JIRA_PARSER_NAME, help="Set up Jira")
+
+    jira_parser.add_argument(
+        "jira_url", help="The URL of the Jira instance, e.g. localhost:2929/jira"
+    )
+    jira_parser.add_argument(
+        "--login",
+        default="admin:admin",
+        help="Optionally specify the login to use, formatted as user:password (default: admin:admin)",
+    )
+
+    # Revolori setup functionality
+    revolori_parser = subparsers.add_parser("revo", help="Set up Revolori SSO")
+
+    args = parser.parse_args()
+
+    if args.mode == JIRA_PARSER_NAME:
+        setup_jira(jira_url=args.jira_url, login=args.login)
+    elif args.mode == REVOLORI_PARSER_NAME:
+        setup_revolori()
+    else:
+        parser.print_usage()
+        sys.exit(2)
+
+
 def setup_jira(jira_url: str, login: str):
     if not jira_url.startswith("http"):
         jira_url = f"http://{jira_url}"
@@ -61,41 +97,8 @@ def setup_revolori():
 
 
 if __name__ == "__main__":
-    JIRA_PARSER_NAME = "jira"
-    REVOLORI_PARSER_NAME = "revo"
-
     try:
-        parser = argparse.ArgumentParser(prog="gustave")
-        parser.add_argument(
-            "--version", "-v", action="version", version="%(prog)s " + str(VERSION)
-        )
-        subparsers = parser.add_subparsers(title="modes", dest="mode")
-
-        # Jira setup functionality
-        jira_parser = subparsers.add_parser(JIRA_PARSER_NAME, help="Set up Jira")
-
-        jira_parser.add_argument(
-            "jira_url", help="The URL of the Jira instance, e.g. localhost:2929/jira"
-        )
-        jira_parser.add_argument(
-            "--login",
-            default="admin:admin",
-            help="Optionally specify the login to use, formatted as user:password (default: admin:admin)",
-        )
-
-        # Revolori setup functionality
-        revolori_parser = subparsers.add_parser("revo", help="Set up Revolori SSO")
-
-        args = parser.parse_args()
-
-        if args.mode == JIRA_PARSER_NAME:
-            setup_jira(jira_url=args.jira_url, login=args.login)
-        elif args.mode == REVOLORI_PARSER_NAME:
-            setup_revolori()
-        else:
-            parser.print_usage()
-            sys.exit(2)
-
+        main()
     except KeyboardInterrupt:
         # Exit code for Ctrl-C
         sys.exit(130)
