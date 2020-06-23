@@ -52,6 +52,13 @@ def main():
         help=f"The URL of the Revolori instance; default: {revolori_default_url}",
     )
     revolori_parser.add_argument(
+        "--auth",
+        "-a",
+        dest="revo_auth",
+        nargs=2,
+        help="Basic authentication credentials to use. Expects user and password.",
+    )
+    revolori_parser.add_argument(
         "--create-users",
         "-c",
         metavar="PATH",
@@ -180,6 +187,10 @@ def _revo_create_users(revolori_url: str, create_users_file: str):
         # If the request was badly formatted, it might be an isolated incident
         elif r.status_code == 400:
             errors.append((r.status_code, j))
+        elif r.status_code == 401:
+            exit_with_error(
+                f"Revolori returned 401 (Unauthorized); did you supply authentication?"
+            )
         else:
             exit_with_error(
                 f"Revolori returned {r.status_code} ({r.reason}) "
