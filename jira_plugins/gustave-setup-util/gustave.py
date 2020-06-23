@@ -56,8 +56,13 @@ def setup_jira(jira_url: str, login: str):
             print(f'API error: [{response.status_code}] "{response.text}"')
 
 
+def setup_revolori():
+    print("Revolori mode")
+
+
 if __name__ == "__main__":
     JIRA_PARSER_NAME = "jira"
+    REVOLORI_PARSER_NAME = "revo"
 
     try:
         parser = argparse.ArgumentParser(prog="gustave")
@@ -77,10 +82,16 @@ if __name__ == "__main__":
             default="admin:admin",
             help="Optionally specify the login to use, formatted as user:password (default: admin:admin)",
         )
+
+        # Revolori setup functionality
+        revolori_parser = subparsers.add_parser("revo", help="Set up Revolori SSO")
+
         args = parser.parse_args()
 
         if args.mode == JIRA_PARSER_NAME:
             setup_jira(jira_url=args.jira_url, login=args.login)
+        elif args.mode == REVOLORI_PARSER_NAME:
+            setup_revolori()
         else:
             parser.print_usage()
             sys.exit(2)
