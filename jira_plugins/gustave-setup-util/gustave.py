@@ -38,6 +38,22 @@ def main():
 
     # Revolori setup functionality
     revolori_parser = subparsers.add_parser("revo", help="Set up Revolori SSO")
+    revolori_default_url: str = "https://revolori.sse.in.tum.de"
+    revolori_parser.add_argument(
+        "--url",
+        "-u",
+        dest="revo_url",
+        default=revolori_default_url,
+        help=f"The URL of the Revolori instance; default: {revolori_default_url}",
+    )
+    revolori_parser.add_argument(
+        "--create-users",
+        "-c",
+        metavar="PATH",
+        help="Create users supplied in the given file. File is expected to be a text "
+        "file consisting of lines of individual JSON objects that will be supplied to "
+        "Revolori one by one. Each line represents one user.",
+    )
 
     args = parser.parse_args()
 
