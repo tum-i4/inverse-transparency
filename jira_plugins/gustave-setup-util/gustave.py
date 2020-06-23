@@ -62,12 +62,15 @@ if __name__ == "__main__":
         parser.add_argument(
             "--version", "-v", action="version", version="%(prog)s " + str(VERSION)
         )
+        subparsers = parser.add_subparsers(title="modes", dest="mode")
 
         # Jira setup functionality
-        parser.add_argument(
+        jira_parser = subparsers.add_parser("jira", help="Set up Jira")
+
+        jira_parser.add_argument(
             "jira_url", help="The URL of the Jira instance, e.g. localhost:2929/jira"
         )
-        parser.add_argument(
+        jira_parser.add_argument(
             "--login",
             default="admin:admin",
             help="Optionally specify the login to use, formatted as user:password (default: admin:admin)",
