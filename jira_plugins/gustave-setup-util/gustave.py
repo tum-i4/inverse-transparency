@@ -114,7 +114,24 @@ def setup_revolori(revolori_url: str, create_users_file: str = None):
     : create_users_file : A file consisting of users to be created, with each line
         representing one JSON payload for Revolori.
     """
-    print("Revolori mode")
+
+    try:
+        requests.get(apiu.path.join(revolori_url, "health"))
+    except requests.exceptions.ConnectionError:
+        print(f"Error: Revolori not reachable at {revolori_url}")
+        sys.exit(1)
+
+    print("Connection to Revolori established.")
+
+    if create_users_file:
+        _revo_create_users(revolori_url, create_users_file)
+
+
+def _revo_create_users(revolori_url: str, create_users_file: str):
+    """ Create users in Revolori that are specified in the given file. """
+    print("===== [CREATE USERS MODE] =====")
+
+    pass
 
 
 if __name__ == "__main__":
