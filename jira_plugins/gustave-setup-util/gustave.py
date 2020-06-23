@@ -5,10 +5,9 @@ Name inspired by: M. Gustave, the concierge in "The Grand Budapest Hotel" """
 import argparse
 import sys
 
+import apiu.path
 import requests
 import requests.exceptions
-
-import apiu.path
 
 VERSION = "0.1"
 JIRA_API_PATH = "rest/api/2/user"
