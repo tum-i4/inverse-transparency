@@ -57,7 +57,8 @@ def main():
         "-a",
         dest="revo_auth",
         nargs=2,
-        help="Basic authentication credentials to use. Expects user and password.",
+        metavar=("USER", "PASSWORD"),
+        help="Basic authentication credentials to use.",
     )
     help_text_user_file: str = (
         "File is expected to be a text file consisting of lines of individual JSON "
