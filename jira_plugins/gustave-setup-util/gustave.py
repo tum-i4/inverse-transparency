@@ -66,6 +66,12 @@ def main():
         "one user."
     )
     revolori_parser.add_argument(
+        "--list-users",
+        "-l",
+        metavar="PATH",
+        help=f"List the users contained in the given file. {help_text_user_file}",
+    )
+    revolori_parser.add_argument(
         "--create-users",
         "-c",
         metavar="PATH",
@@ -86,6 +92,7 @@ def main():
         setup_revolori(
             revolori_url=args.revo_url,
             auth=args.revo_auth,
+            list_users_file=args.list_users,
             create_users_file=args.create_users,
             delete_users_file=args.delete_users,
         )
@@ -143,6 +150,7 @@ def setup_jira(jira_url: str, login: str):
 def setup_revolori(
     revolori_url: str,
     auth: List[str] = None,
+    list_users_file: str = None,
     create_users_file: str = None,
     delete_users_file: str = None,
 ):
@@ -164,6 +172,9 @@ def setup_revolori(
     if auth:
         u, p = auth
         req_auth = requests.auth.HTTPBasicAuth(u, p)
+
+    if list_users_file:
+        _revo_list_users(revolori_url, req_auth, list_users_file)
 
     if create_users_file:
         _revo_create_users(revolori_url, req_auth, create_users_file)
@@ -260,6 +271,20 @@ def _revo_send_requests(
         sys.exit(1)
 
     return
+
+
+def _revo_list_users(revolori_url: str, req_auth, create_users_file: str) -> None:
+    """ List all users contained in the given file. """
+    print("===== [LIST USERS MODE] =====\n")
+
+    # Parse and check the given users file.
+    user_jsons: List[str] = _revo_parse_users_file(create_users_file)
+
+    # Print the users one by one
+    for uj in user_jsons:
+        print(json.dumps(json.loads(uj), indent="  ", ensure_ascii=False))
+
+    print("\nAll users listed successfully")
 
 
 def _revo_create_users(revolori_url: str, req_auth, create_users_file: str) -> None:
