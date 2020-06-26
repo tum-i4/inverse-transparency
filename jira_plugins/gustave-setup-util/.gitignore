@@ -1,4 +1,4 @@
-users.jsonl
+*.jsonl
 
 # Created by setuppyproj v2.2 (from https://www.gitignore.io/api/linux,python,visualstudiocode)
 
