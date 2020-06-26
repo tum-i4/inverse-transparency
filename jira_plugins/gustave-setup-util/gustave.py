@@ -161,8 +161,11 @@ def setup_revolori(
         representing one JSON payload for Revolori.
     """
 
+    t: float = 5
     try:
-        requests.get(apiu.path.join(revolori_url, REVOLORI_HEALTH_API_PATH))
+        requests.get(apiu.path.join(revolori_url, REVOLORI_HEALTH_API_PATH), timeout=t)
+    except requests.exceptions.ConnectTimeout:
+        exit_with_error(f"The server took too long to respond (> {t} seconds).")
     except requests.exceptions.ConnectionError:
         exit_with_error(f"Revolori not reachable at {revolori_url}")
 
