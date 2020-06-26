@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Gustave/Revolori: Create users",
+            "name": "revo: Create users",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/gustave.py",
@@ -13,6 +13,18 @@
             "args": [
                 "revo",
                 "--create-users",
+                "users.jsonl"
+            ]
+        },
+        {
+            "name": "revo: List users",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/gustave.py",
+            "console": "integratedTerminal",
+            "args": [
+                "revo",
+                "--list-users",
                 "users.jsonl"
             ]
         }
