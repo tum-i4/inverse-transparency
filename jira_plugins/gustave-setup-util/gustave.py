@@ -219,7 +219,7 @@ def _revo_send_requests(
     path: str,
     req_auth,
     request_params: List[Tuple[str, str]],
-):
+) -> None:
     """
     Send all given payloads with `method` to `revolori_url/path`.
     Authentication can optionally be supplied as `req_auth`.
@@ -262,7 +262,7 @@ def _revo_send_requests(
     return
 
 
-def _revo_create_users(revolori_url: str, req_auth, create_users_file: str):
+def _revo_create_users(revolori_url: str, req_auth, create_users_file: str) -> None:
     """ Create users in Revolori that are specified in the given file. """
     print("===== [CREATE USERS MODE] =====")
 
@@ -293,7 +293,7 @@ def _revo_get_user_ids(user_jsons: List[str]) -> List[str]:
     return user_ids
 
 
-def _revo_delete_users(revolori_url: str, req_auth, delete_users_file: str):
+def _revo_delete_users(revolori_url: str, req_auth, delete_users_file: str) -> None:
     """ Delete users in Revolori that are specified in the given file. """
     print("===== [DELETE USERS MODE] =====")
 
