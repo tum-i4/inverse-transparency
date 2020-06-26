@@ -238,30 +238,30 @@ def _revo_send_requests(
 
     : request_params : List of (path, payload) tuples for each request.
     """
-    errors: List[Tuple[int, str]] = []
-    for request_path, payload in request_params:
-        r = requests.request(
-            method=method,
-            url=apiu.path.join(revolori_url, REVOLORI_USER_API_PATH, request_path),
-            headers={"Content-Type": "application/json"},
-            auth=req_auth,
-            data=payload,
-        )
 
-        if r.status_code == 200:
-            continue
-        # If the request was badly formatted, it might be an isolated incident
-        elif r.status_code == 400:
-            errors.append((r.status_code, payload))
-        elif r.status_code == 401:
-            exit_with_error(
-                f"Revolori returned 401 (Unauthorized); did you supply authentication?"
-            )
-        else:
-            exit_with_error(
-                f"Revolori returned {r.status_code} ({r.reason}) "
-                f'when trying to create "{payload}"'
-            )
+    errors: List[Tuple[int, str]] = []
+    with requests.Session() as session:
+        session.auth = req_auth
+        session.headers.update({"Content-Type": "application/json; charset=UTF-8"})
+        for req_path, payload in request_params:
+            payload_utf8 = payload.encode("utf-8")
+            url: str = apiu.path.join(revolori_url, REVOLORI_USER_API_PATH, req_path)
+            r = session.request(method=method, url=url, data=payload_utf8)
+
+            if r.status_code == 200:
+                continue
+            # If the request was badly formatted, it might be an isolated incident
+            elif r.status_code == 400:
+                errors.append((r.status_code, payload))
+            elif r.status_code == 401:
+                exit_with_error(
+                    f"Revolori returned 401 (Unauthorized); did you supply authentication?"
+                )
+            else:
+                exit_with_error(
+                    f"Revolori returned {r.status_code} ({r.reason}) "
+                    f"when requesting {method} {full_path} with: {payload}"
+                )
 
     if errors:
         print(f"{len(errors)} requests failed:")
