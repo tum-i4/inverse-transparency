@@ -273,7 +273,7 @@ def _revo_create_users(revolori_url: str, req_auth, create_users_file: str):
     request_params: List[Tuple[str, str]] = list(
         zip([""] * len(user_jsons), user_jsons)
     )
-    requests_failed = _revo_send_requests(
+    _revo_send_requests(
         method="POST",
         revolori_url=revolori_url,
         path=REVOLORI_USER_API_PATH,
@@ -303,7 +303,7 @@ def _revo_delete_users(revolori_url: str, req_auth, delete_users_file: str):
 
     # Call Revolori line by line and delete users, printing the errors
     request_params: List[Tuple[str, str]] = list(zip(user_ids, [""] * len(user_ids)))
-    requests_failed = _revo_send_requests(
+    _revo_send_requests(
         method="DELETE",
         revolori_url=revolori_url,
         path=REVOLORI_USER_API_PATH,
