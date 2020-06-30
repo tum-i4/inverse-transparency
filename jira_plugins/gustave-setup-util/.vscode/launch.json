@@ -5,6 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "revo: List users",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/gustave.py",
+            "console": "integratedTerminal",
+            "args": [
+                "revo",
+                "--list-users",
+                "users.jsonl"
+            ]
+        },
+        {
             "name": "revo: Create users",
             "type": "python",
             "request": "launch",
@@ -17,14 +29,14 @@
             ]
         },
         {
-            "name": "revo: List users",
+            "name": "revo: Delete users",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/gustave.py",
             "console": "integratedTerminal",
             "args": [
                 "revo",
-                "--list-users",
+                "--delete-users",
                 "users.jsonl"
             ]
         }
