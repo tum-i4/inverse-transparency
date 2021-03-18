@@ -1,0 +1,23 @@
+#!/bin/bash
+generateKeys=${1:-false}
+if [ "$generateKeys" = "true" ];
+then
+  echo "Generating new set of keys..."
+  mkdir "dev_keys"
+  ssh-keygen -t ecdsa -b 384 -m pem -N "" -f ./dev_keys/ecdsa_key
+  openssl rand -hex -base64 683 | tr -d '\n' > ./dev_keys/hmac
+else
+  echo "Using available set of keys..."
+fi
+
+address=127.0.0.1:5430
+token="default_token"
+echo "Setting up Vault..."
+vault server -dev -dev-listen-address $address -dev-root-token-id $token &
+sleep 2s
+export VAULT_ADDR="http://$address"
+vault secrets enable -path=users kv
+vault secrets enable -path=keys kv
+vault secrets enable -path=whitelist kv
+vault kv put keys/hmac key=@dev_keys/hmac
+vault kv put keys/ecdsa key=@dev_keys/ecdsa_key

@@ -1,0 +1,33 @@
+version: "3.7"
+
+services:
+    vault:
+        build: vault
+        ports:
+            - 5430:5430
+        volumes:
+            - ${VAULT_LOGS}:/vault/logs
+            - ./dev_keys:/vault/keys
+        cap_add:
+            - IPC_LOCK
+        depends_on:
+            - consul
+    consul:
+        build: consul
+        ports:
+            - 5431:5431
+        volumes:
+            - ${CONSUL_DATA}:/consul/data
+    revolori:
+        build:
+            context: .
+            args:
+                VAULT_ADDR: ${VAULT_ADDR}
+                VAULT_TOKEN: ${VAULT_TOKEN}
+                AUTH_NAME: ${AUTH_NAME}
+                AUTH_PASSWORD: ${AUTH_PASSWORD}
+        ports:
+            - 5429:5429
+        depends_on:
+            - vault
+            - consul

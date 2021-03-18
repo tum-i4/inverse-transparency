@@ -1,0 +1,29 @@
+#!/bin/bash
+
+if [ $# -ne 1 ]; then
+	echo "Expecting exactly one argument: Vault address"
+	exit 1
+fi
+
+address=$1
+
+./create-keys
+docker-compose up -d --build
+# || exit 1 makes sure that the script fails in case the command before the pipes fails
+docker-compose exec --env VAULT_ADDR="$address" vault vault operator init || exit 1
+echo "
+Please read the instructions above, then continue.
+You will be asked to provide three unseal keys and the token. If one input is incorrect, the script will fail.
+"
+docker-compose exec --env VAULT_ADDR="$address" vault vault operator unseal || exit 1
+docker-compose exec --env VAULT_ADDR="$address" vault vault operator unseal || exit 1
+docker-compose exec --env VAULT_ADDR="$address" vault vault operator unseal || exit 1
+docker-compose exec --env VAULT_ADDR="$address" vault vault login || exit 1
+
+docker-compose exec --env VAULT_ADDR="$address" vault vault secrets enable -path=users kv
+docker-compose exec --env VAULT_ADDR="$address" vault vault secrets enable -path=keys kv
+docker-compose exec --env VAULT_ADDR="$address" vault vault secrets enable -path=whitelist kv
+docker-compose exec --env VAULT_ADDR="$address" vault vault kv put keys/hmac key=@/vault/keys/hmac
+docker-compose exec --env VAULT_ADDR="$address" vault vault kv put keys/ecdsa key=@/vault/keys/ecdsa_key
+
+echo 'Vault initialization is done. You only need to finish the last step "Restart the Revolori Container" to finish the setup!'
