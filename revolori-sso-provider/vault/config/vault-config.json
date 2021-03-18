@@ -1,0 +1,15 @@
+{
+  "backend": {
+    "consul": {
+      "address": "consul:5431",
+      "path": "vault/"
+    }
+  },
+  "listener": {
+    "tcp":{
+      "address": "0.0.0.0:5430",
+      "tls_disable": 1
+    }
+  },
+  "ui": true
+}

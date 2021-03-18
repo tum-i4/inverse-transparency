@@ -1,0 +1,19 @@
+# Jetbrains IDE
+.idea
+
+# Executables and Binaries
+*.exe
+revolori
+dist
+
+# Crypto keys
+dev_keys
+
+# Vault and Consul
+consul/data
+vault/data
+vault/logs
+vault/policies
+
+# Docker
+.env

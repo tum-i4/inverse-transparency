@@ -1,0 +1,7 @@
+#!/bin/bash
+
+echo "Generating new set of keys..."
+mkdir "dev_keys"
+ssh-keygen -t ecdsa -b 384 -m pem -N "" -f ./dev_keys/ecdsa_key
+openssl rand -hex -base64 683 | tr -d '\n' > ./dev_keys/hmac
+

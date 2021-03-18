@@ -1,0 +1,16 @@
+version: "3.4"
+
+services:
+  overseer:
+    build: .
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URI=sqlite:////var/app-data/data.db
+      - JWT_PUBLIC_KEY_PATH=/var/app-secrets/issuer.pub
+    ports:
+      - 5421:5421
+    volumes:
+      - ${OVERSEER_DATA}:/var/app-data/
+      - ${JWT_PUBLIC_KEY}:/var/app-secrets/issuer.pub
+

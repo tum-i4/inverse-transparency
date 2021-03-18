@@ -1,0 +1,2 @@
+export DATABASE_URI="sqlite:///data.db"
+pipenv run alembic revision --autogenerate -m $1

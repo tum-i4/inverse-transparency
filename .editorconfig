@@ -1,0 +1,17 @@
+# https://editorconfig.org/
+
+root = true
+
+[*]
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+max_line_length = 90
+end_of_line = lf
+charset = utf-8
+
+# Use 2 spaces and 120 characters frontend code and configuration
+[*.{html,json,css,js,ts,svelte,yaml,yml}]
+indent_size = 2
+max_line_length = 120
