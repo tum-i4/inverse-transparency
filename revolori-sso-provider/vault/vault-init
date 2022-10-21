@@ -1,0 +1,18 @@
+#/bin/sh
+
+export VAULT_ADDR="http://$HOST:$PORT"
+vault server -dev -dev-root-token-id="$ACCESS_TOKEN" -dev-no-store-token -config /vault/config/vault-config.json &
+
+echo "Waiting for vault to start..."
+sleep 3
+
+vault login $ACCESS_TOKEN
+
+# enable secrets
+vault secrets enable -path=users kv
+vault secrets enable -path=keys kv
+vault secrets enable -path=whitelist kv
+vault kv put keys/hmac key=@/vault/keys/hmac
+vault kv put keys/ecdsa key=@/vault/keys/ecdsa_key
+
+sleep infinity

@@ -4,11 +4,11 @@
 import datetime as dt
 import itertools
 import random
-from typing import List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
 from fastapi import Depends
 from sqlalchemy import func
-from sqlalchemy.orm import selectinload
+from sqlalchemy.orm import Query, selectinload
 
 from overseer.auth import get_current_user
 from overseer.db.connection import Session
@@ -31,8 +31,21 @@ class DataAccessDao:
 
     @staticmethod
     def add(session: Session, data_access: DataAccess):
-        """ Insert a data access into the database """
+        """Insert a data access into the database"""
         session.add(data_access)
+
+    @staticmethod
+    def _filter_query_with_date_range(
+        query: Query,
+        date_start: Optional[dt.date] = None,
+        date_end: Optional[dt.date] = None,
+    ) -> Query:
+        if date_start is not None:
+            query = query.filter(func.DATE(DataAccess.timestamp) >= date_start)
+        if date_end is not None:
+            query = query.filter(func.DATE(DataAccess.timestamp) <= date_end)
+
+        return query
 
     def load_all(
         self,
@@ -40,19 +53,20 @@ class DataAccessDao:
         date_start: Optional[dt.date] = None,
         date_end: Optional[dt.date] = None,
         limit: Optional[int] = None,
+        offset: Optional[int] = None,
     ) -> List[DataAccess]:
-        """ Load all entries of the given data owner. """
+        """Load all entries of the given data owner."""
 
         query = session.query(DataAccess).filter(
             DataAccess.data_owners.any(owner_rid=self.logged_in_user)
         )
 
-        if date_start:
-            query = query.filter(func.DATE(DataAccess.timestamp) >= date_start)
-        if date_end:
-            query = query.filter(func.DATE(DataAccess.timestamp) <= date_end)
+        query = self._filter_query_with_date_range(query, date_start, date_end)
 
         query = query.order_by(DataAccess.timestamp.desc())
+
+        if offset:
+            query = query.offset(offset)
 
         if limit:
             query = query.limit(limit)
@@ -64,6 +78,32 @@ class DataAccessDao:
 
         return data_accesses
 
+    def count(
+        self,
+        session: Session,
+        date_start: Optional[dt.date] = None,
+        date_end: Optional[dt.date] = None,
+    ) -> Dict[str, Dict[str, int]]:
+        """
+        Count the total number of entries available in the database per key (user_rid,
+        tool, and access_kind) and grouped by unique values.
+        """
+
+        result = {}
+
+        for field_name in ["user_rid", "tool", "access_kind"]:
+            field = getattr(DataAccess, field_name)
+            query: Query = session.query(
+                field,
+                func.count(),
+            ).filter(DataAccess.data_owners.any(owner_rid=self.logged_in_user))
+
+            query = self._filter_query_with_date_range(query, date_start, date_end)
+            query = query.group_by(field)
+            result[field_name] = dict(query.all())
+
+        return result
+
     @classmethod
     def generate_log(
         cls,
@@ -73,7 +113,7 @@ class DataAccessDao:
         number_of_entries: int,
         tools: List[str],
     ) -> None:
-        """ Generate a log for the given data owner. """
+        """Generate a log for the given data owner."""
 
         data_accesses = cls._generate_data_accesses(owner_rid, date_range, tools)
         for data_access in itertools.islice(data_accesses, number_of_entries):
@@ -81,9 +121,11 @@ class DataAccessDao:
 
     @staticmethod
     def _generate_data_accesses(
-        owner_rid: RevoloriId, date_range: Tuple[dt.date, dt.date], tools: List[str],
+        owner_rid: RevoloriId,
+        date_range: Tuple[dt.date, dt.date],
+        tools: List[str],
     ):
-        """ Infinite generator for creating data accesses for the given data owner. """
+        """Infinite generator for creating data accesses for the given data owner."""
 
         if date_range[0] > date_range[1]:
             date_range = (date_range[1], date_range[0])

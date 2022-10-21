@@ -5,12 +5,17 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/url"
 	"revolori/whitelist"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
 )
+
+type Token struct {
+	Token string `json:"token" format:"base64" example:"eyJhbGc.eyJleHA.vUE6D5Y"`
+}
 
 // NewAuthToken returns a new JWT token signed with ECDSA that should only be used to authenticate user requests.
 func (ac Controller) newAuthToken(userID string, expirationTime time.Time) (string, error) {
@@ -24,7 +29,7 @@ func (ac Controller) newAuthToken(userID string, expirationTime time.Time) (stri
 		return "", err
 	}
 
-	issuer := "http://localhost:5429"
+	issuer := ac.hostAddr
 
 	return generateToken(jwt.SigningMethodES384, expirationTime, issuer, userID, key)
 }
@@ -36,7 +41,7 @@ func (ac Controller) newRefreshToken(userID string, expirationTime time.Time) (s
 		return "", err
 	}
 
-	issuer := "http://localhost:5429"
+	issuer := ac.hostAddr
 
 	return generateToken(jwt.SigningMethodHS512, expirationTime, issuer, userID, key)
 }
@@ -69,9 +74,7 @@ func (ac Controller) createAndSendAuthToken(w http.ResponseWriter, userID string
 		return err
 	}
 
-	token := struct {
-		Token string `json:"token"`
-	}{
+	token := Token{
 		Token: authToken,
 	}
 
@@ -92,7 +95,13 @@ func (ac Controller) createRefreshTokenAndSetCookie(w http.ResponseWriter, userI
 
 	sameSite := http.SameSiteStrictMode
 	secure := true
-	if ac.devMode {
+
+	hostUrl, err := url.Parse(ac.hostAddr)
+	if err != nil {
+		return err
+	}
+
+	if ac.devMode || hostUrl.Scheme == "http" {
 		sameSite = http.SameSiteNoneMode
 		secure = false
 	}

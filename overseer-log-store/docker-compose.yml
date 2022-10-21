@@ -8,9 +8,7 @@ services:
     environment:
       - DATABASE_URI=sqlite:////var/app-data/data.db
       - JWT_PUBLIC_KEY_PATH=/var/app-secrets/issuer.pub
-    ports:
-      - 5421:5421
+    network_mode: "host"
     volumes:
       - ${OVERSEER_DATA}:/var/app-data/
       - ${JWT_PUBLIC_KEY}:/var/app-secrets/issuer.pub
-

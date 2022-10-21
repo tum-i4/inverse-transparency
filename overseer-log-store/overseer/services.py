@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from typing import List, Set
+from typing import Dict, List, Set
 
 import requests
 
@@ -28,9 +28,11 @@ class IdMappingError(Exception):
 
 class RevoloriService:
     @staticmethod
-    def map_ids(tool: str, tool_specific_ids: List[str]) -> Set[RevoloriId]:
+    def get_id_mapping(
+        tool: str, tool_specific_ids: List[str]
+    ) -> Dict[RevoloriId, Set[str]]:
         """
-        Map tool specific IDs to Revolori IDs.
+        Return mapping of unique `RevoloriId`s to their corresponding tool specific ids.
         """
         payload = {tool: tool_specific_ids}
         response = requests.get(settings.REVOLORI_ID_ENDPOINT, json=payload)
@@ -40,8 +42,24 @@ class RevoloriService:
         elif 500 <= response.status_code:
             raise ServiceError(settings.REVOLORI_ID_ENDPOINT, response.status_code)
 
-        resolved_ids = response.json()[tool].values()
-        return {RevoloriId(resolved_id) for resolved_id in resolved_ids}
+        # The response is a mapping `tool : { tool_specific_id : revolori_id }`
+        resolved_ids: Dict[str, str] = response.json()[tool]
+
+        owner_rid_reverse_map: Dict[RevoloriId, Set[str]] = dict()
+        for tool_specific_id, revolori_id_str in resolved_ids.items():
+            revolori_id = RevoloriId(revolori_id_str)
+            if revolori_id not in owner_rid_reverse_map:
+                owner_rid_reverse_map[revolori_id] = set()
+            owner_rid_reverse_map[revolori_id].add(tool_specific_id)
+
+        return owner_rid_reverse_map
+
+    @staticmethod
+    def map_ids(tool: str, tool_specific_ids: List[str]) -> Set[RevoloriId]:
+        """
+        Map tool specific IDs to Revolori IDs.
+        """
+        return set(RevoloriService.get_id_mapping(tool, tool_specific_ids).keys())
 
     @classmethod
     def map_id(cls, tool: str, tool_specific_id: str) -> RevoloriId:

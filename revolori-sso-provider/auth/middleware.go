@@ -15,7 +15,7 @@ func (ac Controller) BasicAuth(h httprouter.Handle, expectedName string, expecte
 			h(w, r, p)
 		} else {
 			w.Header().Set("WWW-Authenticate", "Basic realm=Restricted")
-			ac.logAndReturnStatus(w, "missing or invalid credentials for basic authentication provided", http.StatusUnauthorized)
+			logAndReturnJsonError(w, "missing or invalid credentials for basic authentication provided", http.StatusUnauthorized)
 		}
 	}
 }

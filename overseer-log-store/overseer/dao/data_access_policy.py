@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """ Data access policy DAO module """
 
-from typing import List, Optional
+from typing import List, Optional, Set, Tuple
 
 from fastapi import Depends
 from sqlalchemy import or_
@@ -9,6 +9,7 @@ from sqlalchemy import or_
 from overseer.auth import get_current_user
 from overseer.db.connection import Session
 from overseer.db.models import DataAccess, DataAccessPolicy
+from overseer.models import RevoloriId
 
 
 class DataAccessPolicyDao:
@@ -25,12 +26,12 @@ class DataAccessPolicyDao:
         self.logged_in_user = logged_in_user
 
     def add(self, session: Session, data_access_policy: DataAccessPolicy):
-        """ Insert a data access policy into the database """
+        """Insert a data access policy into the database"""
         data_access_policy.owner_rid = self.logged_in_user
         session.add(data_access_policy)
 
     def load_all(self, session: Session) -> List[DataAccessPolicy]:
-        """ Load all data access policies for the given user. """
+        """Load all data access policies for the given user."""
         query = session.query(DataAccessPolicy).filter(
             DataAccessPolicy.owner_rid == self.logged_in_user
         )
@@ -39,7 +40,7 @@ class DataAccessPolicyDao:
     def load_single(
         self, session: Session, data_access_policy_id: int
     ) -> Optional[DataAccessPolicy]:
-        """ Load a data access policy by id """
+        """Load a data access policy by id"""
         query = session.query(DataAccessPolicy).filter(
             DataAccessPolicy.id == data_access_policy_id,
             DataAccessPolicy.owner_rid == self.logged_in_user,
@@ -50,7 +51,7 @@ class DataAccessPolicyDao:
     def load_matching(
         session: Session, data_access: DataAccess
     ) -> List[DataAccessPolicy]:
-        """ Load all data access policies which permit the given data access """
+        """Load all data access policies which permit the given data access"""
         owners = [owner.owner_rid for owner in data_access.data_owners]
         date_of_access = data_access.timestamp.date()
 
@@ -80,24 +81,24 @@ class DataAccessPolicyDao:
         return query.all()
 
     @classmethod
-    def is_access_granted(cls, session: Session, data_access: DataAccess) -> bool:
-        """ Checks whether a the data access is allowed by all involved owners """
+    def who_granted(
+        cls, session: Session, data_access: DataAccess
+    ) -> Tuple[Set[RevoloriId], Set[RevoloriId]]:
+        """Checks which data owner of the request grant the access and which reject"""
         policies = cls.load_matching(session, data_access)
 
         # extract all owners from the data access and deduplicate them using a set.
         involved_owners = {owner.owner_rid for owner in data_access.data_owners}
 
-        # extract all owners from the matching policies and deduplicate them using a set.
+        # examine the owners from the matching policies and those who do not.
+        # deduplicate them using a set.
         granted_owners = {policy.owner_rid for policy in policies}
+        rejected_owners = involved_owners - granted_owners
 
-        # Since a DataAccess can hold multiple owners, we need to compare sets of owners.
-        # `granted_owners` will never be larger than `involved_owners`
-        # due to the IN clause on the owner column in `cls.load_matching`.
-        # Therefore, we can use strict equality here.
-        return involved_owners == granted_owners
+        return granted_owners, rejected_owners
 
     def delete(self, session: Session, data_access_policy_id: int) -> bool:
-        """ Deletes a data access policy by id """
+        """Deletes a data access policy by id"""
         query = session.query(DataAccessPolicy).filter(
             DataAccessPolicy.id == data_access_policy_id,
             DataAccessPolicy.owner_rid == self.logged_in_user,

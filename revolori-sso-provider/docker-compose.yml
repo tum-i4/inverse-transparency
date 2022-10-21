@@ -2,32 +2,34 @@ version: "3.7"
 
 services:
     vault:
+        network_mode: "host"
         build: vault
-        ports:
-            - 5430:5430
         volumes:
             - ${VAULT_LOGS}:/vault/logs
             - ./dev_keys:/vault/keys
         cap_add:
             - IPC_LOCK
+        environment:
+            HOST: "127.0.0.1"
+            PORT: "5430"
         depends_on:
             - consul
     consul:
+        network_mode: "host"
         build: consul
-        ports:
-            - 5431:5431
+        environment:
+            HOST: "127.0.0.1"
+            PORT: "5431"
         volumes:
             - ${CONSUL_DATA}:/consul/data
     revolori:
+        network_mode: "host"
         build:
             context: .
-            args:
-                VAULT_ADDR: ${VAULT_ADDR}
-                VAULT_TOKEN: ${VAULT_TOKEN}
-                AUTH_NAME: ${AUTH_NAME}
-                AUTH_PASSWORD: ${AUTH_PASSWORD}
-        ports:
-            - 5429:5429
-        depends_on:
-            - vault
-            - consul
+        environment:
+            VAULT_ADDR: ${VAULT_ADDR}
+            VAULT_TOKEN: ${VAULT_TOKEN}
+            AUTH_NAME: ${AUTH_NAME}
+            AUTH_PASSWORD: ${AUTH_PASSWORD}
+            HOST: "127.0.0.1"
+            PORT: "5429"

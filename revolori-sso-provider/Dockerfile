@@ -8,17 +8,23 @@ COPY go.sum .
 RUN go mod download
 
 # Set args
-ARG VAULT_ADDR
-ARG VAULT_TOKEN
-ARG AUTH_NAME
-ARG AUTH_PASSWORD
-ENV VAULT_ADDR $VAULT_ADDR
-ENV VAULT_TOKEN $VAULT_TOKEN
-ENV AUTH_NAME $AUTH_NAME
-ENV AUTH_PASSWORD $AUTH_PASSWORD
+ENV VAULT_ADDR https://127.0.0.1:5430
+ENV VAULT_TOKEN root
+ENV AUTH_NAME admin
+ENV AUTH_PASSWORD password
+ENV HOST 127.0.0.1
+ENV PORT 5429
+ENV APP_PROTOCOL http
+ENV APP_HOST ${HOST}:${PORT}
 
 # Copy the code into the container
 COPY . .
+
+# Install swag-go
+RUN go get -u github.com/swaggo/swag/cmd/swag
+
+# Build the docs
+RUN swag init
 
 # Build the application
 RUN go build -o revolori .
@@ -27,4 +33,4 @@ RUN go build -o revolori .
 EXPOSE 5429
 
 # Run Revolori
-CMD ./revolori -vault-address=${VAULT_ADDR} -vault-token=${VAULT_TOKEN} -auth-name=${AUTH_NAME} -auth-password=${AUTH_PASSWORD}
+CMD ./revolori -vault-address=${VAULT_ADDR} -vault-token=${VAULT_TOKEN} -auth-name=${AUTH_NAME} -auth-password=${AUTH_PASSWORD} -address ${HOST}:${PORT} -host-address ${APP_PROTOCOL}://${APP_HOST}

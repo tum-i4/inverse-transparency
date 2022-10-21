@@ -1,4 +1,5 @@
 #!/bin/bash
+
 generateKeys=${1:-false}
 if [ "$generateKeys" = "true" ];
 then

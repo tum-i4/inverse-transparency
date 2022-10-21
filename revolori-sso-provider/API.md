@@ -36,13 +36,30 @@ The environment variables AUTH_NAME and AUTH_Password can be defined in the envi
   - `password` (String): Password of the new user.
   - `email` (String):Email address of the new user.
   - `secondaryIDs`: Arbitrary amount of additional IDs of the new user in the format "tool":[ "id1", "id2", ...].
-- **Returned Content:** -
-- **Returned Status Codes**
-  - `200: OK`
+- **Returned Content:** The sent content, which was saved
+- **Returned Status Codes** (see [error response](#error-response))
+  - `201: Created`
   - `400: Bad Request`
+  - `409: Conflict` - if user with id already exists
   - `500: Internal Server Error`
 
 **Exemplary Request Body:**
+
+```json
+{
+    "firstName": "Some",
+    "lastName": "User",
+    "password": "somePassword",
+    "email": "someEmail@example.com",
+    "secondaryIDs":{
+        "slack": ["slackID", "slackID2"],
+        "gitlab": ["gitlabID", "gitlabID2"],
+        "other": ["someID"]
+    }
+}
+```
+
+Exemplary Response Body:
 
 ```json
 {
@@ -66,7 +83,7 @@ The environment variables AUTH_NAME and AUTH_Password can be defined in the envi
 - **Returned Content**
   - List of users in JSON format.
   - If no user exists, an empty list is returned.
-- **Returned Status Codes**
+- **Returned Status Codes** (see [error response](#error-response))
     `200: OK`
     `400: Bad Request`
     `500: Internal Server Error`
@@ -119,7 +136,7 @@ The environment variables AUTH_NAME and AUTH_Password can be defined in the envi
 - **URL Parameters**
   - `:id` (string): ID of the desired user.
 - **Returned Content:** Requested user in JSON format.
-- **Returned Status Codes**
+- **Returned Status Codes** (see [error response](#error-response))
     `200: OK`
     `400: Bad Request`
     `500: Internal Server Error`
@@ -161,13 +178,28 @@ The environment variables AUTH_NAME and AUTH_Password can be defined in the envi
   - `password` (String): Password of the new user.
   - `email` (String): Email address of the new user. The email needs to match with the :id URL parameter and can't be changed.
   - `secondaryIDs`: Arbitrary amount of additional IDs of the new user in the format "tool":[ "id1", "id2", ...].
-- **Returned Content:** -
-- **Returned Status Codes**
+- **Returned Content:** The updated user object.
+- **Returned Status Codes** (see [error response](#error-response))
   - `200: OK`
   - `400: Bad Request`
   - `500: Internal Server Error`
 
 **Exemplary Request Body:**
+
+```json
+{
+    "firstName": "User3",
+    "lastName": "DifferentName",
+    "password": "SomeOtherPassword",
+    "email": "oneID@example.com",
+    "secondaryIDs": {
+        "slack": ["third_user"],
+        "test": ["third_user"]
+    }
+}
+```
+
+Exemplary Response Body:
 
 ```json
 {
@@ -189,10 +221,9 @@ The environment variables AUTH_NAME and AUTH_Password can be defined in the envi
 - **URL Parameters:**
   - `:id` (string): id of the user to delete.
 - **Returned Content:** -
-- **Returned Status Codes**
-  - `200: OK`
+- **Returned Status Codes** (see [error response](#error-response))
+  - `204: No Content`
   - `500: Internal Server Error`
-
 
 ## User Authentication
 ### POST /login
@@ -206,9 +237,10 @@ The environment variables AUTH_NAME and AUTH_Password can be defined in the envi
 - **Returned Content**
   - JWT authentication token in JSON Format.
   - Sets an HTTP-only cookie that includes a refresh token that can be used to refresh the authentication token.
-- **Returned Status Codes**
+- **Returned Status Codes** (see [error response](#error-response))
   - `200: OK`
   - `400: Bad Request`
+  - `401: Unauthorized` - if provided login credentials are wrong
   - `500: Internal Server Error`
 
 **Exemplary Request Body:**
@@ -239,8 +271,10 @@ The environment variables AUTH_NAME and AUTH_Password can be defined in the envi
 - **Query Parameters**
   - `all=true`: remove all available whitelist entries of a user.
 - **Returned Content:** -
-- **Returned Status Codes**
+- **Returned Status Codes** (see [error response](#error-response))
   - `200: OK`
+  - `400: Bad Request`
+  - `500: Internal Server Error`
 
 ### GET /refresh
 
@@ -248,7 +282,7 @@ The environment variables AUTH_NAME and AUTH_Password can be defined in the envi
 - **Accepts:** No specific headers required.
 - **Authentication:** Cookie with a valid refresh token
 - **Returned Content:** JWT authentication token in JSON Format.
-- **Returned Status Codes**
+- **Returned Status Codes** (see [error response](#error-response))
   - `200: OK`
   - `400: Bad Request`
   - `500: Internal Server Error`
@@ -271,7 +305,7 @@ The environment variables AUTH_NAME and AUTH_Password can be defined in the envi
   - key-value pairs of type `string:[string]`
   - The key describes the tool and the list of strings contains the secondary IDs for the specified tool.
 - **Returned Content:** Mapping of transmitted secondary IDs to primary IDs for each provided tool.
-- **Returned Status Codes**
+- **Returned Status Codes** (see [error response](#error-response))
   - `200: OK`
   - `400: Bad Request`
   - `500: Internal Server Error`
@@ -314,4 +348,15 @@ The environment variables AUTH_NAME and AUTH_Password can be defined in the envi
 - **Returned Status Codes**
   - `200: OK`
 
+## Error Response
 
+Should the API encounter an error of any kind, it will be reflected in the returned HTTP status code. Also an error object will be returned (if the HTTP status code allows a body to be returned).
+
+Exemplary Error:
+
+```json
+{
+    "error": {
+        "message": "Not found"
+    }
+}
