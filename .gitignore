@@ -1,3 +1,18 @@
+# build environment ignores
+# run directory docker volumes
+run/overseer/
+run/clotilde/
+run/revolori/
+
+# run data directories
+run/*/data/
+
+run/*/personal.env
+run/*/secrets/
+
+# clotilde production environment
+clotilde-web-console/prod.env
+
 # vs code workspace file
 *.code-workspace
 

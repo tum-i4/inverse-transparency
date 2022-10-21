@@ -4,6 +4,7 @@ package user
 import (
 	"errors"
 	"fmt"
+	"strings"
 )
 
 // Data represents user data excluding the user's password.
@@ -11,7 +12,7 @@ type Data struct {
 	FirstName    string              `json:"firstName"`
 	LastName     string              `json:"lastName"`
 	Email        string              `json:"email"`
-	SecondaryIDs map[string][]string `json:"secondaryIDs"`
+	SecondaryIDs map[string][]string `json:"secondaryIDs" swaggertype:"string" example:"{'slack':['mm1','mm2'],'gitlab':[]}"`
 }
 
 // User represents a user account.
@@ -37,8 +38,14 @@ func (u User) VerifySignup() error {
 	if u.Email == "" {
 		return errors.New("empty email")
 	}
+	if u.Email != strings.ToLower(u.Email) {
+		return errors.New("email must be lowercase")
+	}
 	if u.hasDuplicatedID() {
 		return errors.New("the same secondary ID was provided at least twice")
+	}
+	if u.hasEmptyToolOrSecondaryID() {
+		return errors.New("an empty string was provided as a secondary tool or user ID")
 	}
 	return nil
 }
@@ -47,6 +54,9 @@ func (u User) VerifySignup() error {
 func (u User) VerifyLogin() error {
 	if u.Password == "" {
 		return errors.New("empty password")
+	}
+	if u.Email != strings.ToLower(u.Email) {
+		return errors.New("email must be lowercase")
 	}
 	if u.GetPrimaryID() == "" {
 		return errors.New("empty user id")
@@ -88,6 +98,21 @@ func (ud Data) hasDuplicatedID() bool {
 		}
 		if len(idMap) < len(ids) {
 			return true
+		}
+	}
+	return false
+}
+
+// hasEmptyToolOrSecondaryID checks if a secondary ID or tool is given as a whitespace
+func (ud Data) hasEmptyToolOrSecondaryID() bool {
+	for tool, secondaryIDs := range ud.SecondaryIDs {
+		if strings.TrimSpace(tool) == "" {
+			return true
+		}
+		for _, id := range secondaryIDs {
+			if strings.TrimSpace(id) == "" {
+				return true
+			}
 		}
 	}
 	return false

@@ -4,30 +4,40 @@ package server
 import (
 	"flag"
 	"fmt"
-	"log"
 	"net/http"
-	"os"
 	"revolori/auth"
+	"revolori/log"
 	"revolori/store"
 	"time"
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/rs/cors"
+	"github.com/swaggo/http-swagger"
+	_ "revolori/docs"
 )
 
-// StartServer initializes and starts the HTTP server.
+// StartServer initializes and starts the HTTP server and parses stdin flags.
 func StartServer() {
+	vaultAddress, vaultToken, authName, authPassword, devMode, addr, hostAddr := createAndParseFlags()
+
+	ac, err := initStore(vaultAddress, vaultToken, devMode, hostAddr)
+	if err != nil {
+		log.ErrorLogger.Fatalln(err)
+	}
+
 	c := cors.New(cors.Options{
-		AllowedOrigins: []string{"http://localhost:*", "https://localhost:*",
-			"https://*.sse.in.tum.de", "http://0.0.0.0:*", "https://0.0.0.0:*"},
+		AllowedOrigins: []string{
+			"https://*.sse.in.tum.de",
+			"http://127.0.0.1:*", "https://127.0.0.1:*",
+		},
 		AllowedMethods: []string{http.MethodGet, http.MethodPost, http.MethodDelete,
 			http.MethodPut},
 		AllowCredentials: true,
 	})
 
-	r, err := initRouter()
+	r, err := initRouter(authName, authPassword, ac)
 	if err != nil {
-		log.Fatalln(err)
+		log.ErrorLogger.Fatalln(err)
 	}
 
 	handler := c.Handler(r)
@@ -38,22 +48,26 @@ func StartServer() {
 		WriteTimeout:      1 * time.Minute,
 		IdleTimeout:       1 * time.Minute,
 		Handler:           handler,
-		Addr:              ":5429",
+		Addr:              addr,
 	}
 
-	fmt.Println("Revolori is up and running on http://localhost:5429.")
-	log.Fatal(server.ListenAndServe())
+	fmt.Println("Revolori is up and running on " + addr + ".")
+	log.ErrorLogger.Fatal(server.ListenAndServe())
 }
 
-// initRouter initializes a router with its dependencies and routes.
-func initRouter() (*httprouter.Router, error) {
-	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime|log.LUTC|log.Lshortfile)
-	vaultAddress, vaultToken, authName, authPassword, devMode := createAndParseFlags()
+// initStore initializes the client to communicate with vault storage and returns a authentication client
+func initStore(vaultAddress, vaultToken string, devMode bool, hostAddr string) (*auth.Controller, error) {
 	client, err := store.New(vaultToken, vaultAddress)
 	if err != nil {
 		return nil, err
 	}
-	ac := auth.New(logger, client, devMode)
+	ac := auth.New(client, devMode, hostAddr)
+
+	return ac, nil
+}
+
+// initRouter initializes a router with its dependencies and routes.
+func initRouter(authName, authPassword string, ac *auth.Controller) (*httprouter.Router, error) {
 	r := httprouter.New()
 
 	r.POST("/user", ac.BasicAuth(ac.CreateUser, authName, authPassword))
@@ -66,17 +80,22 @@ func initRouter() (*httprouter.Router, error) {
 	r.GET("/refresh", ac.Refresh)
 	r.GET("/id", ac.GetID)
 	r.GET("/health", ac.CheckHealth)
+	// Documentation handler
+	r.HandlerFunc(http.MethodGet, "/docs/*route", httpSwagger.Handler())
 
 	return r, nil
 }
 
 // createAndParseFlags creates and parses command line flags and returns their values.
-func createAndParseFlags() (vaultAddress string, vaultToken string, authName string, authPassword string, devMode bool) {
+func createAndParseFlags() (vaultAddress string, vaultToken string, authName string, authPassword string, devMode bool, addr string, hostAddr string) {
+	hostAddrPtr := flag.String("host-address", "http://127.0.0.1:5429", "domain name and protocol used by this service")
+	addrPtr := flag.String("address", "127.0.0.1:5429", "address in the form 'host:port' for Revolori to listen at")
 	vaultAddressPtr := flag.String("vault-address", "http://127.0.0.1:5430", "address of Vault")
 	vaultTokenPtr := flag.String("vault-token", "default_token", "access token of Vault")
 	authNamePtr := flag.String("auth-name", "user", "username for basic authentication")
 	authPasswordPtr := flag.String("auth-password", "password", "password for basic authentication")
 	devModePtr := flag.Bool("dev", false, "whether dev mode should be enabled")
 	flag.Parse()
-	return *vaultAddressPtr, *vaultTokenPtr, *authNamePtr, *authPasswordPtr, *devModePtr
+
+	return *vaultAddressPtr, *vaultTokenPtr, *authNamePtr, *authPasswordPtr, *devModePtr, *addrPtr, *hostAddrPtr
 }

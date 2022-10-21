@@ -39,7 +39,7 @@ def setup_environment():
     os.environ["DATABASE_URI"] = "sqlite:///data.db"
     os.environ["JWT_ALGORITHM"] = "ES384"
     os.environ["JWT_PUBLIC_KEY_PATH"] = "issuer.pub"
-    os.environ["REVOLORI_SERVICE_ROOT"] = "http://localhost:5429"
+    os.environ["REVOLORI_SERVICE_ROOT"] = "http://127.0.0.1:5429"
 
 
 def create_keys_if_not_existent():

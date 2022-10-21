@@ -1,0 +1,74 @@
+version: "3"
+
+services:
+    clotilde:
+        image: "inv-toolchain/clotilde"
+        container_name: "clotilde"
+        restart: always
+        network_mode: "host"
+        depends_on:
+            - overseer
+        build:
+            context: ../../clotilde-web-console
+            args:
+                BASE_URL: "${CLOTILDE_BASE_URL}"
+                BUILD_ENV: "${BUILD_ENV}"
+        environment:
+            HOST: "${CLOTILDE_HOST}"
+            PORT: "${CLOTILDE_PORT}"
+
+    overseer:
+        image: "inv-toolchain/overseer"
+        container_name: "overseer"
+        restart: always
+        network_mode: "host"
+        build:
+            context: ../../overseer-log-store
+        environment:
+            PORT: "${OVERSEER_PORT}"
+            HOST: "${OVERSEER_HOST}"
+            ADMIN_USER: "${OVERSEER_ADMIN}"
+            ADMIN_USER_PASSWORD: "${OVERSEER_ADMIN_PASSWD}"
+            TECHNICAL_USER: "${OVERSEER_USER}"
+            TECHNICAL_USER_PASSWORD: "${OVERSEER_USER_PASSWD}"
+            JWT_ALGORITHM: "ES384"
+            DATABASE_URI: "${OVERSEER_DATABASE_URI}"
+            OVERSEER_DATA: "/var/app-data/"
+            JWT_PUBLIC_KEY_PATH: "/var/app-secrets/issuer.pub"
+            REVOLORI_SERVICE_ROOT: "http:/${REVOLORI_HOST}:${REVOLORI_PORT}" # must be changed when using https
+        volumes:
+            - "./data/overseer/:/var/app-data/"
+            - "./secrets/overseer/issuer.pub:/var/app-secrets/issuer.pub" # public key from revolori
+
+    revolori:
+        image: "inv-toolchain/revolori"
+        container_name: "revolori"
+        restart: always
+        network_mode: "host"
+        depends_on:
+            - vault
+        build:
+            context: ../../revolori-sso-provider
+        environment:
+            VAULT_ADDR: "http://${VAULT_HOST}:${VAULT_PORT}"
+            VAULT_TOKEN: "root"
+            AUTH_NAME: "${REVOLORI_HTTP_AUTH_USER}"
+            AUTH_PASSWORD: "${REVOLORI_HTTP_AUTH_PASSWD}"
+            APP_HOST: "${REVOLORI_HOST}:${REVOLORI_PORT}"
+            APP_PROTOCOL: "http"
+
+    vault:
+        image: "inv-toolchain/vault"
+        container_name: "vault"
+        restart: always
+        network_mode: "host"
+        build:
+            context: ../../revolori-sso-provider/vault
+        environment:
+            HOST: "${VAULT_HOST}"
+            PORT: "${VAULT_PORT}"
+            ACCESS_TOKEN: "${VAULT_TOKEN}"
+        command: sh -c "./vault-init"
+        volumes:
+            - "./secrets/vault:/vault/keys"
+            - "./configs/vault/config.json:/vault/config/vault-config.json"

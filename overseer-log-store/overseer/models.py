@@ -3,7 +3,7 @@
 
 import datetime as dt
 from enum import Enum
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 from pydantic import BaseModel, Field
 
@@ -66,6 +66,16 @@ class DataAccessSingleOwner(BaseModel):
     )
 
 
+class DataAccessOverview(BaseModel):
+    user_rid: Dict[RevoloriId, int] = Field(
+        ..., description="Count of entries grouped by user_rid"
+    )
+    tool: Dict[str, int] = Field(..., description="Count of entries grouped by tools")
+    access_kind: Dict[DataAccessKind, int] = Field(
+        ..., description="Count of entries grouped by access_kind"
+    )
+
+
 class DataAccessesResponse(BaseModel):
     """
     Response when querying the accesses to the data of a user.
@@ -78,6 +88,24 @@ class DataAccessesResponse(BaseModel):
     owner_rid: RevoloriId = Field(
         ..., description="The Revolori ID of the user whose data has been accessed."
     )
+
+    overview: DataAccessOverview = Field(
+        ...,
+        description="Overview of the total number of entries available in the database "
+        "for each key, independent of the pagination.",
+    )
+
+    offset: int = Field(..., description="The number of items skipped for pagination.")
+
+    limit: Optional[int] = Field(
+        ...,
+        description=(
+            'Maximum number of entries to return in the "accesses" field. If set to '
+            "None, all items are returned."
+        ),
+    )
+
+    total: int = Field(..., description="Total number of items available.")
 
 
 class RequestAccessRequest(BaseModel):
@@ -115,6 +143,20 @@ class RequestDirectAccessRequest(RequestAccessRequest):
     )
 
 
+class RequestMultiuserDirectAccessRequest(RequestAccessRequest):
+    """
+    Request body when requesting access as part of a direct access
+    to the data of multiple users.
+    """
+
+    owners: List[str] = Field(
+        ...,
+        description="The users whose data are being accessed. "
+        "(specific to the tool; could be email address, Slack ID, etc.)",
+        min_items=1,
+    )
+
+
 class RequestQueryAccessRequest(RequestAccessRequest):
     """
     Request body when requesting access to the data of multiple users
@@ -125,6 +167,7 @@ class RequestQueryAccessRequest(RequestAccessRequest):
         ...,
         description="The users whose data are being accessed. "
         "(specific to the tool; could be email address, Slack ID, etc.)",
+        min_items=1,
     )
 
 
@@ -138,6 +181,7 @@ class RequestAggregateAccessRequest(RequestAccessRequest):
         ...,
         description="The users whose data are being accessed. "
         "(specific to the tool; could be email address, Slack ID, etc.)",
+        min_items=1,
     )
 
 
@@ -151,6 +195,16 @@ class RequestAccessResponse(BaseModel):
         description="Boolean whether access was granted, "
         "i.e. whether the data may be used in an analysis.",
     )
+
+
+class RequestIndividualAccessResponse(BaseModel):
+    """
+    Response when requesting direct access to multiple users to data, provides information
+    on which users granted and which users rejected the access.
+    """
+
+    granted: List[str] = Field(..., description="The users who grant the access.")
+    rejected: List[str] = Field(..., description="The users who reject the access.")
 
 
 class DataAccessPolicyBase(BaseModel):

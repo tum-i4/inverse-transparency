@@ -1,0 +1,12 @@
+{
+  "storage": {
+    "inmem": {}
+  },
+  "listener": {
+    "tcp": {
+      "address": "127.0.0.1:5430",
+      "tls_disable": 1
+    }
+  },
+  "ui": true
+}

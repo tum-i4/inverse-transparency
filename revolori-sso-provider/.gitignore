@@ -17,3 +17,9 @@ vault/policies
 
 # Docker
 .env
+
+# VSCode
+.vscode/
+
+# Documentation
+docs/ 

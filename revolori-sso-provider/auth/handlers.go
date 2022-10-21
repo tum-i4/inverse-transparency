@@ -5,10 +5,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
+	"revolori/log"
 	"revolori/store"
 	"revolori/user"
+	"strings"
 	"time"
 
 	"github.com/julienschmidt/httprouter"
@@ -20,198 +21,241 @@ const validityDurationRefresh = 7 * 24 * time.Hour
 
 // Controller contains functionality for user authentication.
 type Controller struct {
-	logger  *log.Logger
-	vault   *store.Client
-	devMode bool
+	vault    *store.Client
+	devMode  bool
+	hostAddr string
 }
 
 // New creates a new controller for user authentication.
-func New(logger *log.Logger, vault *store.Client, devMode bool) *Controller {
+func New(vault *store.Client, devMode bool, hostAddr string) *Controller {
 	return &Controller{
-		logger,
 		vault,
 		devMode,
+		hostAddr,
 	}
 }
 
-// CreateUser handles POST requests to the route '/user' and creates a new user based on the data
-// sent in the request body.
+// @Summary Signup a new user
+// @Accept  json
+// @Router /user [POST]
+// @Param Request body user.User true "Parameters specifying the user. 'secondaryIDs' are key-value pairs of the type string->[string], where the key describes the tool and the list of strings contains the secondary IDs for the specified tool"
+// @securityDefinitions.basic BasicAuth
+// @Success 201 "Created"
+// @Failure 400 "Bad request"
+// @Failure 409 "Conflict"
+// @Failure 500 "Internal error"
 func (ac Controller) CreateUser(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	var transmittedUser user.User
 
 	if err := decodeJSON(w, r, &transmittedUser); err != nil {
 		var ir *invalidRequestBody
 		if errors.As(err, &ir) {
-			ac.logAndReturnMessage(w, ir.msg, ir.status)
+			logAndReturnJsonError(w, ir.msg, ir.status)
 		} else {
-			ac.logAndReturnStatus(w, err.Error(), http.StatusInternalServerError)
+			logAndReturnJsonError(w, err.Error(), http.StatusInternalServerError)
 		}
 		return
 	}
 
+	transmittedUser.Email = strings.ToLower(transmittedUser.Email)
+
 	if err := transmittedUser.VerifySignup(); err != nil {
-		ac.logAndReturnMessage(w, err.Error(), http.StatusBadRequest)
+		logAndReturnJsonError(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	exists, err := ac.userExists(transmittedUser)
 	if err != nil {
-		ac.logAndReturnStatus(w, err.Error(), http.StatusInternalServerError)
+		logAndReturnJsonError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	if exists {
-		ac.logAndReturnMessage(w, "user with given ID already exists", http.StatusBadRequest)
+		logAndReturnJsonError(w, "user with given ID already exists", http.StatusConflict)
 		return
 	}
 
 	duplicatedSecondaryID, id, err := ac.secondaryIDExists(transmittedUser)
 	if err != nil {
-		ac.logAndReturnStatus(w, err.Error(), http.StatusInternalServerError)
+		logAndReturnJsonError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	if duplicatedSecondaryID {
 		logMsg := fmt.Sprintf("user with secondary ID (%s) already exists", id)
-		ac.logAndReturnMessage(w, logMsg, http.StatusBadRequest)
+		logAndReturnJsonError(w, logMsg, http.StatusBadRequest)
 		return
 	}
 
 	storedUser, err := hashPassword(transmittedUser)
 	if err != nil {
-		ac.logAndReturnStatus(w, err.Error(), http.StatusInternalServerError)
+		logAndReturnJsonError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	if err := ac.vault.CreateUser(storedUser); err != nil {
-		ac.logAndReturnStatus(w, err.Error(), http.StatusInternalServerError)
+		logAndReturnJsonError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
+	message := fmt.Sprintf("User (ID: %s) succesfully created", storedUser.GetPrimaryID())
+	logAndReturnJson(w, message, http.StatusCreated)
 }
 
-// GetAllUsers handles GET requests to the route 'user' and returns the data of all available users.
+// @Summary Get the data of all available users.
+// @Description Get the data of all available users. Gets back a list of users in a JSON format.
+// @Description If no user exists, an empty list is returned.
+// @Produce json
+// @Router /user [GET]
+// @securityDefinitions.basic BasicAuth
+// @Success 200 {array} user.Data "Keep in mind that 'secondaryIDs' are key-value pairs of the type string->[string], where the key describes the tool and the list of strings contains the secondary IDs for the specified tool"
+// @Failure 500 "Internal error"
 func (ac Controller) GetAllUsers(w http.ResponseWriter, _ *http.Request, _ httprouter.Params) {
 	users, err := ac.vault.GetAllUserData()
 	switch {
 	case err == store.ErrNoSecrets:
 		users = []user.Data{}
 	case err != nil:
-		ac.logAndReturnStatus(w, err.Error(), http.StatusInternalServerError)
+		logAndReturnJsonError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(users); err != nil {
-		ac.logAndReturnStatus(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	logAndReturnJson(w, users, http.StatusOK)
 }
 
-// GetUser handles GET requests to the route 'user/:id' and returns the user specified by the id.
+// @Summary Get the data of the user with the specified id
+// @Produce json
+// @Router /user/{id} [GET]
+// @securityDefinitions.basic BasicAuth
+// @Param id path integer true "The ID of the user we want to get the data for"
+// @Success 200 {object} user.Data "'secondaryIDs' are key-value pairs of the type string->[string], where the key describes the tool and the list of strings contains the secondary IDs for the specified tool"
+// @Failure 400 "Bad request"
+// @Failure 500 "Internal error"
 func (ac Controller) GetUser(w http.ResponseWriter, _ *http.Request, p httprouter.Params) {
-	id := p.ByName("id")
-	ud, err := ac.vault.GetUserData(id)
+	lowercaseId := strings.ToLower(p.ByName("id"))
+	ud, err := ac.vault.GetUserData(lowercaseId)
 	switch {
 	case err == user.ErrUserNotFound:
-		ac.logAndReturnMessage(w, err.Error(), http.StatusBadRequest)
+		logAndReturnJsonError(w, err.Error(), http.StatusBadRequest)
 		return
+
 	case err != nil:
-		ac.logAndReturnStatus(w, err.Error(), http.StatusInternalServerError)
+		logAndReturnJsonError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(ud); err != nil {
-		ac.logAndReturnStatus(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	logAndReturnJson(w, ud, http.StatusOK)
 }
 
-// UpdateUser handles PUT requests to the route 'user/:id' and updates the specified user based on the data
-// sent in the request body.
+// @Summary Update an available user
+// @Description Email needs to match the {id} in the URL parameter and can't be changed
+// @Accept  json
+// @Router /user/{id} [PUT]
+// @Param id path integer true "The ID of the user we want to change the data for"
+// @Param Request body user.Data true "'secondaryIDs' are key-value pairs of the type string->[string], where the key describes the tool and the list of strings contains the secondary IDs for the specified tool"
+// @securityDefinitions.basic BasicAuth
+// @Success 201 "Created"
+// @Failure 400 "Bad request"
+// @Failure 500 "Internal Error"
 func (ac Controller) UpdateUser(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	var newUser user.User
 
 	if err := decodeJSON(w, r, &newUser); err != nil {
 		var ir *invalidRequestBody
 		if errors.As(err, &ir) {
-			ac.logAndReturnMessage(w, ir.msg, ir.status)
+			logAndReturnJsonError(w, ir.msg, ir.status)
 		} else {
-			ac.logAndReturnStatus(w, err.Error(), http.StatusInternalServerError)
+			logAndReturnJsonError(w, err.Error(), http.StatusInternalServerError)
 		}
 		return
 	}
 
-	id := p.ByName("id")
-	if id != newUser.GetPrimaryID() {
-		ac.logAndReturnMessage(w, "provided IDs don't match", http.StatusBadRequest)
+	newUser.Email = strings.ToLower(newUser.Email)
+
+	lowercaseId := strings.ToLower(p.ByName("id"))
+	if lowercaseId != newUser.GetPrimaryID() {
+		logAndReturnJsonError(w, "provided IDs don't match", http.StatusBadRequest)
 		return
 	}
 
 	if err := newUser.VerifySignup(); err != nil {
-		ac.logAndReturnMessage(w, err.Error(), http.StatusBadRequest)
+		logAndReturnJsonError(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	duplicatedSecondaryID, duplicatedID, err := ac.secondaryIDExists(newUser)
 	if err != nil {
-		ac.logAndReturnStatus(w, err.Error(), http.StatusInternalServerError)
+		logAndReturnJsonError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	if duplicatedSecondaryID {
 		logMsg := fmt.Sprintf("user with secondary ID (%s) already exists", duplicatedID)
-		ac.logAndReturnMessage(w, logMsg, http.StatusBadRequest)
+		logAndReturnJsonError(w, logMsg, http.StatusBadRequest)
 		return
 	}
 
 	newUser, err = hashPassword(newUser)
 	if err != nil {
-		ac.logAndReturnStatus(w, err.Error(), http.StatusInternalServerError)
+		logAndReturnJsonError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	switch err = ac.vault.UpdateUser(id, newUser); {
+	switch err = ac.vault.UpdateUser(lowercaseId, newUser); {
 	case err == user.ErrUserNotFound:
-		ac.logAndReturnMessage(w, err.Error(), http.StatusBadRequest)
+		logAndReturnJsonError(w, err.Error(), http.StatusBadRequest)
 		return
 	case err != nil:
-		ac.logAndReturnStatus(w, err.Error(), http.StatusInternalServerError)
+		logAndReturnJsonError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
+	message := fmt.Sprintf("User (ID: %s) succesfully updated", newUser.GetPrimaryID())
+	logAndReturnJson(w, message, http.StatusCreated)
 }
 
-// DeleteUser handles DELETE requests to the route '/user' and deletes the specified user if it exists.
+// @Summary Delete an available user
+// @Router /user/{id} [DELETE]
+// @Param id path integer true "The ID of the user we want to delete"
+// @securityDefinitions.basic BasicAuth
+// @Success 204 "No Content"
+// @Failure 500 "Internal Error"
 func (ac Controller) DeleteUser(w http.ResponseWriter, _ *http.Request, p httprouter.Params) {
-	id := p.ByName("id")
-	if err := ac.vault.DeleteUser(id); err != nil {
-		ac.logAndReturnStatus(w, err.Error(), http.StatusInternalServerError)
+	lowercaseId := strings.ToLower(p.ByName("id"))
+	if err := ac.vault.DeleteUser(lowercaseId); err != nil {
+		logAndReturnJsonError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
+	logAndReturnJson(w, "", http.StatusNoContent)
 }
 
-// Login handles POST requests to the route '/login' and issues an access token (short TTL) and a refresh token
-// (long TTL) if the user data provided in the request body is valid. The access token is returned to the client
-// in JSON format. The refresh token is set as an HTTP only cookie. Login also cleans up expired refresh tokens on
-// the whitelist.
+// @Summary Login an available user
+// @Description Issues an access token(short TTL) and a refresh token(long TTL) if the user data provided in the request body is valid.
+// @Description The access token is returned to the client in JSON format. The refresh token is set as an HTTP only cookie.
+// @Description Login also cleans up expired refresh tokens on the whitelist.
+// @Accept  json
+// @Produce  json
+// @Router /login [POST]
+// @Param Request body user.User true "Email and Password fields are mandatory the others field are optional and are not actually used"
+// @Success 200 {object} auth.Token "Also sets a refresh cookie"
+// @Failure 400 "Bad request"
+// @Failure 401 "Unauthorized"
+// @Failure 500 "Internal Error"
 func (ac Controller) Login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	var transmittedUser user.User
 
 	if err := decodeJSON(w, r, &transmittedUser); err != nil {
 		var ir *invalidRequestBody
 		if errors.As(err, &ir) {
-			ac.logAndReturnMessage(w, ir.msg, ir.status)
+			logAndReturnJsonError(w, ir.msg, ir.status)
 		} else {
-			ac.logAndReturnStatus(w, err.Error(), http.StatusInternalServerError)
+			logAndReturnJsonError(w, err.Error(), http.StatusInternalServerError)
 		}
 		return
 	}
 
+	transmittedUser.Email = strings.ToLower(transmittedUser.Email)
+
 	if err := transmittedUser.VerifyLogin(); err != nil {
-		ac.logAndReturnMessage(w, err.Error(), http.StatusBadRequest)
+		logAndReturnJsonError(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -220,44 +264,48 @@ func (ac Controller) Login(w http.ResponseWriter, r *http.Request, _ httprouter.
 	storedUser, err := ac.vault.GetUser(transmittedUser.Email)
 	if err != nil {
 		if err == user.ErrUserNotFound {
-			ac.logger.Println(err.Error())
-			http.Error(w, errorInvalidCredentials, http.StatusBadRequest)
+			logAndReturnJsonError(w, errorInvalidCredentials, http.StatusUnauthorized)
 			return
 		}
-		ac.logAndReturnStatus(w, err.Error(), http.StatusInternalServerError)
+		logAndReturnJsonError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(storedUser.Password), []byte(passwordPlain))
 	if err != nil {
-		ac.logger.Println(err.Error())
-		http.Error(w, errorInvalidCredentials, http.StatusBadRequest)
+		logAndReturnJsonError(w, errorInvalidCredentials, http.StatusUnauthorized)
 		return
 	}
 	storedUser.Password = ""
 
 	expirationTimeRefresh := time.Now().Add(validityDurationRefresh)
 	if err = ac.createRefreshTokenAndSetCookie(w, storedUser.Email, expirationTimeRefresh); err != nil {
-		ac.logAndReturnStatus(w, err.Error(), http.StatusInternalServerError)
+		logAndReturnJsonError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	expirationTimeAuth := time.Now().Add(validityDurationAuth)
 	if err = ac.createAndSendAuthToken(w, storedUser.Email, expirationTimeAuth); err != nil {
-		ac.logAndReturnStatus(w, err.Error(), http.StatusInternalServerError)
+		logAndReturnJsonError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
+	// return token
 	go func() {
 		if err = ac.vault.DeleteExpiredWhitelistEntries(); err != nil {
-			ac.logger.Println(err.Error())
+			log.ErrorLogger.Println(err.Error())
 		}
 	}()
 }
 
-// Logout handles DELETE requests to the route '/login' and logs out users by removing the cookie that contains the refresh token
-// and the whitelist entry of said token. Alternatively, all whitelisted refresh tokens of the requesting user can be deleted by
-// setting 'all=true' as a query parameter. The auth token needs to be removed by the client.
+// @Summary Logout a user
+// @Description This function removes the cookie that holds the refresh token and removes the entry related to the token from the whitelist.
+// @Description Note that only the cookie with the refresh token and whitelist entries are deleted. The removal of the authentication token is up to the client.
+// @Router /login [DELETE]
+// @Param all query boolean false "In case a query parameter `all=true` is added to the request, all whitelist entries of the user that sends the request are deleted.  The query parameter can be omitted(default is false) if a user only wants to logout from the current session and wants to keep other session, e.g. on different devices, alive."
+// @Success 200 "OK"
+// @Failure 400 "Bad Request"
+// @Failure 500 "Internal Error"
 func (ac Controller) Logout(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	params, ok := r.URL.Query()["all"]
 	var all string
@@ -267,25 +315,25 @@ func (ac Controller) Logout(w http.ResponseWriter, r *http.Request, _ httprouter
 	if all == "true" {
 		id, status, err := ac.validateRefreshToken(r)
 		if err != nil {
-			ac.logAndReturnStatus(w, err.Error(), status)
+			logAndReturnJsonError(w, err.Error(), status)
 			return
 		}
 		if err = ac.vault.DeleteUsersWhitelistEntries(id); err != nil {
-			ac.logAndReturnStatus(w, err.Error(), http.StatusInternalServerError)
+			logAndReturnJsonError(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 	} else {
 		c, err := r.Cookie("token")
 		if err != nil {
 			if err == http.ErrNoCookie {
-				ac.logAndReturnMessage(w, err.Error(), http.StatusBadRequest)
+				logAndReturnJsonError(w, err.Error(), http.StatusBadRequest)
 				return
 			}
-			ac.logAndReturnStatus(w, err.Error(), http.StatusInternalServerError)
+			logAndReturnJsonError(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		if err = ac.vault.DeleteWhitelistEntry(c.Value); err != nil {
-			ac.logAndReturnStatus(w, err.Error(), http.StatusInternalServerError)
+			logAndReturnJsonError(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 	}
@@ -296,40 +344,57 @@ func (ac Controller) Logout(w http.ResponseWriter, r *http.Request, _ httprouter
 		HttpOnly: true,
 	})
 
-	w.WriteHeader(http.StatusOK)
+	logAndReturnJson(w, "", http.StatusOK)
 }
 
-// Refresh handles GET requests to the route '/refresh' and returns a new auth token in case of an authenticated request.
-// For a request to be authenticated, a valid refresh token must be provided in a cookie named 'token'.
+// @Summary Refreshes authentication token
+// @Description Returns a new JWT authentication token in case of an authenticated request.
+// @Description For a request to be authenticated, a valid refresh token must be provided in a cookie named 'token'.
+// @Router /refresh [GET]
+// @securityDefinitions.basic BasicAuth
+// @Accept json
+// @Param all query boolean false "In case a query parameter `all=true` is added to the request, all whitelist entries of the user that sends the request are deleted.  The query parameter can be omitted(default is false) if a user only wants to logout from the current session and wants to keep other session, e.g. on different devices, alive."
+// @Success 200 {object} auth.Token "Authentication token"
+// @Failure 400 "Bad request"
+// @Failure 500 "Internal Error"
 func (ac Controller) Refresh(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	id, status, err := ac.validateRefreshToken(r)
 	if err != nil {
-		ac.logAndReturnStatus(w, err.Error(), status)
+		logAndReturnJsonError(w, err.Error(), status)
 		return
 	}
+	// return refresh token
 	expirationTimeAuth := time.Now().Add(validityDurationAuth)
 	if err = ac.createAndSendAuthToken(w, id, expirationTimeAuth); err != nil {
-		ac.logAndReturnStatus(w, err.Error(), http.StatusInternalServerError)
+		logAndReturnJsonError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 }
 
 // GetID handles GET requests to the route '/id' and returns a matching of provided secondary IDs to a user's primary ID.
+// @Summary Matches secondary IDs to their primary IDs
+// @Description For a request to be authenticated, a valid refresh token must be provided in a cookie named 'token'.
+// @Router /id [GET]
+// @Accept json
+// @Param secondaryIDs body string true "Key-value pairs of the type string->[string], where the key describes the tool and the list of strings contains the secondary IDs for the specified tool"
+// @Success 200 {object} string "Mapping of transmitted secondary IDs to primary IDs for each provided tool"
+// @Failure 400 "Bad request"
+// @Failure 500 "Internal Error"
 func (ac Controller) GetID(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	var receivedIDs map[string][]string
 	if err := decodeJSON(w, r, &receivedIDs); err != nil {
 		var ir *invalidRequestBody
 		if errors.As(err, &ir) {
-			ac.logAndReturnMessage(w, ir.msg, ir.status)
+			logAndReturnJsonError(w, ir.msg, ir.status)
 		} else {
-			ac.logAndReturnStatus(w, err.Error(), http.StatusInternalServerError)
+			logAndReturnJsonError(w, err.Error(), http.StatusInternalServerError)
 		}
 		return
 	}
 
 	users, err := ac.vault.GetAllUserData()
 	if err != nil {
-		ac.logAndReturnStatus(w, err.Error(), http.StatusInternalServerError)
+		logAndReturnJsonError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -339,23 +404,21 @@ func (ac Controller) GetID(w http.ResponseWriter, r *http.Request, _ httprouter.
 		for _, secondaryID := range secondaryIDs {
 			primaryID, err := user.MatchID(tool, secondaryID, users)
 			if err != nil {
-				ac.logAndReturnMessage(w, err.Error(), http.StatusBadRequest)
+				logAndReturnJsonError(w, err.Error(), http.StatusBadRequest)
 				return
 			}
 			primaryIDs[tool][secondaryID] = primaryID
 		}
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	if err = json.NewEncoder(w).Encode(primaryIDs); err != nil {
-		ac.logAndReturnStatus(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	logAndReturnJson(w, primaryIDs, http.StatusOK)
 }
 
-// CheckHealth handles GET requests to the route '/health' and returns HTTP status ok if the server is running.
+// @Summary Check if Revolori is running
+// @Router /health [GET]
+// @Success 200 "OK"
 func (ac Controller) CheckHealth(w http.ResponseWriter, _ *http.Request, _ httprouter.Params) {
-	w.WriteHeader(http.StatusOK)
+	logAndReturnJson(w, "", http.StatusOK)
 }
 
 // hashPassword hashes a users password and returns the user with hashed password field.
@@ -368,15 +431,56 @@ func hashPassword(u user.User) (user.User, error) {
 	return u, nil
 }
 
-// logAndReturnStatus logs the error to the logger attached to the Controller and returns an HTTP status code.
-func (ac Controller) logAndReturnStatus(w http.ResponseWriter, msg string, status int) {
-	ac.logger.Println(msg)
-	w.WriteHeader(status)
+// logAndReturnJson logs the response, returns a succesful HTTP status code and returns the data
+// object in JSON format
+func logAndReturnJson(w http.ResponseWriter, data interface{}, status int) {
+	log.InfoLogger.Printf("%d - Response: %+v\n", status, data)
+	setJsonResponse(w, status, data)
 }
 
-// logAndReturnMessage logs the error to the logger attached to the Controller and returns an HTTP
-// status code and a response message.
-func (ac Controller) logAndReturnMessage(w http.ResponseWriter, msg string, status int) {
-	ac.logger.Println(msg)
-	http.Error(w, msg, status)
+// logAndReturnJsonError logs the error, returns a bad HTTP status code and returns an error
+// object in JSON format
+func logAndReturnJsonError(w http.ResponseWriter, msg string, status int) {
+	log.ErrorLogger.Printf("%d - ERROR: %s\n", status, msg)
+	setJsonError(w, status, msg)
+}
+
+// setJsonResponse sets the given http.ResponseWriter up for a successful response by writing a
+// JSON response and setting the header accordingly.
+func setJsonResponse(w http.ResponseWriter, status int, data interface{}) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+
+	jsn, err := json.Marshal(data)
+	if err != nil {
+		setJsonError(w, http.StatusInternalServerError, "") // logs error
+		return
+	}
+	w.Write(jsn)
+}
+
+type jsonErrorEnvelope struct {
+	Error jsonResponseError `json:"error"`
+}
+
+type jsonResponseError struct {
+	Message string `json:"message,omitempty"`
+}
+
+// setJsonError sets the given http.ResponseWriter up for an error response (see `setJsonResponse`).
+// Importantly, it handles potential JSON marshalling errors.
+func setJsonError(w http.ResponseWriter, status int, message string) {
+	if message == "" {
+		message = http.StatusText(status)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+
+	envelope := jsonErrorEnvelope{jsonResponseError{message}}
+	jsn, err := json.Marshal(envelope)
+	if err != nil {
+		log.ErrorLogger.Println(err.Error())
+	}
+	w.Write(jsn)
 }

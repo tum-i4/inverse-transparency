@@ -15,5 +15,7 @@ COPY overseer ./overseer
 COPY alembic ./alembic
 COPY alembic.ini .
 
-EXPOSE 5421
-ENTRYPOINT pipenv run alembic upgrade head && pipenv run uvicorn overseer.main:overseer --port 5421 --host 0.0.0.0
+ENV PORT 5421
+ENV HOST 127.0.0.1
+
+ENTRYPOINT pipenv run alembic upgrade head && pipenv run uvicorn overseer.main:overseer --port $PORT --host $HOST

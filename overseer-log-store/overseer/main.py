@@ -2,11 +2,19 @@
 """ overseer: Inverse Transparency log store """
 
 import datetime as dt
-from typing import List, Optional, Tuple
+from typing import Dict, List, Optional, Set, Tuple
 
 from fastapi import Depends, FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.exc import IntegrityError
+from starlette.responses import RedirectResponse, Response
+from starlette.status import (
+    HTTP_204_NO_CONTENT,
+    HTTP_400_BAD_REQUEST,
+    HTTP_404_NOT_FOUND,
+    HTTP_409_CONFLICT,
+    HTTP_500_INTERNAL_SERVER_ERROR,
+)
 
 import overseer.models as dto
 from overseer.auth import admin_user_logged_in, technical_user_logged_in
@@ -22,14 +30,6 @@ from overseer.exception import (
 )
 from overseer.models import DataAccessKind, RevoloriId
 from overseer.services import RevoloriService
-from starlette.responses import RedirectResponse, Response
-from starlette.status import (
-    HTTP_204_NO_CONTENT,
-    HTTP_400_BAD_REQUEST,
-    HTTP_404_NOT_FOUND,
-    HTTP_409_CONFLICT,
-    HTTP_500_INTERNAL_SERVER_ERROR,
-)
 
 DOCS_URL = "/docs"
 
@@ -49,13 +49,13 @@ overseer.add_middleware(
 
 @overseer.on_event("startup")
 def startup():
-    """ Called on app startup """
+    """Called on app startup"""
     init_db()
 
 
 @overseer.on_event("shutdown")
 def shutdown():
-    """ Called on app shutdown """
+    """Called on app shutdown"""
     close_db()
 
 
@@ -81,15 +81,32 @@ def check_health(session: Session = Depends(get_db)):
 def get_data_accesses(
     date_start: dt.date = Query(None, description="Start of the relevant date range."),
     date_end: dt.date = Query(None, description="End of the relevant date range."),
-    limit: int = Query(None, description="Maximum number of entries to return."),
+    limit: Optional[int] = Query(
+        None,
+        description="Maximum number of entries to return. Default: unlimited",
+        ge=0,
+    ),
+    offset: Optional[int] = Query(
+        0,
+        description="Rows to skip before beginning to return the accesses. Default: 0",
+        ge=0,
+    ),
     dao: DataAccessDao = Depends(),
     session: Session = Depends(get_db),
 ):
-    """ Retrieve stored data accesses. """
+    """Retrieve stored data accesses."""
 
     with session:
+        count: Dict[str, Dict[str, int]] = dao.count(
+            session=session, date_start=date_start, date_end=date_end
+        )
+
         accesses: List[DataAccess] = dao.load_all(
-            session=session, date_start=date_start, date_end=date_end, limit=limit,
+            session=session,
+            date_start=date_start,
+            date_end=date_end,
+            limit=limit,
+            offset=offset,
         )
 
         single_owner_accesses = [
@@ -106,18 +123,40 @@ def get_data_accesses(
         ]
 
         return dto.DataAccessesResponse(
-            owner_rid=dao.logged_in_user, accesses=single_owner_accesses
+            owner_rid=dao.logged_in_user,
+            accesses=single_owner_accesses,
+            overview=dto.DataAccessOverview(**count),
+            offset=offset,
+            limit=limit,
+            total=sum(count["access_kind"].values()),
         )
 
 
-def check_consent_and_log_access(
+def check_who_consented_and_log_access(
     session: Session, data_access: DataAccess
-) -> dto.RequestAccessResponse:
-    """ Helper function for checking whether an access is allowed and logging it. """
-    granted = DataAccessPolicyDao.is_access_granted(session, data_access)
-    if granted:
+) -> Tuple[Set[RevoloriId], Set[RevoloriId]]:
+    """Helper function for checking who in an access is allowing and logging for them."""
+    granted, rejected = DataAccessPolicyDao.who_granted(session, data_access)
+
+    data_access.data_owners = [DataOwner(owner_rid=owner_rid) for owner_rid in granted]
+
+    DataAccessDao.add(session, data_access)
+
+    return granted, rejected
+
+
+def check_all_consented_and_log_access(
+    session: Session, data_access: DataAccess
+) -> bool:
+    """Helper function for checking whether an access is allowed and logging it."""
+    _, rejected = DataAccessPolicyDao.who_granted(session, data_access)
+
+    all_consented = len(rejected) == 0
+
+    if all_consented:
         DataAccessDao.add(session, data_access)
-    return dto.RequestAccessResponse(granted=granted)
+
+    return all_consented
 
 
 def validate_tool_exists(session: Session, tool_name: Optional[str]):
@@ -146,11 +185,43 @@ def request_direct_access(
     Requests direct access to the data of a single individual.
     E.g. data which has been accessed by its id.
     """
+    access_request = dto.RequestMultiuserDirectAccessRequest(
+        data_types=body.data_types,
+        justification=body.justification,
+        tool=body.tool,
+        user=body.user,
+        owners=[body.owner],
+    )
+
+    response = request_multiuser_direct_access(
+        access_request, session, revolori_service
+    )
+
+    return dto.RequestAccessResponse(granted=[body.owner] == response.granted)
+
+
+@overseer.post(
+    "/request-access/direct/multi",
+    response_model=dto.RequestIndividualAccessResponse,
+    dependencies=[Depends(technical_user_logged_in)],
+)
+def request_multiuser_direct_access(
+    body: dto.RequestMultiuserDirectAccessRequest,
+    session: Session = Depends(get_db),
+    revolori_service: RevoloriService = Depends(),
+):
+    """
+    Requests direct access to the same data of multiple individuals.
+    E.g. data which has been accessed by its id.
+    """
+
     with session:
         validate_tool_exists(session, body.tool)
 
         with handle_owner_not_signed_up():
-            owner_rid = revolori_service.map_id(body.tool, body.owner)
+            owner_rid_mapping: Dict[
+                RevoloriId, Set[str]
+            ] = revolori_service.get_id_mapping(body.tool, body.owners)
 
         with handle_user_not_signed_up():
             user_rid = revolori_service.map_id(body.tool, body.user)
@@ -162,12 +233,29 @@ def request_direct_access(
             timestamp=dt.datetime.now(),
             justification=body.justification,
         )
-        data_access.data_owners = [DataOwner(owner_rid=owner_rid)]
+
+        data_access.data_owners = [
+            DataOwner(owner_rid=owner_rid) for owner_rid in owner_rid_mapping.keys()
+        ]
+
         data_access.data_types = [
             DataType(type=data_type) for data_type in body.data_types
         ]
 
-        return check_consent_and_log_access(session, data_access)
+        granted, rejected = check_who_consented_and_log_access(session, data_access)
+
+        def map_revolori_id_to_requested_id(owners: Set[RevoloriId]) -> Set[str]:
+            """map all ids back to the form from the request"""
+            nonlocal owner_rid_mapping
+            result = set()
+            for owner in owners:
+                result.update(owner_rid_mapping[owner])
+            return result
+
+        return dto.RequestIndividualAccessResponse(
+            granted=list(map_revolori_id_to_requested_id(granted)),
+            rejected=list(map_revolori_id_to_requested_id(rejected)),
+        )
 
 
 @overseer.post(
@@ -207,7 +295,9 @@ def request_query_access(
             DataType(type=data_type) for data_type in body.data_types
         ]
 
-        return check_consent_and_log_access(session, data_access)
+        return dto.RequestAccessResponse(
+            granted=check_all_consented_and_log_access(session, data_access)
+        )
 
 
 @overseer.post(
@@ -246,11 +336,15 @@ def request_aggregate_access(
             DataType(type=data_type) for data_type in body.data_types
         ]
 
-        return check_consent_and_log_access(session, data_access)
+        return dto.RequestAccessResponse(
+            granted=check_all_consented_and_log_access(session, data_access)
+        )
 
 
 @overseer.post(
-    "/generate", response_model=str, dependencies=[Depends(admin_user_logged_in)],
+    "/generate",
+    response_model=str,
+    dependencies=[Depends(admin_user_logged_in)],
 )
 def generate(
     owner_rid: RevoloriId = Query(
@@ -273,7 +367,7 @@ def generate(
     ),
     session: Session = Depends(get_db),
 ):
-    """ Generate fake entries. """
+    """Generate fake entries."""
     date_range: Tuple[dt.date, dt.date] = (date_start, date_end)
 
     with session:
@@ -294,9 +388,10 @@ def generate(
 
 @overseer.get("/data-access-policies", response_model=List[dto.DataAccessPolicy])
 def get_data_access_policies(
-    dao: DataAccessPolicyDao = Depends(), session: Session = Depends(get_db),
+    dao: DataAccessPolicyDao = Depends(),
+    session: Session = Depends(get_db),
 ):
-    """ Load all data access policies for the logged in user. """
+    """Load all data access policies for the logged in user."""
     with session:
         data_access_policies: List[DataAccessPolicy] = dao.load_all(session=session)
         return [
@@ -310,7 +405,7 @@ def create_data_access_policy(
     dao: DataAccessPolicyDao = Depends(),
     session: Session = Depends(get_db),
 ):
-    """ Create a data access policy for the logged in user. """
+    """Create a data access policy for the logged in user."""
     with session:
         validate_tool_exists(session, policy.tool)
 
@@ -330,10 +425,11 @@ def get_data_access_policy(
     dao: DataAccessPolicyDao = Depends(),
     session: Session = Depends(get_db),
 ):
-    """ Get a data access policy by id. """
+    """Get a data access policy by id."""
     with session:
         data_access_policy = dao.load_single(
-            session=session, data_access_policy_id=data_access_policy_id,
+            session=session,
+            data_access_policy_id=data_access_policy_id,
         )
 
         if data_access_policy is None:
@@ -352,12 +448,13 @@ def update_data_access_policy(
     dao: DataAccessPolicyDao = Depends(),
     session: Session = Depends(get_db),
 ):
-    """ Update a data access policy. """
+    """Update a data access policy."""
     with session:
         validate_tool_exists(session, policy_update.tool)
 
         data_access_policy = dao.load_single(
-            session=session, data_access_policy_id=data_access_policy_id,
+            session=session,
+            data_access_policy_id=data_access_policy_id,
         )
 
         if data_access_policy is None:
@@ -370,17 +467,19 @@ def update_data_access_policy(
 
 
 @overseer.delete(
-    "/data-access-policies/{data_access_policy_id}", status_code=204,
+    "/data-access-policies/{data_access_policy_id}",
+    status_code=204,
 )
 def delete_data_access_policy(
     data_access_policy_id: int,
     dao: DataAccessPolicyDao = Depends(),
     session: Session = Depends(get_db),
 ):
-    """ Update a data access policy. """
+    """Update a data access policy."""
     with session:
         succeeded = dao.delete(
-            session=session, data_access_policy_id=data_access_policy_id,
+            session=session,
+            data_access_policy_id=data_access_policy_id,
         )
 
         if not succeeded:
@@ -391,7 +490,7 @@ def delete_data_access_policy(
 
 @overseer.get("/tool-types", response_model=List[dto.Tool])
 def get_tool_types(session: Session = Depends(get_db)):
-    """ Get all tool types. """
+    """Get all tool types."""
     with session:
         return [dto.Tool(**tool.__dict__) for tool in ToolDao.load_all(session)]
 
@@ -402,7 +501,7 @@ def get_tool_types(session: Session = Depends(get_db)):
     dependencies=[Depends(admin_user_logged_in)],
 )
 def create_tool_type(tool: dto.Tool, session: Session = Depends(get_db)):
-    """ Create a new tool type. """
+    """Create a new tool type."""
     with session:
         if ToolDao.load_single(session, tool.name) is not None:
             raise HTTPException(
@@ -421,7 +520,7 @@ def create_tool_type(tool: dto.Tool, session: Session = Depends(get_db)):
     dependencies=[Depends(admin_user_logged_in)],
 )
 def delete_tool_type(tool_name: str, session: Session = Depends(get_db)):
-    """ Delete a tool type. """
+    """Delete a tool type."""
     exception_mapper = http_exception(
         IntegrityError,
         HTTP_500_INTERNAL_SERVER_ERROR,

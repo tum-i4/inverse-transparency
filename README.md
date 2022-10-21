@@ -19,7 +19,7 @@ Please cite our paper when making use of (parts of) the toolchain:
 - Format with black
 - Lint with pylint
 - Sort imports with isort
-- Type check with mypy
+- Type checking with mypy
 
 ### JavaScript, TypeScript, ...
 
@@ -34,9 +34,16 @@ Please cite our paper when making use of (parts of) the toolchain:
 - Clotilde
     + [@vauhochzett](https://github.com/vauhochzett/)
     + [@JCHHeilmann](https://github.com/JCHHeilmann)
+    + Patipon Riebpradit
 - Overseer
     + [@vauhochzett](https://github.com/vauhochzett/)
     + [@felixschorer](https://github.com/felixschorer)
+    + Yiyu Gu
 - Revolori
     + [@vauhochzett](https://github.com/vauhochzett/)
     + Stefan Knilling
+    + Stefan Madzharov
+    + [@hohmannr](https://github.com/hohmannr)
+- Automated Docker deployment
+    + [@vauhochzett](https://github.com/vauhochzett/)
+    + [@hohmannr](https://github.com/hohmannr)

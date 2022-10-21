@@ -1,6 +1,8 @@
 # Svelte build
 /public/build/
-/public/vendor/
+/public/vendor/*
+!/public/vendor/pdfmake/
+
 
 # Created by https://www.gitignore.io/api/node,linux,macos,windows,intellij,visualstudio
 # Edit at https://www.gitignore.io/?templates=node,linux,macos,windows,intellij,visualstudio

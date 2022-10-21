@@ -19,9 +19,8 @@
   }
 </script>
 
-<nav class="navbar navbar-expand navbar-dark bg-dark mb-4">
-
-  <div class="collapse navbar-collapse ">
+<nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+  <div class="navbar-collapse ">
     <img
       class="navbar-brand pb-0"
       role="button"
@@ -30,7 +29,8 @@
       width="300"
       height="60"
       loading="lazy"
-      alt="Inverse Transparenz" />
+      alt="Inverse Transparenz"
+    />
     {#if $authStore}
       <div class="navbar-nav mt-auto brand">
         <a class="nav-item nav-link pb-0" href="/monitor">Monitor</a>

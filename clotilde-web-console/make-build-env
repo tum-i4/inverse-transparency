@@ -1,0 +1,16 @@
+#! /bin/sh
+
+echo "using BUILD_ENV=$BUILD_ENV"
+
+case $BUILD_ENV in
+    dev)
+        cp dev.env .env
+        ;;
+    prod)
+        cp prod.env .env
+        ;;
+    *)
+        echo "BUILD_ENV not known."
+        exit 1
+        ;;
+esac
