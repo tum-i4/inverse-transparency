@@ -2,11 +2,14 @@
 package auth
 
 import (
+	"crypto/rsa"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
+	"reflect"
 	"revolori/log"
+	"revolori/p3"
 	"revolori/store"
 	"revolori/user"
 	"strings"
@@ -252,31 +255,11 @@ func (ac Controller) Login(w http.ResponseWriter, r *http.Request, _ httprouter.
 		return
 	}
 
-	transmittedUser.Email = strings.ToLower(transmittedUser.Email)
-
-	if err := transmittedUser.VerifyLogin(); err != nil {
-		logAndReturnJsonError(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	errorInvalidCredentials := "the entered credentials are invalid"
-	passwordPlain := transmittedUser.Password
-	storedUser, err := ac.vault.GetUser(transmittedUser.Email)
+	storedUser, err, statusCode := ac.verifyLogin(transmittedUser)
 	if err != nil {
-		if err == user.ErrUserNotFound {
-			logAndReturnJsonError(w, errorInvalidCredentials, http.StatusUnauthorized)
-			return
-		}
-		logAndReturnJsonError(w, err.Error(), http.StatusInternalServerError)
+		logAndReturnJsonError(w, err.Error(), statusCode)
 		return
 	}
-
-	err = bcrypt.CompareHashAndPassword([]byte(storedUser.Password), []byte(passwordPlain))
-	if err != nil {
-		logAndReturnJsonError(w, errorInvalidCredentials, http.StatusUnauthorized)
-		return
-	}
-	storedUser.Password = ""
 
 	expirationTimeRefresh := time.Now().Add(validityDurationRefresh)
 	if err = ac.createRefreshTokenAndSetCookie(w, storedUser.Email, expirationTimeRefresh); err != nil {
@@ -419,6 +402,144 @@ func (ac Controller) GetID(w http.ResponseWriter, r *http.Request, _ httprouter.
 // @Success 200 "OK"
 func (ac Controller) CheckHealth(w http.ResponseWriter, _ *http.Request, _ httprouter.Params) {
 	logAndReturnJson(w, "", http.StatusOK)
+}
+
+// @Summary Show Revolori's public key
+// @Description Displays Revolori's public key in JSON
+// @Router /key/show [GET]
+// @Accept json
+// @Success 200 {object} string "Returns Revolori's public key"
+// @Failure 500 "Internal Error"
+func (ac Controller) ShowPublicKey(w http.ResponseWriter, _ *http.Request, _ httprouter.Params) {
+	key, err := p3.LoadRSAPublicKey()
+	if err != nil {
+		logAndReturnJsonError(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	logAndReturnJson(w, key, http.StatusOK)
+}
+
+// @Summary Revolori will sign the passed public key
+// @Router /key/sign [POST]
+// @Accept json
+// @Param publicKey body string true "The public key to be signed"
+// @Param token body string false "A valid authentication token"
+// @Param username body string false "If no token is given, then a valid username is expected"
+// @Param password body string false "If no token is given, then a valid password is expected"
+// @Success 200 {object} p3.SignedMessage "An identity card containing the public key and signed by Revolori"
+// @Failure 400 "Bad request"
+// @Failure 500 "Internal Error"
+func (ac Controller) SignKey(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	// Check if user is already logged in
+	var userPublicKey rsa.PublicKey
+
+	userID, _, err := ac.validateRefreshToken(r)
+	if err == nil {
+		// The token is valid => Get the public key from the request body
+		var transmittedUser = struct {
+			PublicKey rsa.PublicKey `json:"publicKey"`
+		}{}
+
+		if err = decodeJSON(w, r, &transmittedUser); err != nil {
+			var ir *invalidRequestBody
+			if errors.As(err, &ir) {
+				logAndReturnJsonError(w, ir.msg, ir.status)
+			} else {
+				logAndReturnJsonError(w, err.Error(), http.StatusBadRequest)
+			}
+
+			return
+		}
+
+		userPublicKey = transmittedUser.PublicKey
+	} else {
+		// Token is invalid => Check for username/password in request
+		var transmittedUser = struct {
+			Email     string        `json:"email"`
+			Password  string        `json:"password"`
+			PublicKey rsa.PublicKey `json:"publicKey"`
+		}{}
+
+		if err = decodeJSON(w, r, &transmittedUser); err != nil {
+			var ir *invalidRequestBody
+			if errors.As(err, &ir) {
+				logAndReturnJsonError(w, ir.msg, ir.status)
+			} else {
+				logAndReturnJsonError(w, err.Error(), http.StatusBadRequest)
+			}
+
+			return
+		}
+
+		if transmittedUser.Email == "" && transmittedUser.Password == "" && !reflect.DeepEqual(transmittedUser.PublicKey, rsa.PublicKey{}) {
+			logAndReturnJsonError(w, "invalid token - no email or password, only a public key was given", http.StatusBadRequest)
+			return
+		}
+
+		dummyUser := user.User{
+			Data: user.Data{
+				Email: transmittedUser.Email,
+			},
+			Password: transmittedUser.Password,
+		}
+
+		_, err, statusCode := ac.verifyLogin(dummyUser)
+		if err != nil {
+			logAndReturnJsonError(w, err.Error(), statusCode)
+			return
+		}
+
+		userID = transmittedUser.Email
+		userPublicKey = transmittedUser.PublicKey
+	}
+
+	identityCard := p3.IdentityCard{
+		SSOID:     userID,
+		PublicKey: userPublicKey,
+	}
+
+	revoloriPrivateKey, err := p3.LoadRSAPrivateKey()
+	if err != nil {
+		logAndReturnJsonError(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	signedCard, err := p3.CreateSignedIdentityCard(identityCard, &revoloriPrivateKey)
+	if err != nil {
+		logAndReturnJsonError(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	logAndReturnJson(w, signedCard, http.StatusOK)
+}
+
+// verifyLogin returns the stored user associated with the passed user
+func (ac Controller) verifyLogin(passedUser user.User) (user.User, error, int) {
+	passedUser.Email = strings.ToLower(passedUser.Email)
+
+	if err := passedUser.VerifyLogin(); err != nil {
+		return user.User{}, err, http.StatusBadRequest
+	}
+
+	errorInvalidCredentials := "the entered credentials are invalid"
+	passwordPlain := passedUser.Password
+	storedUser, err := ac.vault.GetUser(passedUser.Email)
+	if err != nil {
+		if err == user.ErrUserNotFound {
+			return user.User{}, errors.New(errorInvalidCredentials), http.StatusUnauthorized
+		}
+
+		return user.User{}, err, http.StatusInternalServerError
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(storedUser.Password), []byte(passwordPlain))
+	if err != nil {
+		return user.User{}, errors.New(errorInvalidCredentials), http.StatusUnauthorized
+	}
+	storedUser.Password = ""
+
+	return storedUser, nil, http.StatusOK
 }
 
 // hashPassword hashes a users password and returns the user with hashed password field.

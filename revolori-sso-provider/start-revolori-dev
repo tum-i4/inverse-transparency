@@ -2,10 +2,14 @@
 generateKeys=${1:-false}
 if [ "$generateKeys" = "true" ];
 then
-  echo "Generating new set of keys..."
-  mkdir "dev_keys"
-  ssh-keygen -t ecdsa -b 384 -m pem -N "" -f ./dev_keys/ecdsa_key
-  openssl rand -hex -base64 683 | tr -d '\n' > ./dev_keys/hmac
+	echo "Generating new set of keys..."
+	mkdir "dev_keys"
+	ssh-keygen -t ecdsa -b 384 -m pem -N "" -f ./dev_keys/ecdsa_key
+	openssl rand -hex -base64 683 | tr -d '\n' > ./dev_keys/hmac
+	echo "Generating RSA key pair..."
+	ssh-keygen -t rsa -b 3072 -m pem -N "" -f ./dev_keys/rsa_key
+	ssh-keygen -f ./dev_keys/rsa_key.pub -e -m pem > ./dev_keys/tmp_rsa_key
+	mv ./dev_keys/tmp_rsa_key ./dev_keys/rsa_key.pub
 else
   echo "Using available set of keys..."
 fi
@@ -14,6 +18,11 @@ address=127.0.0.1:5430
 token="default_token"
 echo "Building Revolori..."
 go build
+if [ $? -ne 0 ]; then
+	echo "Could not build Revolori"
+	exit 1
+fi
+
 chmod +x revolori
 echo "Setting up Vault..."
 vault server -dev -dev-listen-address $address -dev-root-token-id $token &
@@ -24,5 +33,12 @@ vault secrets enable -path=keys kv
 vault secrets enable -path=whitelist kv
 vault kv put keys/hmac key=@dev_keys/hmac
 vault kv put keys/ecdsa key=@dev_keys/ecdsa_key
+
+echo
+echo "===== Building Docs ====="
+swag init
+echo "===== Done ====="
+echo
+
 echo "Starting Revolori..."
 ./revolori -dev

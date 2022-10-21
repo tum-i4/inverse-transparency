@@ -2,6 +2,14 @@
 
 echo "Generating new set of keys..."
 mkdir "dev_keys"
-ssh-keygen -t ecdsa -b 384 -m pem -N "" -f ./dev_keys/ecdsa_key
-openssl rand -hex -base64 683 | tr -d '\n' > ./dev_keys/hmac
 
+read -p "Replace existing keys? (y/n): " replace
+if [ "$replace" = "y" ]; then
+	ssh-keygen -t ecdsa -b 384 -m pem -N "" -f ./dev_keys/ecdsa_key
+	openssl rand -hex -base64 683 | tr -d '\n' > ./dev_keys/hmac
+	
+	# RSA key pair
+	ssh-keygen -t rsa -b 3072 -m pem -N "" -f ./dev_keys/rsa_key
+	ssh-keygen -f ./dev_keys/rsa_key.pub -e -m pem > ./dev_keys/tmp_rsa_key
+	mv ./dev_keys/tmp_rsa_key ./dev_keys/rsa_key.pub
+fi

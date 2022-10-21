@@ -1,6 +1,7 @@
 package store
 
 import (
+	"fmt"
 	"revolori/whitelist"
 	"time"
 )
@@ -20,11 +21,13 @@ func (c Client) CreateWhitelistEntry(entry whitelist.Entry) error {
 func (c Client) GetWhitelistEntry(token string) (whitelist.Entry, error) {
 	data, err := c.read(storagePath, token)
 	if err != nil {
+		fmt.Printf("[!] Could not read storage path '%s' because: %s\n", storagePath, err.Error())
 		return whitelist.Entry{}, err
 	}
 
 	expiration, err := time.Parse(time.RFC3339, data["expiration"].(string))
 	if err != nil {
+		fmt.Printf("[!] Expired? Error: %s\n", err.Error())
 		return whitelist.Entry{}, err
 	}
 

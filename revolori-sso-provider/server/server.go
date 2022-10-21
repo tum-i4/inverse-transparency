@@ -80,6 +80,8 @@ func initRouter(authName, authPassword string, ac *auth.Controller) (*httprouter
 	r.GET("/refresh", ac.Refresh)
 	r.GET("/id", ac.GetID)
 	r.GET("/health", ac.CheckHealth)
+	r.POST("/key/sign", ac.SignKey)
+	r.GET("/key/show", ac.ShowPublicKey)
 	// Documentation handler
 	r.HandlerFunc(http.MethodGet, "/docs/*route", httpSwagger.Handler())
 
