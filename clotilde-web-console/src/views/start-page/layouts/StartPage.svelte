@@ -14,12 +14,12 @@
   });
 </script>
 
-<h1 class="brand">Inverse Transparenz: Konsole</h1>
+<h1 class="brand">Inverse Transparency: Console</h1>
 {#if !$authStore}
   <Login />
 {:else}
   <p>
-    Sie sind schon eingeloggt. Weiter zum
+    You're already logged in. Redirecting to
     <!-- prettier-ignore -->
     <Navigate to="/monitor">Monitor</Navigate>.
   </p>

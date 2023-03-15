@@ -12,7 +12,7 @@
   async function handleLogout() {
     try {
       await logout();
-      navigateHome(); // if successfull navigate to start page
+      navigateHome(); // if successful navigate to start page
     } catch (error) {
       notificationStore.add(error.message);
     }
@@ -29,17 +29,17 @@
       width="300"
       height="60"
       loading="lazy"
-      alt="Inverse Transparenz"
+      alt="Inverse Transparency"
     />
     {#if $authStore}
       <div class="navbar-nav mt-auto brand">
         <a class="nav-item nav-link pb-0" href="/monitor">Monitor</a>
-        <a class="nav-item nav-link pb-0" href="/datenfreigabe">Datenfreigabe</a>
+        <a class="nav-item nav-link pb-0" href="/clearance">Clearance</a>
       </div>
     {/if}
   </div>
   {#if $authStore}
-    <span class="navbar-text mt-auto pb-0 brand">Eingeloggt: {$authStore.email}</span>
-    <button class="btn btn-link text-light mt-auto pb-0 border-0 brand" on:click={handleLogout}>Ausloggen</button>
+    <span class="navbar-text mt-auto pb-0 brand">Logged in: {$authStore.email}</span>
+    <button class="btn btn-link text-light mt-auto pb-0 border-0 brand" on:click={handleLogout}>Log out</button>
   {/if}
 </nav>

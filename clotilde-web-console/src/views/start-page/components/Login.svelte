@@ -22,14 +22,14 @@
 </script>
 
 <div class="py-3">
-  <h4>Zum Fortfahren einloggen</h4>
+  <h4>Please login to continue</h4>
 </div>
 
 <div class="row">
   <div class="col-md-6 col-xs">
     <form on:submit|preventDefault={handleSubmit}>
       <div class="form-group">
-        <label for="inputUsername">E-Mail</label>
+        <label for="inputUsername">Email</label>
         <input
           type="text"
           class="form-control rounded-0 border-dark"
@@ -37,11 +37,11 @@
           bind:value={username}
           required
           pattern=".+@.+\..+"
-          title="Bitte verwenden sie eine gültige E-Mail-Adresse." />
+          title="Please enter a valid email address." />
       </div>
 
       <div class="form-group">
-        <label for="inputPassword">Passwort</label>
+        <label for="inputPassword">Password</label>
         <input
           type="password"
           class="form-control rounded-0 border-dark"
@@ -50,7 +50,7 @@
           required />
       </div>
 
-      <button type="submit" class="btn btn-dark rounded-0 border-dark">Einloggen</button>
+      <button type="submit" class="btn btn-dark rounded-0 border-dark">Log in</button>
     </form>
   </div>
 </div>

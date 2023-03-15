@@ -34,23 +34,23 @@
 
 <div class="py-3 row">
   <div class="col-xs-12 col-lg-4 mb-4 mb-lg-0">
-    <SummaryCountCard count={accessesToday.length} label="Zugriffe heute" />
+    <SummaryCountCard count={accessesToday.length} label="accesses today" />
   </div>
   <div class="col-xs-12 col-lg-4 mb-4 mb-lg-0">
-    <SummaryCountCard count={accessesThisWeek.length} label="Zugriffe in den letzten {numDaysHistory} Tagen" />
+    <SummaryCountCard count={accessesThisWeek.length} label="accesses in the last {numDaysHistory} days" />
   </div>
   <div class="col-xs-12 col-lg-4 mb-4 mb-lg-0">
     <SummaryCountCard
       count={Object.keys(dataUsersThisWeek).length}
-      label="Datennutzer in den letzten {numDaysHistory} Tagen"
+      label="distinct data consumers in the last {numDaysHistory} days"
     />
   </div>
 </div>
 <div class="py-3 row">
   <div class="col-xs-12 col-lg-8 mb-4 mb-lg-0">
-    <AccessHistoryCard {accessesPerDay} label="Zugriffshistorie der letzten {numDaysHistory} Tage" />
+    <AccessHistoryCard {accessesPerDay} label="Access history of the last {numDaysHistory} days" />
   </div>
   <div class="col-xs-12 col-lg-4">
-    <TopUsersCard topUsers={topUsersThisWeek} label="Top Nutzer in den letzten {numDaysHistory} Tagen" />
+    <TopUsersCard topUsers={topUsersThisWeek} label="Top consumers of the last {numDaysHistory} days" />
   </div>
 </div>

@@ -34,7 +34,7 @@
   }
 </script>
 
-<h1 class="brand">Datenfreigabe</h1>
+<h1 class="brand">Clearance</h1>
 
 {#await dataAccessPoliciesPromise}
   <InvSpinner />
@@ -44,5 +44,5 @@
     on:deletion={(event) => handleDeletion(event.detail.id)}
     on:addition={(event) => handleAddition(event.detail.newPolicy)} />
 {:catch error}
-  <InvErrorAlert messagePrefix="Beim Laden der Datenfreigaberegeln ist ein Fehler aufgetreten" {error} />
+  <InvErrorAlert messagePrefix="An error occurred while attempting to load the clearance rules" {error} />
 {/await}

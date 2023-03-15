@@ -5,7 +5,7 @@ import { authStore } from "../shared/stores.js";
 const REVOLORI_URL = process.env.REVOLORI_URL;
 
 /**
- * Makes a call to Revolori, if successfull this sets a refresh token cookie and stores the JWT token.
+ * Makes a call to Revolori, if successful this sets a refresh token cookie and stores the JWT token.
  * @param {string} email The user's email address used for authentication.
  * @param {string} password The user's password.
  */
@@ -22,7 +22,7 @@ export async function login(email, password) {
     const data = await response.json();
     authStore.set(data.token);
   } else {
-    throw new Error(`${response.status}: ${response.statusText}. Hervorgerufen durch eine Anfrage an ${response.url}.`);
+    throw new Error(`${response.status}: ${response.statusText}. Caused by a request to ${response.url}.`);
   }
 }
 
@@ -40,7 +40,7 @@ export async function logout() {
     authStore.clear();
     return true;
   } else {
-    throw new Error(`${response.status}: ${response.statusText}. Hervorgerufen durch eine Anfrage an ${response.url}.`);
+    throw new Error(`${response.status}: ${response.statusText}. Caused by a request to ${response.url}.`);
   }
 }
 
@@ -64,7 +64,7 @@ export async function refreshToken() {
 }
 
 /**
- * Return token from store. If there is no stored token or the token has expired, an attemt is made to refresh the token.
+ * Return token from store. If there is no stored token or the token has expired, an attempt is made to refresh the token.
  */
 export async function getToken() {
   if (get(authStore) && !checkTokenExpired()) {

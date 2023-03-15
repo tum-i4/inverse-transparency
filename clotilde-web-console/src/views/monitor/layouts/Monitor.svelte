@@ -69,5 +69,5 @@
     {sections}
   />
 {:catch error}
-  <InvErrorAlert messagePrefix="Beim Laden des Monitors ist ein Fehler aufgetreten" {error} />
+  <InvErrorAlert messagePrefix="An error occurred while attempting to load the monitor" {error} />
 {/await}

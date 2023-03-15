@@ -22,7 +22,7 @@
   <td>
     <select class="form-control form-control-sm rounded-0 border-dark" bind:value={newPolicy.access_kind}>
       <option value={null}>*</option>
-      <option>Direkt</option>
+      <option>Direct</option>
       <option>Query</option>
       <option>Aggregation</option>
     </select>
@@ -47,6 +47,6 @@
     </div>
   </td>
   <td>
-    <button type="submit" class="btn btn-dark btn-sm rounded-0 border-dark" form="clearance-form">Neue Regel</button>
+    <button type="submit" class="btn btn-dark btn-sm rounded-0 border-dark" form="clearance-form">New rule</button>
   </td>
 </tr>

@@ -65,7 +65,7 @@ async function send({ method, path, data = undefined }, auth) {
       return response.json();
     }
   } else {
-    throw new Error(`${response.status}: ${response.statusText}. Hervorgerufen durch eine Anfrage an ${response.url}.`);
+    throw new Error(`${response.status}: ${response.statusText}. Caused by a request to ${response.url}.`);
   }
 }
 

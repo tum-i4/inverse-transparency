@@ -35,7 +35,7 @@
 
   function onExportPDF() {
     if (filters.userRid == "") {
-      alert("Um ein PDF zu exportieren, wählen Sie bitte mittels der Filter eine*n Datennutzer*in aus.");
+      alert("In order to export a pdf, select a data consumer using the filter.");
       return;
     }
 
@@ -91,7 +91,7 @@
   }
 </style>
 
-<h2 class="brand">Zugriffe auf Ihre Daten</h2>
+<h2 class="brand">Usage of your data</h2>
 
 <div class="pt-3">
   <InvCard>
@@ -101,12 +101,12 @@
       <table class="table table-responsive-md d-md-table">
         <thead>
           <tr>
-            <th scope="col">Verantwortlich</th>
+            <th scope="col">Responsible</th>
             <th scope="col" class="tool">Tool</th>
-            <th scope="col" class="kind">Art</th>
-            <th scope="col">Begründung</th>
-            <th scope="col">Datentypen</th>
-            <th scope="col" class="timestamp">Zeitstempel</th>
+            <th scope="col" class="kind">Kind</th>
+            <th scope="col">Justification</th>
+            <th scope="col">Data types</th>
+            <th scope="col" class="timestamp">Timestamp</th>
           </tr>
         </thead>
 
@@ -126,8 +126,8 @@
           <button
             class="page-link btn btn-dark rounded-0 border-dark"
             class:disabled={pageIndex <= 0}
-            on:click={() => dispatch("previous")}>Zurück</button
-          >
+            on:click={() => dispatch("previous")}>Back
+          </button>
         </li>
         {#each paginationList as i}
           <li class="page-item">
@@ -143,11 +143,11 @@
           <button
             class="page-link btn btn-dark rounded-0 border-dark"
             class:disabled={pageIndex >= sections - 1}
-            on:click={() => dispatch("next")}>Weiter</button
+            on:click={() => dispatch("next")}>Next</button
           >
         </li>
       </ul>
-      <div style="text-align: center;">Seite {pageIndex + 1} von {sections}</div>
+      <div style="text-align: center;">Page {pageIndex + 1} of {sections}</div>
     </div>
   </InvCard>
 </div>

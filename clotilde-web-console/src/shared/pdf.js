@@ -69,7 +69,7 @@ const pdfHeader = {
           fillColor: primaryBlue,
         },
         {
-          text: "  Inverse Transparenz",
+          text: "  Inverse Transparency",
           style: "header",
           lineHeight: 2,
           fillColor: primaryBlue,
@@ -89,12 +89,12 @@ const pdfHeader = {
 };
 
 const tableHeaderContent = {
-  user_rid: "Verantwortlich",
+  user_rid: "Responsible",
   tool: "Tool",
-  access_kind: "Art",
-  justification: "Begründung",
-  data_types: "Datentypen",
-  timestamp: "Zeitstempel",
+  access_kind: "Kind",
+  justification: "Justification",
+  data_types: "Data types",
+  timestamp: "Timestamp",
 };
 
 const chartDefaultTicks = {
@@ -203,7 +203,7 @@ class PdfGenerator {
       this.addAccessesTable();
     } else {
       this.documentContent.content.push({
-        text: "Im angegebenen Zeitraum wurden keine Datenzugriffe erfasst.",
+        text: "There are no data accesses in the given time frame.",
         lineHeight: 1.5,
       });
     }
@@ -235,9 +235,9 @@ class PdfGenerator {
     const end = moment(this.maxTimestamp).format("DD.MM.YYYY");
     const headers = [
       { text: " ", lineHeight: 1.5 },
-      { text: `Erstellt für: ${this.ownerRid}`, lineHeight: 1.5 },
-      { text: `Abgedeckter Zeitraum: ${start}–${end}`, lineHeight: 1.5 },
-      { text: `Datennutzer*in: ${this.userRid}`, lineHeight: 1.5 },
+      { text: `Created for: ${this.ownerRid}`, lineHeight: 1.5 },
+      { text: `Time frame: ${start}–${end}`, lineHeight: 1.5 },
+      { text: `Data consumer: ${this.userRid}`, lineHeight: 1.5 },
       { text: " ", lineHeight: 1 },
     ];
     this.documentContent.content.push(...headers);
@@ -247,7 +247,7 @@ class PdfGenerator {
    * Add graph (converted to image) to the PDF.
    */
   addGraph() {
-    this.documentContent.content.push({ text: "Überblick", style: "subheader", lineHeight: 2 });
+    this.documentContent.content.push({ text: "Overview", style: "subheader", lineHeight: 2 });
     this.documentContent.content.push({
       image: this.chartImage,
       width: 500,
@@ -273,7 +273,7 @@ class PdfGenerator {
       return result;
     });
 
-    this.documentContent.content.push({ text: "Alle Datenzugriffe", style: "subheader", lineHeight: 1.5 });
+    this.documentContent.content.push({ text: "All data accesses", style: "subheader", lineHeight: 1.5 });
     let tableContent = [];
     // Add headers in the same order as they appear in the object
     const header = Object.keys(tableData[0]).map((element) => ({

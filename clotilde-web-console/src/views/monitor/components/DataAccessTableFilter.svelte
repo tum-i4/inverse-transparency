@@ -21,22 +21,22 @@
   </div>
   <div class="col-auto mt-auto mb-3">
     <button class="btn btn-outline-dark rounded-0 border-dark" type="button" on:click={resetFilters}>
-      Filter zurücksetzen</button
+      Reset filter</button
     >
   </div>
   <div class="col-auto mt-auto mb-3">
     <button class="btn btn-outline-dark rounded-0 border-dark" type="button" on:click={() => dispatch("exportPdf")}>
-      Als PDF exportieren</button
+      Export as PDF</button
     >
   </div>
 </div>
 <div class="form-row">
   <div class="col form-group">
-    <label for="searchFilter">Freitextsuche</label>
+    <label for="searchFilter">Free text search</label>
     <input type="text" class="form-control rounded-0 border-dark" id="searchFilter" bind:value={filters.search} />
   </div>
   <div class="col form-group">
-    <label for="userRid">Verantwortlich</label>
+    <label for="userRid">Responsible</label>
     <select class="form-control rounded-0 border-dark" id="userRid" bind:value={filters.userRid}>
       <option />
       {#each users as user}
@@ -54,7 +54,7 @@
     </select>
   </div>
   <div class="col form-group">
-    <label for="minTimestamp">Zeitraum von</label>
+    <label for="minTimestamp">Timestamp from</label>
     <input
       type="date"
       class="form-control rounded-0 border-dark"
@@ -64,7 +64,7 @@
     />
   </div>
   <div class="col form-group">
-    <label for="maxTimestamp">Zeitraum bis</label>
+    <label for="maxTimestamp">Timestamp to</label>
     <input
       type="date"
       class="form-control rounded-0 border-dark"

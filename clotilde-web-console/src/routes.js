@@ -6,7 +6,7 @@ import StartPage from "./views/start-page/layouts/StartPage.svelte";
 const routes = [
   { name: "/", component: StartPage },
   { name: "monitor", component: Monitor },
-  { name: "datenfreigabe", component: Clearance },
+  { name: "clearance", component: Clearance },
   {
     name: "404",
     path: "404",

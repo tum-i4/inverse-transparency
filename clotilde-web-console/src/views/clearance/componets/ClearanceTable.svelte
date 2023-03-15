@@ -44,11 +44,11 @@
       <table class="table">
         <thead>
           <tr>
-            <th scope="col" class="user">Nutzer</th>
+            <th scope="col" class="user">User</th>
             <th scope="col" class="tool">Tool</th>
-            <th scope="col" class="kind">Art</th>
-            <th scope="col" class="period">Zeitraum</th>
-            <th scope="col" class="controls" />
+            <th scope="col" class="kind">Kind</th>
+            <th scope="col" class="period">Period</th>
+            <th scope="col" class="controls"></th>
           </tr>
         </thead>
         {#each dataAccessPolicies as policy (policy.id)}
@@ -70,7 +70,7 @@
                 type="button"
                 class="btn btn-outline-danger btn-sm rounded-0 w-100"
                 on:click={() => dispatch('deletion', { id: policy.id })}>
-                Löschen
+                Delete
               </button>
             </td>
           </tr>

@@ -8,7 +8,7 @@
   import "./global.scss";
   import { routes } from "./routes";
 
-  moment.updateLocale("de", localization);
+  moment.updateLocale("en", localization);
 </script>
 
 <main>
