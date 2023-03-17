@@ -20,7 +20,7 @@ if [ "x$FILES_EXIST" == "x1" ]; then
     echo "> All necessary files already exist. Exiting."
     exit 0
 else
-    echo "> Some keys are missing: Please proceed to create new keys."
+    echo "> Some keys are missing; proceeding to create new keys..."
 fi
 
 # create keys

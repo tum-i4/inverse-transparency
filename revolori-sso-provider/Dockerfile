@@ -1,4 +1,4 @@
-FROM golang:alpine
+FROM golang:1.18-alpine
 
 WORKDIR /build
 
@@ -21,7 +21,7 @@ ENV APP_HOST ${HOST}:${PORT}
 COPY . .
 
 # Install swag-go
-RUN go get -u github.com/swaggo/swag/cmd/swag
+RUN go install github.com/swaggo/swag/cmd/swag
 
 # Build the docs
 RUN swag init
