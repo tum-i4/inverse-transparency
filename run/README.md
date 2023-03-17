@@ -92,8 +92,12 @@ $ ./setup.sh
 To stop the environment, please always use `docker-compose`:
 ```
 $ docker-compose down
-
 ```
+
+## CORS
+
+Please note that, due to CORS requirements, you need to access Clotilde locally via `127.0.0.1` (instead of `localhost` or `0.0.0.0`). Only then, requests to Revolori are successful.
+
 ## Development Environment
 
 - location: `./dev`

@@ -5,7 +5,6 @@ services:
         image: "inv-toolchain/clotilde"
         container_name: "clotilde"
         restart: always
-        network_mode: "host"
         depends_on:
             - overseer
         build:
@@ -13,6 +12,8 @@ services:
             args:
                 BASE_URL: "${CLOTILDE_BASE_URL}"
                 BUILD_ENV: "${BUILD_ENV}"
+        ports:
+            - 8080:8080
         environment:
             HOST: "${CLOTILDE_HOST}"
             PORT: "${CLOTILDE_PORT}"
@@ -21,9 +22,10 @@ services:
         image: "inv-toolchain/overseer"
         container_name: "overseer"
         restart: always
-        network_mode: "host"
         build:
             context: ../../overseer-log-store
+        ports:
+            - 5421:5421
         environment:
             PORT: "${OVERSEER_PORT}"
             HOST: "${OVERSEER_HOST}"
@@ -35,7 +37,7 @@ services:
             DATABASE_URI: "${OVERSEER_DATABASE_URI}"
             OVERSEER_DATA: "/var/app-data/"
             JWT_PUBLIC_KEY_PATH: "/var/app-secrets/issuer.pub"
-            REVOLORI_SERVICE_ROOT: "http:/${REVOLORI_HOST}:${REVOLORI_PORT}" # must be changed when using https
+            REVOLORI_SERVICE_ROOT: "http://revolori:${REVOLORI_PORT}" # must be changed when using https
         volumes:
             - "./data/overseer/:/var/app-data/"
             - "./secrets/overseer/issuer.pub:/var/app-secrets/issuer.pub" # public key from revolori
@@ -44,16 +46,19 @@ services:
         image: "inv-toolchain/revolori"
         container_name: "revolori"
         restart: always
-        network_mode: "host"
         depends_on:
             - vault
         build:
             context: ../../revolori-sso-provider
+        ports:
+            - 5429:5429
         environment:
-            VAULT_ADDR: "http://${VAULT_HOST}:${VAULT_PORT}"
+            VAULT_ADDR: "http://vault:${VAULT_PORT}"
             VAULT_TOKEN: "root"
             AUTH_NAME: "${REVOLORI_HTTP_AUTH_USER}"
             AUTH_PASSWORD: "${REVOLORI_HTTP_AUTH_PASSWD}"
+            HOST: "${REVOLORI_HOST}"
+            PORT: "${REVOLORI_PORT}"
             APP_HOST: "${REVOLORI_HOST}:${REVOLORI_PORT}"
             APP_PROTOCOL: "http"
 
@@ -61,9 +66,10 @@ services:
         image: "inv-toolchain/vault"
         container_name: "vault"
         restart: always
-        network_mode: "host"
         build:
             context: ../../revolori-sso-provider/vault
+        ports:
+            - 5430:5430
         environment:
             HOST: "${VAULT_HOST}"
             PORT: "${VAULT_PORT}"

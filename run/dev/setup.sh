@@ -19,6 +19,16 @@ dummy_data=(
     'mm@example.com'
 )
 
+# mac os + linux compatible date
+# for mac, you may need to install coreutils (e.g. via homebrew)
+date () {
+    if type -p gdate > /dev/null; then
+        gdate "$@";
+    else
+        date "$@";
+    fi
+}
+
 setup-user() {
     local user=$1
     echo -e  "setting up user:\n$user"
@@ -38,7 +48,7 @@ add-dummy-data() {
     # FIX: once new /generate endpoint has been provided
     status=$(curl -u $OVERSEER_ADMIN:$OVERSEER_ADMIN_PASSWD --verbose -X POST "http://$OVERSEER_HOST:$OVERSEER_PORT/generate?owner_rid=$user&date_start=$date_start&date_end=$date_end&number_of_entries=$DUMMY_DATA_COUNT" 2>&1 | grep "< HTTP/1.1" | awk '{printf $3}')
     if [[ $status != "200" ]]; then
-        echo "error: Could not create user due to http status: $status"
+        echo "error: Could not add dummy data due to http status: $status"
         exit 1;
     fi
     echo ""
