@@ -1,0 +1,44 @@
+cff-version: 1.2.0
+title: >-
+  Inverse Transparency Toolchain
+message: Please cite our paper when making use of this tool.
+type: software
+authors:
+  - given-names: Valentin
+    family-names: Zieglmeier
+    orcid: 'https://orcid.org/0000-0002-3770-0321'
+    affiliation: Technical University of Munich
+  - given-names: Yiyu
+    family-names: Gu
+  - given-names: Johannes
+    family-names: Heilmann
+  - given-names: Raphael
+    family-names: Hohmann
+  - given-names: Stefan
+    family-names: Knilling
+  - given-names: Stefan
+    family-names: Madzharov
+  - given-names: Patipon
+    family-names: Riebpradit
+  - given-names: Felix
+    family-names: Schorer
+version: 1.0.0
+repository-code: 'https://github.com/SoftwareImpacts/SIMPAC-2023-126'
+date-released: '2023-07-26'
+preferred-citation:
+  type: article
+  title: >-
+    The Inverse Transparency Toolchain: A Fully Integrated and Quickly Deployable Data Usage Logging Infrastructure
+  authors:
+    - given-names: Valentin
+      family-names: Zieglmeier
+      orcid: 'https://orcid.org/0000-0002-3770-0321'
+      affiliation: Technical University of Munich
+  year: 2023
+  publisher:
+    name: Elsevier
+  doi: 10.1016/j.simpa.2023.100554
+  journal: "Software Impacts"
+  issn: "2665-9638"
+  volume: 17
+  month: 9
