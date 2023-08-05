@@ -1,5 +1,14 @@
 # The toolchain – Clotilde and Overseer and Revolori
 
+Please cite our accompanying paper when making use of the toolchain:
+
+**Zieglmeier, Valentin**: "The Inverse Transparency Toolchain: A Fully Integrated and Quickly Deployable Data Usage Logging Infrastructure." *Software Impacts* 17 (Sept. 2023), Article 100554.
+DOI: [10.1016/j.simpa.2023.100554](https://doi.org/10.1016/j.simpa.2023.100554).
+[*[BibTeX]*](https://mediatum.ub.tum.de/export/1717184/bibtex)
+
+
+## About
+
 The Inverse Transparency Toolchain—consisting of Overseer, Clotilde, and Revolori—is a flexible solution for research, teaching, and prototyping in the context of inverse transparency.
 
 ## Deploying with Docker
