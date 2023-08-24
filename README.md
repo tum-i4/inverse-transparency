@@ -33,7 +33,7 @@ To build and run the toolchain, use Docker Compose: [documentation and instructi
 - Overseer
     + [@vauhochzett](https://github.com/vauhochzett/)
     + [@felixschorer](https://github.com/felixschorer)
-    + Yiyu Gu
+    + [@guyiyu](https://github.com/guyiyu)
 - Revolori
     + [@vauhochzett](https://github.com/vauhochzett/)
     + Stefan Knilling
